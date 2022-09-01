@@ -1,0 +1,245 @@
+p {
+  margin-bottom: 0;
+}
+
+.gradient {
+  background: linear-gradient(to top right, #69a0ea, #63b759);
+  border-radius: 15px;
+}
+
+.login-bg {
+  font-size: 12px;
+  line-height: 16px;
+  font-family: "Noto Sans", sans-serif !important;
+}
+.login-bg .left-panel {
+  position: relative;
+}
+.login-bg .left-panel .logo-holder {
+  padding-top: 60px;
+  margin-bottom: 75px;
+}
+
+.main {
+  height: 100vh;
+}
+
+.min-height-685 {
+  min-height: 685px;
+}
+
+.right-panel a {
+  text-decoration: none;
+  color: #fff;
+}
+.right-panel .card {
+  color: #ffffff;
+  border-color: transparent;
+  background-color: transparent;
+}
+.right-panel .card .card-header {
+  background-color: #fafbff;
+  border-color: transparent;
+  background-color: transparent;
+}
+.right-panel .card .card-header h5 {
+  margin: 0;
+  font-weight: 500;
+  font-size: 20px;
+}
+.right-panel .card .card-header p {
+  font-size: 12px;
+  padding-right: 10px;
+}
+.right-panel .card .card-header p span {
+  cursor: pointer;
+}
+.right-panel .card .card-body {
+  padding: 24px 30px;
+}
+.right-panel .card .card-body .btn-group {
+  border: 1px solid #ffffff;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.right-panel .card .card-body .btn-group .btn-primary {
+  border-color: transparent;
+  background-color: transparent;
+  font-size: 12px;
+}
+.right-panel .card .card-body .btn-group .btn-primary i::before {
+  font-size: 22px !important;
+}
+.right-panel .card .card-body .btn-group .btn-primary:hover, .right-panel .card .card-body .btn-group .btn-primary:focus, .right-panel .card .card-body .btn-group .btn-primary.active {
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
+  color: #000;
+  box-shadow: none;
+}
+.right-panel .card .card-body .btn-group .btn-primary:hover i, .right-panel .card .card-body .btn-group .btn-primary:focus i, .right-panel .card .card-body .btn-group .btn-primary.active i {
+  color: #125ddb;
+}
+.right-panel .card .card-body .btn-min {
+  background-color: transparent;
+  border-color: transparent;
+  font-size: 25px;
+  color: #a8dbd1;
+}
+.right-panel .card .card-body .btn-min:hover, .right-panel .card .card-body .btn-min:focus, .right-panel .card .card-body .btn-min.active {
+  color: #ffffff;
+}
+.right-panel .card .card-body .btn-min i {
+  font-size: 35px;
+}
+.right-panel .card .card-body .btn.btn-register {
+  background-color: #7eb2d4;
+  border: 1px solid #ffffff;
+  padding: 10px 12px;
+  margin-top: 25px;
+  transition: all 300ms ease-in-out;
+  font-weight: 600;
+}
+.right-panel .card .card-body .btn.btn-register:focus {
+  box-shadow: none;
+  outline: none;
+}
+.right-panel .card .card-body .btn.btn-register:hover {
+  color: #4f6a91;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+}
+.right-panel .card label {
+  font-size: 13px;
+  margin-bottom: 12px;
+  line-height: 16px;
+}
+.right-panel .card .form-control {
+  background-color: transparent;
+  border: 1px solid #ffffff !important;
+  padding: 14px 12px;
+  color: #ffffff;
+  font-weight: 400;
+  margin-bottom: 25px;
+  font-size: 13px;
+}
+.right-panel .card .form-control:hover, .right-panel .card .form-control:focus {
+  box-shadow: none;
+  outline: none;
+  border-bottom: 1px solid #ffffff !important;
+}
+.right-panel .card .form-control::-moz-placeholder {
+  color: #bdd7d9;
+  font-size: 12px;
+}
+.right-panel .card .form-control:-ms-input-placeholder {
+  color: #bdd7d9;
+  font-size: 12px;
+}
+.right-panel .card .form-control::placeholder {
+  color: #bdd7d9;
+  font-size: 12px;
+}
+.right-panel .card .custom-dropdown {
+  margin-bottom: 25px;
+}
+.right-panel .card .plan .custom-check {
+  padding-left: 0;
+}
+.right-panel .card .plan .custom-check [type=radio]:checked,
+.right-panel .card .plan .custom-check [type=radio]:not(:checked) {
+  position: absolute;
+  left: -9999px;
+}
+.right-panel .card .plan .custom-check .form-check-label {
+  max-width: 150px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  padding: 15px;
+  color: #fff;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.right-panel .card .plan .custom-check .form-check-label::after {
+  content: inherit;
+}
+.right-panel .card .plan .custom-check .form-check-label .plan-name {
+  font-size: 14px;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+.right-panel .card .plan .custom-check .form-check-label .plan-price {
+  font-size: 18px;
+  font-weight: 700;
+}
+.right-panel .card .plan .custom-check [type=radio]:checked + label.form-check-label {
+  border-width: 1px;
+  background-color: #fff;
+  color: #30427e;
+  border-color: #fff;
+}
+.right-panel .card .select2-container {
+  width: 100% !important;
+}
+.right-panel .card .select2-container--default .select2-selection--single {
+  background-color: transparent;
+  border-color: transparent;
+  border-bottom: 1px solid #ffffff;
+  border-radius: 0px;
+}
+.right-panel .card .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #ffffff;
+  padding-left: 0px !important;
+}
+.right-panel .card .select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: #aac2e6;
+  font-size: 12px;
+}
+.right-panel .card .select2-container--default .select2-selection--single .select2-selection__arrow b {
+  border-color: #ffffff transparent transparent transparent;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #4fb4a3 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  opacity: 1;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: #4fb4a3 !important;
+}
+
+.select2-dropdown {
+  border: 1px solid transparent !important;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+/*-------------IPAD VIEW*-----------------*/
+@media (min-width: 768px) and (max-device-width: 991px) {
+  .right-panel .card {
+    max-height: 630px;
+    overflow-y: auto;
+  }
+  .right-panel .card .card-header h5 {
+    font-size: 20px !important;
+  }
+  .right-panel .card .card-header p {
+    font-size: 10px !important;
+  }
+  .right-panel .card label {
+    font-size: 12px;
+  }
+}/*# sourceMappingURL=style.css.map */
