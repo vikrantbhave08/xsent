@@ -17,7 +17,7 @@ class Dashboard_controller extends Controller
 
     public function index()
     {
-        // $user_data=Auth::admin_user();
+        // $user_data=Auth::admin_user();    
        
         return view('admin/dashboard');
     }
