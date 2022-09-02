@@ -48,4 +48,19 @@ class Users_controller extends Controller
                                               
         return view('admin/register-user-details',$result);
     }
+
+
+    public static function admin_user()
+    {       
+        $user = User_model::select('users.*','auth_user.auth_id','auth_user.users_token')
+        ->leftjoin('auth_user', 'users.user_id', '=', 'auth_user.user_id')
+        ->where('auth_user.users_token', session('admin_token'))
+        ->first();
+        if(!empty($user))
+        {
+            $user = $user->toArray();       
+        }
+
+        return $user;
+    }
 }
