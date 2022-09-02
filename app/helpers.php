@@ -9,11 +9,11 @@ function send_otp($data)
    
     $response = $client->request('GET', $endpoint, ['query' => [
         'action' => 'sendsms', 
-        'user' => '0tb1pd88', 
+        'user' => env("SEND_OTP_USER"), 
         'from' => 'ibdaa', 
         'to' => $data['contact_no'], 
         'text' => $data['msg'],
-        'password' => 'inyJdu5t',
+        'password' => env("SEND_OTP_PASS"),
     ]]);
 
     // url will be: http://my.domain.com/test.php?key1=5&key2=ABC;

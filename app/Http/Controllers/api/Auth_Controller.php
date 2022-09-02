@@ -220,7 +220,7 @@ class Auth_Controller extends Controller
             
             $data=array('contact_no'=>'+919075554309','msg'=>$gen_otp.' is your Xsent verification code.');
 
-            //  $response=send_otp($data); 
+             $response=send_otp($data); 
 
             $data=array('status'=>true,'msg'=>'Otp sent successfully','otp'=>$gen_otp,'response'=>$response);
         }
@@ -259,57 +259,9 @@ class Auth_Controller extends Controller
         echo json_encode($data); 
     }
 
-    
-    public function send_mail($title='',$msg='',$body='',$to='')
-    {
-        // $data=array(
-        //     'from'=>'projectibda@abc.com',
-        //     'to'=>'suraj@oliveindesign.com',
-        //     'password'=>'123456'
-      
-            $config = Array(
-                'protocol' => 'sendmail',
-                'smtp_host' => 'ssl://majlis.tasjeel.ae',
-                // 'smtp_host' => 'ssl://karak.tasjeel.ae',      //given by shritej
-                'smtp_port' => 465,
-                'smtp_user' => 'info@kabat.ae', // change it to yours
-                'smtp_pass' => 'D9R+-a6k-TCK', // change it to yours
-                'mailtype' => 'html',
-                'charset'=>'utf-8',
-                // 'charset' => 'iso-8859-1',
-                'wordwrap' => TRUE
-              );          
-            //   'foodtruck@gmail.com'
-              
-                     $message = 'Your foodtruck is successfully register.Login to setup your foodtruck. <br>';
-                     $message .= '<p>Link: '.base_url().'owner/login'.'</p>';
-                     $message .= '<p>Username: '.$data['to'].'</p>';
-                     $message .= '<p>Password: '.$data['password'].'</p>';
-    
-                    $mail_view=$this->ci->load->view('admin/emailer',$data,true);
-                     
-                    $this->ci->load->library('email', $config);
-                    $this->ci->email->set_newline("\r\n");
-                    $this->ci->email->from('info@foodtrucks.ae'); // change it to yours
-                    $this->ci->email->to($data['to']);// change it to yours
-                    $this->ci->email->subject('Foodtruck Credentials');
-                    // $this->ci->email->message($message);
-                    $this->ci->email->message($mail_view);
-                    if($this->ci->email->send())
-                   {
-                    // echo 'Email sent.'; 
-                   } 
-                   else
-                  {
-                //    echo $this->email->print_debugger(); 
-                  }
-        
-        // );
-    }
-
-
+   
     public function send_notification($title='',$msg='',$body='',$to='')
-    {     
+    {    
 
            $msg = urlencode($msg);
             $data = array(
@@ -325,15 +277,14 @@ class Auth_Controller extends Controller
         //     $data["style"] = "picture";
         //     $data["picture"] = $img;
         // }
-        $fields = array(
-            // 'to'=>'daMLbQaDRjCxB2vkc5NmuP:APA91bG67w9xw_-Kr6yxkXN1_Kpbw-KyR5hk1sW6-gLbhgEgsdYXsMWvjjHV4DUGCN4KRcrBegMeBz1WPqy17QxaqdFLlHsicqMIYXG4S0lyAxuanaglRiFDjR0XxmztvwND5BgzAXAI',
+        $fields = array(           
             'to'=>$to,
             'notification'=>$data,
             // 'data'=>'Datapayload',
             "priority" => "high",
         );
         $headers = array(
-            'Authorization: key=AAAA-2W9tn8:APA91bHKGzkuv11Ks3mkp60e08NstH2UixdGS4-lZlG69JvxFFfYIXP5U2JoS8pD7UPggAA0wcXlYEIbgbsNLBGwPaBpJ8pn0by1QAZf-UmF3paXjXqMJiyYlKobEJSwG-kaxTqbh394',
+            'Authorization: key='.env("NOTIFICATION_AUTH_KEY"),
             'Content-Type: application/json'
         );
         $ch = curl_init();
