@@ -35,4 +35,11 @@ class User_model extends Model
 
                     return $data;
     }
+
+    public function children(){
+        return $this->hasMany(Parent_child_model::class,'parent_id','user_id'); 
+    }
+    public function auth_users(){
+        return $this->hasMany(Auth_users::class,'user_id','user_id'); 
+    }
 }

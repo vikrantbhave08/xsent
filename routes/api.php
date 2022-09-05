@@ -33,4 +33,8 @@ Route::post('forgot-password', [Auth_controller::class, 'forgot_password']);
 
 Route::post('reset-password', [App_controller::class, 'reset_password']);
 Route::post('get_data', [App_controller::class, 'get_data']);
+Route::post('add-child', [App_controller::class, 'add_child']);
+Route::Post('getall-children', [App_controller::class, 'getall_children']); 
+
+Route::Post('add-money-to-wallet', [App_controller::class, 'add_money_to_wallet']); 
 
