@@ -114,7 +114,7 @@ class Auth_Controller extends Controller
                     
                     if($create_auth_user)
                     {
-                        $data=array('status'=>false,'msg'=>'User registered successfully','token'=>$gen_token);
+                        $data=array('status'=>false,'msg'=>'User registered successfully','token'=>$gen_token,'user_role'=> $request['user_role']);
                     } else {                        
                         $data=array('status'=>false,'msg'=>'Something went wrong');
                     }
@@ -152,6 +152,8 @@ class Auth_Controller extends Controller
 
                     if(!empty($auth_user))
                     {
+
+                        $user_role=$auth_user->user_role;
                                             
                         $auth_user->users_token=$gen_token;
                         $auth_user->fcm_token=$request['fcm_token'];                        
@@ -159,6 +161,8 @@ class Auth_Controller extends Controller
                         $auth_user->save();                    
                         
                     } else {
+
+                        // $user_role=$auth_user->user_role;
 
                         $create_auth_user = Auth_users::create([
                             'user_id' => $user_validate['user_data']['user_id'],
@@ -171,7 +175,7 @@ class Auth_Controller extends Controller
 
                     }
 
-                    $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token);
+                    $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,'user_role'=> $user_role);
 
                 } else {
                     $data=array('status'=>false,'msg'=>'Invalid credentials');

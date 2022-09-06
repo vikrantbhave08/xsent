@@ -16,8 +16,7 @@ use App\Http\Controllers\api\Auth_controller;
 */
 
 
-Route::get('greeting', [App\Http\Controllers\api\Auth_controller::class, 'greeting']);
-Route::get('/greetings', 'App\Http\Controllers\api\Auth_controller@greeting');
+Route::get('/greeting', [Auth_controller::class, 'greeting']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
