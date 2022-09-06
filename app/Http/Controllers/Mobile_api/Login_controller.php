@@ -160,12 +160,11 @@ class Login_controller extends Controller
                         $auth_user->save();                    
                         
                     } else {
-
-                        // $user_role=$auth_user->user_role;
+                        $user_role=$user_validate['user_data']['user_role'];
 
                         $create_auth_user = Auth_users::create([
                             'user_id' => $user_validate['user_data']['user_id'],
-                            'user_role' => $request['user_role'],
+                            'user_role' => $user_validate['user_data']['user_role'],
                             'fcm_token' => $request['fcm_token'],
                             'users_token' => $gen_token,
                             'created_at' =>  date('Y-m-d H:i:s'),
@@ -244,20 +243,21 @@ class Login_controller extends Controller
         if($request['email'])
         {
             
-            // $check_user_exists=$this->check_user_and_validate(array('email'=>$request_data['email']));
-            // if($check_user_exists['status'])
-            // {
+            $check_user_exists=$this->check_user_and_validate(array('email'=>$request['email'],'user_role'=>$request['user_role']));
+            if($check_user_exists['status'])
+            {
+                $details = [
+                    'title' => 'Forgot Password Email',
+                    'body' => 'Your password is '.$request['pass_phrase']
+                ];
+               
+                $email_response=\Mail::to('suraj@appcartsystems.com')->send(new \App\Mail\SendMail($details));
 
-            // }
+                $data=array('status'=>true,'msg'=>'Password is sent to your email id','email_response'=>$email_response);
 
-            $details = [
-                'title' => 'Mail from ItSolutionStuff.com',
-                'body' => 'This is for testing email using smtp'
-            ];
-           
-            \Mail::to('suraj@appcartsystems.com')->send(new \App\Mail\SendMail($details));
-           
-            dd("Email is Sent.");
+            } else {
+                $data=array('status'=>false,'msg'=>'Email not exists');
+            }          
 
             // $gen_otp=mt_rand(111111,999999);              
             // $data=array('contact_no'=>'+919075554309','msg'=>$gen_otp.' is your Xsent verification code.');

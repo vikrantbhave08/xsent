@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Mobile_api\Auth_controller;
+use App\Http\Controllers\Mobile_api\Login_controller;
 
 use App\Models\User_model;
 use App\Models\Auth_users;
@@ -35,7 +35,7 @@ class App_controller extends Controller
         if($request['email'] && $request['password'] && $request['child_role'])
          {
             $request_data=$request->all();
-            $check_user_exists=Auth_controller::check_user_and_validate(array('email'=>$request_data['email'],'user_role'=>$request['child_role']));  //here user role 4 is for child
+            $check_user_exists=Login_controller::check_user_and_validate(array('email'=>$request_data['email'],'user_role'=>$request['child_role']));  //here user role 4 is for child
            
             if(!$check_user_exists['status'])
             {
