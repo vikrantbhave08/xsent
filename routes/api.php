@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\api\App_controller;
-// use App\Http\Controllers\api\Auth_controller;
+use App\Http\Controllers\api\App_controller;
+use App\Http\Controllers\api\Auth_controller;
 /*
 |--------------------------------------------------------------------------
 | API Routes
