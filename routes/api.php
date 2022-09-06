@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mobile_api\App_controller;
 use App\Http\Controllers\Mobile_api\Auth_controller;
+use App\Http\Controllers\Mobile_api\Example_controller;
 use App\Http\Controllers\Home_controller;
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,7 @@ use App\Http\Controllers\Home_controller;
 
 
 
-Route::get('/greeting', [Home_controller:: class, 'index']);
+Route::get('/greeting', [Example_controller::class, 'index']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
