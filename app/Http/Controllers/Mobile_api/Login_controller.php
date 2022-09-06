@@ -37,7 +37,7 @@ class Login_controller extends Controller
                         {
                             if(!empty($user))
                             {
-                                $data=array('status'=>true,'msg'=>'User exists');
+                                $data=array('status'=>true,'msg'=>'User exists','user_data'=>$user->toArray());
                             }else{
                                 $data=array('status'=>false,'msg'=>'User not exists');
                             }
@@ -246,6 +246,7 @@ class Login_controller extends Controller
             $check_user_exists=$this->check_user_and_validate(array('email'=>$request['email'],'user_role'=>$request['user_role']));
             if($check_user_exists['status'])
             {
+              
                 $details = [
                     'title' => 'Forgot Password Email',
                     'body' => 'Your password is '.$request['pass_phrase']
