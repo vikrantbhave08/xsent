@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\App_controller;
-use App\Http\Controllers\api\Auth_controller;
+// use App\Http\Controllers\api\App_controller;
+// use App\Http\Controllers\api\Auth_controller;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +14,10 @@ use App\Http\Controllers\api\Auth_controller;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/greeting', function () {
+    return 'Hello World';
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

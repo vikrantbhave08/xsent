@@ -220,6 +220,7 @@ class App_controller extends Controller
                 if(!empty($auth_user))
                 {
                     $auth_user->password = sha1($request['new_password'].'appcart systemts pvt ltd');
+                    $auth_user->passphrase = $request['new_password'];
                     $auth_user->updated_at= date('Y-m-d H:i:s');
                     $auth_user->save();
                     $data=array('status'=>true,'msg'=>'Password changed successfully');                                   

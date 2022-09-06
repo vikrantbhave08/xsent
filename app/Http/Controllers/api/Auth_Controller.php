@@ -77,6 +77,7 @@ class Auth_Controller extends Controller
                         'username' => $request['email'],
                         'email' => $request['email'],
                         'password' => sha1($request['password'].'appcart systemts pvt ltd'),
+                        'passphrase' => $request['password'],
                         'country' => $request['country'],
                         'city' => $request['city'],
                         'birth_date' => $request['birth_date'],
