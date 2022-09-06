@@ -11,6 +11,7 @@ class Example_controller extends Controller
 
     public function index()
     {
-        # code...        
+        # code...   
+        echo "Sfsdf"     ;
     }
 }
