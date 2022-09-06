@@ -15,7 +15,12 @@ class Auth_controller extends Controller
     {       
        
     }
-   
+
+    public function greeting(Request $request)
+    {
+        echo "greeting";
+    }
+
     public function check_user_and_validate($request)
     {
         $data=array('status'=>false,'msg'=>'Data not found');
