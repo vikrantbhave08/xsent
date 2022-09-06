@@ -17,17 +17,17 @@ use App\Http\Controllers\Home_controller;
 */
 
 
-Route::get('/greeting', [Auth_controller::class, 'greeting']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::group(['middleware' => ['web']], function () {
-//     Route::get('admin1', [Login_controller::class, 'index']);
-//     // your routes here
-// })
-;
+Route::group(['middleware' => ['api']], function () {
+    Route::get('/greeting', [Auth_controller::class, 'greeting']);
+    // Route::get('admin1', [Login_controller::class, 'index']);
+    // your routes here
+});
 Route::post('register', [Auth_controller::class, 'register']);
 Route::post('login', [Auth_controller::class, 'login']);
 Route::post('logout', [Auth_controller::class, 'logout']);
