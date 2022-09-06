@@ -17,7 +17,7 @@ use App\Http\Controllers\Home_controller;
 */
 
 
-Route::get('/greeting', [Home_controller::class, 'index']);
+Route::get('/greeting', [Auth_controller::class, 'greeting']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
