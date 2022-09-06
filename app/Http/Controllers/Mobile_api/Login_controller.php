@@ -248,7 +248,7 @@ class Login_controller extends Controller
               
                 $details = [
                     'title' => 'Forgot Password Email',
-                    'body' => 'Your password is '.$request['passphrase']
+                    'body' => 'Your password is '.$check_user_exists['passphrase']
                 ];
                
                 $email_response=\Mail::to('suraj@appcartsystems.com')->send(new \App\Mail\SendMail($details));
