@@ -16,7 +16,7 @@ class Auth_Controller extends Controller
        
     }
 
-    public function greeting($request)
+    public function greeting(Request $request)
     {
         echo "greeting";
     }
