@@ -114,7 +114,7 @@ class Auth_Controller extends Controller
                     
                     if($create_auth_user)
                     {
-                        $data=array('status'=>false,'msg'=>'User registered successfully','token'=>$gen_token,'user_role'=> $request['user_role']);
+                        $data=array('status'=>true,'msg'=>'User registered successfully','token'=>$gen_token,'user_role'=> $request['user_role']);
                     } else {                        
                         $data=array('status'=>false,'msg'=>'Something went wrong');
                     }
