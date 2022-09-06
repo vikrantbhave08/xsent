@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\App_controller;
 use App\Http\Controllers\api\Auth_controller;
-use App\Providers\RouteServiceProvider;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,6 +17,8 @@ use App\Providers\RouteServiceProvider;
 
 
 Route::get('/greeting', [Auth_controller::class, 'greeting']);
+
+Route::get('greetings', 'Auth_controller@greeting');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
