@@ -199,8 +199,7 @@ class Login_controller extends Controller
             $auth_user=Auth_users::where('users_token',$request['token'])->first();
                   
             if(!empty($auth_user))
-            {
-                                    
+            {                                    
                 $auth_user->users_token='';
                 $auth_user->updated_at= date('Y-m-d H:i:s');
                 $auth_user->save();                    
@@ -249,7 +248,7 @@ class Login_controller extends Controller
               
                 $details = [
                     'title' => 'Forgot Password Email',
-                    'body' => 'Your password is '.$request['pass_phrase']
+                    'body' => 'Your password is '.$request['passphrase']
                 ];
                
                 $email_response=\Mail::to('suraj@appcartsystems.com')->send(new \App\Mail\SendMail($details));
