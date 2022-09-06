@@ -8,19 +8,14 @@ use Illuminate\Http\Request;
 use App\Models\User_model;
 use App\Models\Auth_users;
 
-class Auth_Controller extends Controller
+class Auth_controller extends Controller
 {
     //
     public function __construct()
     {       
        
     }
-
-    public function greeting(Request $request)
-    {
-        echo "greeting";
-    }
-
+   
     public function check_user_and_validate($request)
     {
         $data=array('status'=>false,'msg'=>'Data not found');
@@ -310,6 +305,4 @@ class Auth_Controller extends Controller
         //  print_r($result); 
       
     }
-
 }
-

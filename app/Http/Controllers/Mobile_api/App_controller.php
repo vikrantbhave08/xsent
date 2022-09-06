@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Mobile_api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Mobile_api\Auth_controller;
 use Illuminate\Http\Request;
+
+
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Mobile_api\Auth_controller;
 
 use App\Models\User_model;
 use App\Models\Auth_users;
@@ -15,7 +17,6 @@ use App\Models\Wallet_transaction_model;
 
 class App_controller extends Controller
 {
-    
     public function __construct()
     {               
         $this->middleware('CheckApiToken:app');
@@ -235,5 +236,4 @@ class App_controller extends Controller
         
         echo json_encode($data);
     }
-
 }
