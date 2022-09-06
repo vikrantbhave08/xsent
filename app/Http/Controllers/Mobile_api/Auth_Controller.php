@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Mobile_api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\User_model;
-use App\Models\Auth_users;
+// use App\Models\User_model;
+// use App\Models\Auth_users;
 
 class Auth_controller extends Controller
 {
