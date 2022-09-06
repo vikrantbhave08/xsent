@@ -18,8 +18,6 @@ use App\Http\Controllers\api\Auth_controller;
 
 Route::get('/greeting', [Auth_controller::class, 'greeting']);
 
-Route::get('greetings', 'Auth_controller@greeting');
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
