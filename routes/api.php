@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\App_controller;
-use App\Http\Controllers\Api\Auth_controller;
+use App\Http\Controllers\Mobile_api\App_controller;
+use App\Http\Controllers\Mobile_api\Auth_controller;
 use App\Http\Controllers\Home_controller;
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +19,14 @@ use App\Http\Controllers\Home_controller;
 
 
 
+Route::get('/greeting', [Auth_controller:: class, 'greeting']);
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::group(['middleware' => ['api']], function () {
-    Route::get('/greeting', [Auth_controller::class, 'greeting']);
     // Route::get('admin1', [Login_controller::class, 'index']);
     // your routes here
 });
