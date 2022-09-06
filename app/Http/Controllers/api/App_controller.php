@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\api\Auth_controller;
+use App\Http\Controllers\Api\Auth_controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User_model;
 use App\Models\Auth_users;
-use App\Models\Parent_child_model;
+use App\Models\Parent_child_model; 
 use App\Models\Wallet_model;
 use App\Models\Wallet_transaction_model;
 
