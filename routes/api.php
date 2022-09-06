@@ -20,7 +20,7 @@ use App\Http\Controllers\Home_controller;
 
 
 
-Route::get('/greeting', [Auth_controller::class, 'greeting']);
+Route::get('/greeting', [App_controller::class, 'greeting']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
