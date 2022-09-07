@@ -42,6 +42,9 @@ Route::get('admin/complaints', [Complaints_controller::class, 'index']);
 Route::get('admin/complaint-details', [Complaints_controller::class, 'complaint_details']);
 Route::get('admin/requests', [Requests_controller::class, 'index']);
 Route::get('admin/register-users', [Users_controller::class, 'index']);
+
+Route::post('admin/payment', [Users_controller::class, 'payment']);
+
 Route::get('admin/register-user-details', [Users_controller::class, 'register_user_details']);
 
 

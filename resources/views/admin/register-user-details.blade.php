@@ -337,6 +337,7 @@
     <script>
 
 $('.register_uesrs').addClass('active');
+
         // SELECT DATE
         flatpickr("#date_from", {
 

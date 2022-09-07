@@ -32,10 +32,14 @@ class App_controller extends Controller
     {   
         $data=array('status'=>false,'msg'=>'Data not found');
 
-        if($request['email'] && $request['password'] && $request['child_role'])
+        if($request['email'] && $request['password'] && $request['user_role'] && $request['name'])
          {
+            $fullname=explode(" ",$request['name']);
+            $request['first_name']=count($fullname)>=1 ? $fullname[0] : '' ;
+            $request['last_name']=count($fullname)>1 ? $fullname[1] : '' ;
+
             $request_data=$request->all();
-            $check_user_exists=Login_controller::check_user_and_validate(array('email'=>$request_data['email'],'user_role'=>$request['child_role']));  //here user role 4 is for child
+            $check_user_exists=Login_controller::check_user_and_validate(array('email'=>$request_data['email'],'user_role'=>$request['user_role']));  //here user role 4 is for child
            
             if(!$check_user_exists['status'])
             {
@@ -49,12 +53,14 @@ class App_controller extends Controller
                 if(empty($user))
                 {
                     $create_user = User_model::create([                        
-                        'user_role' => $request['child_role'],
+                        'user_role' => $request['user_role'],
                         'first_name' => $request['first_name'],
                         'last_name' => $request['last_name'],
                         'username' => $request['email'],
                         'email' => $request['email'],
+                        'contact_no' => $request['contact_no'],
                         'password' => sha1($request['password'].'appcart systemts pvt ltd'),
+                        'passphrase' => $request['password'],
                         'country' => $request['country'],
                         'city' => $request['city'],
                         'birth_date' => $request['birth_date'],
@@ -77,7 +83,7 @@ class App_controller extends Controller
 
                     $user=array(
                         'user_id' => $create_user,
-                        'user_role' => $request['child_role']
+                        'user_role' => $request['user_role']
                     );
 
                 } else {
@@ -87,7 +93,7 @@ class App_controller extends Controller
 
                     $create_auth_user = Auth_users::create([
                         'user_id' => $user['user_id'],
-                        'user_role' => $request['child_role'],
+                        'user_role' => $request['user_role'],
                         'users_token' => $gen_token,
                         'fcm_token' => $request['fcm_token'],
                         'created_at' =>  date('Y-m-d H:i:s'),
@@ -96,7 +102,7 @@ class App_controller extends Controller
                     
                     if($create_auth_user)
                     {
-                        $data=array('status'=>false,'msg'=>'User registered successfully','token'=>$gen_token);
+                        $data=array('status'=>true,'msg'=>'User registered successfully','token'=>$gen_token);
                     } else {                        
                         $data=array('status'=>false,'msg'=>'Something went wrong');
                     }
@@ -115,22 +121,28 @@ class App_controller extends Controller
 
     public function getall_children(Request $request)
     {       
-        $data=array('status'=>false,'msg'=>'Data not found');
+        $data=array('status'=>false,'msg'=>'Data not found','children'=>array());
 
         $logged_user=Auth::mobile_app_user($request['token']);
 
-        $children=User_model::select('users.*','parent_child.parent_id')      
+        $children=User_model::select('users.*','parent_child.parent_id','wallet.balance')      
         ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.child_id')    
+        ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')    
         ->where('parent_child.parent_id',$logged_user['user_id'])
         ->get()->toArray();     
         if(!empty($children))
         {
             $data=array('status'=>true,'msg'=>'Data found','children'=>$children);
-        }
+        } 
         
         echo json_encode($data);
     }
 
+
+    public function add_money_to_wallet_for_parent(Request $request)
+    {
+        // $this->
+    }
 
     public function add_money_to_wallet(Request $request)
     {       

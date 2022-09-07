@@ -12,6 +12,10 @@
                                     <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
                                         <h4 class="page-title">Registered Users</h4>
                                     </div>
+                                    <form id="payment_form" action="{{url('/admin/payment')}}"  method="POST">
+                                         @csrf
+                                        <button type="submit" id="checkout-button">Checkout</button>
+                                    </form>
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                         <div class="calender-view">
                                             <input type=" text" class="form-control calender" id="date_from"
@@ -30,10 +34,14 @@
                                                         <tr>
                                                             <th></th>
                                                             <th>Sr. No</th>
-                                                            <th>User ID</th>
+                                                            <!-- <th>User ID</th> -->
                                                             <th>User Name</th>
+                                                            <th>Email Id</th>
                                                             <th>Registered As</th>
+                                                            <th>Parent Name</th>
+                                                            <th>Parent Email</th>
                                                             <th>Wallet Balance</th>
+                                                            <th>Created At</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -44,10 +52,14 @@
                                                        <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>{{ $usr_no+1 }}</td>
-                                                            <td>541023</td>
+                                                            <!-- <td>541023</td> -->
                                                             <td>{{ $user['first_name'].' '.$user['last_name'] }}</td>
+                                                            <td>{{ $user['email'] }}</td>
                                                             <td>{{ $user['role_name'] }}</td>
-                                                            <td>AED 2200</td>
+                                                            <td>{{ $user['parent_name'] }}</td>
+                                                            <td>{{ $user['parent_email'] }}</td>
+                                                            <td>{{ $user['balance']!=null ? 'AED '.$user['balance'] : 'AED 0' }}</td>
+                                                            <td>{{ $user['created_at'] }}</td>
                                                             <td><button class="active-btn">Active</button></td>
                                                             <td>
                                                                 <span class="table-icon"><a
@@ -95,6 +107,9 @@
     <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/flatpickr.js') }}"></script>
     <script src="{{ asset('assets/dist/js/common-script.js') }}"></script>
+    <script src="{{ asset('assets/dist/js/jquery.validate.js') }}"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
 
 
 
@@ -149,7 +164,7 @@
                 dropdownParent: $('#sendremarkModal')
             });
             $('#registereUser').DataTable({
-                scrollY: 200,
+                scrollY: 500,
                 scrollX: true,
                 // "bPaginate": false,
                 "ordering": false,
@@ -165,6 +180,70 @@
                 }
             });
         });
+
+
+        // $("#payment_form").validate({
+        //     rules: {                
+        //         // username: {
+        //         //     required: true
+        //         // },
+        //         // password: {
+        //         //     required: true
+        //         // },
+
+        //     },
+        //     messages: {
+                           
+        //         // username: {
+        //         //     required: "Enter Username"
+        //         // },
+        //         // password: {
+        //         //     required: "Enter Password"
+        //         // },
+        //     },          
+        //     submitHandler: function (form, message) {
+             
+        //             redUrl = "{{url('/admin/payment')}}";             
+
+        //         $.ajax({
+        //             url: redUrl,
+        //             type: 'post',
+        //             data: new FormData(form),
+        //             dataType: 'json',
+        //             contentType: false, // The content type used when sending data to the server.
+        //             cache: false, // To unable request pages to be cached
+        //             processData: false, // To send DOMDocument or non processed data file it is set to false
+        //             success: function (res) {
+
+        //                 if (res.flag) {
+
+        //                     $(".login-err").css("color", "green");
+        //                     $(".login-err").html(res.msg);
+        //                     setTimeout(function () {
+        //                         window.location.href = "{{ url('/admin/dashboard') }}";
+        //                     }, 3000);
+
+
+
+        //                 } else {
+        //                     // fp1.close();
+        //                     $(".login-err").css("color", "red");
+        //                     $(".login-err").html(res.msg);
+        //                     setTimeout(function () {
+        //                         // location.reload();
+        //                     }, 3000);
+        //                 }
+
+
+        //             },
+        //             error: function (xhr) {
+        //                 console.log(xhr);
+        //             }
+        //         });
+
+        //     }
+        // }); 
+
     </script>
 </body>
 

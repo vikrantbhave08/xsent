@@ -59,8 +59,13 @@ class Login_controller extends Controller
 
         $data=array('status'=>false,'msg'=>'Data not found');
 
-        if($request['email'] && $request['password'] && $request['user_role'])
+        if($request['email'] && $request['password'] && $request['user_role'] && $request['name'])
          {
+            
+            $fullname=explode(" ",$request['name']);
+            $request['first_name']=count($fullname)>=1 ? $fullname[0] : '' ;
+            $request['last_name']=count($fullname)>1 ? $fullname[1] : '' ;
+
             $request_data=$request->all();
             $check_user_exists=$this->check_user_and_validate(array('email'=>$request_data['email'],'user_role'=>$request_data['user_role']));
            
@@ -80,6 +85,7 @@ class Login_controller extends Controller
                         'last_name' => $request['last_name'],
                         'username' => $request['email'],
                         'email' => $request['email'],
+                        'contact_no' => $request['contact_no'],
                         'password' => sha1($request['password'].'appcart systemts pvt ltd'),
                         'passphrase' => $request['password'],
                         'country' => $request['country'],
@@ -225,7 +231,7 @@ class Login_controller extends Controller
         { 
             $gen_otp=mt_rand(111111,999999);  
             
-            $data=array('contact_no'=>'+919075554309','msg'=>$gen_otp.' is your Xsent verification code.');
+            $data=array('contact_no'=>'+971'.$request['contact_no'],'msg'=>$gen_otp.' is your Xsent verification code.');
 
             //  $response=send_otp($data); 
 
@@ -242,21 +248,21 @@ class Login_controller extends Controller
         if($request['email'])
         {
             
-            $check_user_exists=$this->check_user_and_validate(array('email'=>$request['email'],'user_role'=>$request['user_role']));
-            if($check_user_exists['status'])
+            $check_user_exists= User_model::where('email',$request['email'])->first(); 
+            if(!empty($check_user_exists))
             {
-              
+                $check_user_exists=$check_user_exists->toArray();
                 $details = [
                     'title' => 'Forgot Password Email',
                     'body' => 'Your password is '.$check_user_exists['user_data']['passphrase']
                 ];
                
-                $email_response=\Mail::to('suraj@appcartsystems.com')->send(new \App\Mail\SendMail($details));
+                $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
 
                 $data=array('status'=>true,'msg'=>'Password is sent to your email id','email_response'=>$email_response);
 
             } else {
-                $data=array('status'=>false,'msg'=>'Email not exists');
+                $data=array('status'=>false,'msg'=>'User not found');
             }          
 
             // $gen_otp=mt_rand(111111,999999);              
