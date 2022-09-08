@@ -2,6 +2,9 @@
 @include('admin/header')
     <link rel="stylesheet" href="{{ asset('assets/dist/css/jquery.dataTables.min.css') }}">
     <link href="{{ asset('assets/dist/sass/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/dist/css/checkout.css') }}" rel="stylesheet">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
             <main class="content-holder">
                 <div class="container-fluid">
@@ -12,10 +15,23 @@
                                     <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
                                         <h4 class="page-title">Registered Users</h4>
                                     </div>
-                                    <form id="payment_form" action="{{url('/admin/payment')}}"  method="POST">
-                                         @csrf
+                                    <form id="payment-form" action="{{url('/admin/payment')}}"  method="POST">
+                                      
+                                        @csrf
                                         <button type="submit" id="checkout-button">Checkout</button>
                                     </form>
+
+                                    <!-- <form id="payment-form">
+                                    <div id="payment-element">
+                                   
+                                    </div>
+                                    <button id="submit">
+                                        <div class="spinner hidden" id="spinner"></div>
+                                        <span id="button-text">Pay now</span>
+                                    </button>
+                                    <div id="payment-message" class="hidden"></div>
+                                    </form> -->
+
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                         <div class="calender-view">
                                             <input type=" text" class="form-control calender" id="date_from"
@@ -103,15 +119,13 @@
     <script src="{{ asset('assets/dist/js/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/jquery.dataTables.min.js') }}"></script>
-
+    
     <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/flatpickr.js') }}"></script>
     <script src="{{ asset('assets/dist/js/common-script.js') }}"></script>
     <script src="{{ asset('assets/dist/js/jquery.validate.js') }}"></script>
     <script src="https://js.stripe.com/v3/"></script>
-
-
-
+    <!-- <script src="{{ asset('assets/dist/js/checkout.js') }}"></script> -->
 
 
     <script>
@@ -182,7 +196,7 @@
         });
 
 
-        // $("#payment_form").validate({
+        // $("#payment-form").validate({
         //     rules: {                
         //         // username: {
         //         //     required: true

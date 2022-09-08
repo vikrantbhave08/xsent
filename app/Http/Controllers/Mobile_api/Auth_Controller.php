@@ -228,9 +228,9 @@ class Auth_controller extends Controller
         { 
             $gen_otp=mt_rand(111111,999999);  
             
-            $data=array('contact_no'=>'+919075554309','msg'=>$gen_otp.' is your Xsent verification code.');
+            $data=array('contact_no'=>$request['contact_no'],'msg'=>$gen_otp.' is your Xsent verification code.');
 
-            //  $response=send_otp($data); 
+             $response=send_otp($data); 
 
             $data=array('status'=>true,'msg'=>'Otp sent successfully','otp'=>$gen_otp,'response'=>$response);
         }

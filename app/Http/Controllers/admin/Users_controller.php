@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\admin\Dashboard_controller;
 use Illuminate\Http\Request;
+use App;
 
 use App\Models\User_model;
 use App\Models\Auth_users;
@@ -86,76 +88,58 @@ class Users_controller extends Controller
             $user = $user->toArray();       
         }
         
-        return $user;
+        return $user; 
     }
 
-    public function payment()
+    public function payment_status( Request $request)
+    {      
+        $payment_details=Dashboard_controller::payment_details_by_session($request->all());
+
+        echo "<pre>";
+        print_r($payment_details);
+    }
+
+    public function payment_details()
     {
-        require 'vendor/autoload.php';
-        // This is your test secret API key.
-        \Stripe\Stripe::setApiKey('sk_test_51LfGgJSCia5qiodpIeTGpYQTrWuFs8AMuCXRu3SvVF7SeyRNHn4eroQOhpUWUWCKbAIsFc3kuENWh0RBYdnYhnIn00YrHjImwW');
+            require 'vendor/autoload.php';
 
-        header('Content-Type: application/json');
+            // This is your test secret API key.
+            \Stripe\Stripe::setApiKey('sk_test_51LfGgJSCia5qiodpIeTGpYQTrWuFs8AMuCXRu3SvVF7SeyRNHn4eroQOhpUWUWCKbAIsFc3kuENWh0RBYdnYhnIn00YrHjImwW');
 
-        $YOUR_DOMAIN = 'http://localhost:4242/public';
+          
 
-        $stripe = new \Stripe\StripeClient('sk_test_51LfGgJSCia5qiodpIeTGpYQTrWuFs8AMuCXRu3SvVF7SeyRNHn4eroQOhpUWUWCKbAIsFc3kuENWh0RBYdnYhnIn00YrHjImwW');
+            header('Content-Type: application/json');
 
-        $PRODUCT_ID=$stripe->products->create(
-        [
-            'name' => 'Basic Dashboard',
-            'default_price_data' => [
-            'unit_amount' => 100.0,
-            'currency' => 'INR',
-            // 'recurring' => ['interval' => 'month'],
-            ],
-            'expand' => ['default_price'],
-        ]
-        );
+            try {
+                // retrieve JSON from POST body
+                $jsonStr = file_get_contents('php://input');
+                $jsonObj = json_decode($jsonStr);
 
+                // Create a PaymentIntent with amount and currency
+                $paymentIntent = \Stripe\PaymentIntent::create([
+                    'amount' => 100,
+                    'currency' => 'inr',
+                    'automatic_payment_methods' => [
+                        'enabled' => true,
+                    ],
+                ]);
+
+                $output = [
+                    'clientSecret' => $paymentIntent->client_secret,
+                ];
+
+                echo json_encode($output);
+            } catch (Error $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+            }
+    }
+
+    public function prebuild_checkout_page()
+    {
        
+        $checkout_session = Dashboard_controller::prebuild_checkout_page();       
 
-        $PRICE_ID=$stripe->prices->create(
-            [
-              'product' => $PRODUCT_ID->id,
-              'unit_amount' => 100.0,
-              'currency' => 'INR',
-            //   'recurring' => ['interval' => 'month'],
-            ]
-          );
-
-        //   $checkout_session = \Stripe\Checkout\Session::create([
-        //     'line_items' => [[
-        //       # Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
-        //       'price' => $PRICE_ID,
-        //       'quantity' => 1,
-        //     ]],
-        //     'mode' => 'payment',
-        //     'success_url' => $YOUR_DOMAIN . '/success.html',
-        //     'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
-        //   ]);
-
-
-        // echo $PRICE_ID;
-        // exit;
-      
-
-          $checkout_session=$stripe->checkout->sessions->create([
-            'success_url' => 'https://example.com/success',
-            'cancel_url' => 'https://example.com/cancel',
-            'line_items' => [
-              [
-                'price' => $PRICE_ID->id,
-                'quantity' => 1,
-              ],
-            ],
-            'mode' => 'payment',
-          ]);
-
-          echo $checkout_session;
-          exit;
-
-        header("HTTP/1.1 303 See Other");
-        header("Location: " . $checkout_session->url);
+        return redirect($checkout_session->url);
     }
 }

@@ -43,9 +43,8 @@ Route::get('admin/complaint-details', [Complaints_controller::class, 'complaint_
 Route::get('admin/requests', [Requests_controller::class, 'index']);
 Route::get('admin/register-users', [Users_controller::class, 'index']);
 
-Route::post('admin/payment', [Users_controller::class, 'payment']);
+Route::post('admin/payment_details', [Users_controller::class, 'payment_details']);
+Route::post('admin/payment', [Users_controller::class, 'prebuild_checkout_page']);
+Route::get('admin/payment-status', [Users_controller::class, 'payment_status']);
 
 Route::get('admin/register-user-details', [Users_controller::class, 'register_user_details']);
-
-
-
