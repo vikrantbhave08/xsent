@@ -18,7 +18,7 @@ class Home_controller extends Controller
 
     public function index()
     {
-        echo "home";
+        // echo "home";
         // return view('homepage',['user_role'=>1]);
     }
 
