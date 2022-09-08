@@ -26,9 +26,7 @@ class App_controller extends Controller
 
     public function reset_password(Request $request)
     {   
-        echo "asd";
-        exit;
-
+       
         $data=array('status'=>false,'msg'=>'Data not found');
         
         if($request['token'] && $request['current_password'] && $request['new_password'])
