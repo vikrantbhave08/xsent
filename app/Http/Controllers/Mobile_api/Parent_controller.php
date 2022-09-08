@@ -161,7 +161,7 @@ class Parent_controller extends Controller
             $from_wallet_balance=$from_wallet->balance;
         }
         // 'IFNULL( wallet.balance , 0 )'
-        $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,0) as balance')) 
+        $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,"0") as balance')) 
         ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.child_id')    
         ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')  
         ->where('parent_child.parent_id',$logged_user['user_id'])
