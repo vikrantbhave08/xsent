@@ -15,17 +15,12 @@ use App\Models\Parent_child_model;
 use App\Models\Wallet_model;
 use App\Models\Wallet_transaction_model;
 
-class App_controller extends Controller
+class Parent_controller extends Controller
 {
     public function __construct()
     {               
         $this->middleware('CheckApiToken:app');
         
-    }
-
-    public function greeting(Request $request)
-    {
-        echo "greeting";
     }
 
     public function add_child(Request $request)
@@ -139,10 +134,6 @@ class App_controller extends Controller
     }
 
 
-    public function add_money_to_wallet_for_parent(Request $request)
-    {
-        // $this->
-    }
 
     public function add_money_to_wallet(Request $request)
     {       
@@ -154,7 +145,7 @@ class App_controller extends Controller
             $logged_user=Auth::mobile_app_user($request['token']);
 
             if(empty($users_wallet_exists))
-            {                
+            {               
                 
                 $create_wallet=Wallet_model::create([                        
                                     'user_id' => $request['user_id'],
@@ -211,9 +202,7 @@ class App_controller extends Controller
 
             }
 
-        }
-
-      
+        }      
         
         echo json_encode($data);
     }
@@ -221,9 +210,7 @@ class App_controller extends Controller
    
 
     public function reset_password(Request $request)
-    {      
-
-        
+    {   
         $data=array('status'=>false,'msg'=>'Data not found');
         
         if($request['token'] && $request['current_password'] && $request['new_password'])

@@ -150,8 +150,15 @@ class Auth_controller extends Controller
                     $auth_user=Auth_users::where('user_id',$user_validate['user_data']['user_id'])->where('user_role',$request['user_role'])->first();
                   
 
+                    echo "<pre>";
+                    print_r($auth_user);
+                    exit;
+
                     if(!empty($auth_user))
                     {
+
+                        echo "Dfg";
+                        exit;
 
                         $user_role=$auth_user->user_role;
                                             
