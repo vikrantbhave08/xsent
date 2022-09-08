@@ -15,4 +15,8 @@ class Wallet_model extends Model
     protected $primaryKey = 'wallet_id';   //make default primary key
 
     protected $guarded = []; //allow  fill all data in table  
+
+    protected $attributes = [
+        'balance' => 0     
+    ];
 }

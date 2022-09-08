@@ -36,6 +36,7 @@ Route::post('forgot-password', [Login_controller::class, 'forgot_password']);
 
 Route::post('reset-password', [App_controller::class, 'reset_password']);
 
+Route::post('get-users-profile', [Parent_controller::class, 'get_users_profile']);
 Route::post('add-child', [Parent_controller::class, 'add_child']);
 Route::Post('getall-children', [Parent_controller::class, 'getall_children']); 
 Route::Post('get-child-details', [Parent_controller::class, 'get_child_details']); 

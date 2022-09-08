@@ -18,6 +18,7 @@ class User_model extends Model
 
     protected $guarded = []; //allow  fill all data in table  
 
+   
     public function check_user_exists($request)
     {
         $user=User_model::select('users.*','auth_user.auth_id')

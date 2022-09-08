@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Mobile_api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use DB;
+// use App\Http\Controllers\Mobile_api\DB;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,35 @@ class Parent_controller extends Controller
         
     }
 
+    public function parent_balance($request)
+    {
+        return Wallet_model::where('user_id',$request['user_id'])->first();
+    }
+    
+    public function profile_data($request)
+    {
+        return User_model::select('users.*','wallet.balance') 
+            ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')    
+            ->where('users.user_id',$request['user_id'])
+            ->first(); 
+    }
+
+    public function get_users_profile(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        $profile_data=$this->profile_data($logged_user);
+        
+        if(!empty($profile_data))
+        {
+            $data=array('status'=>true,'msg'=>'Profile data','profile_data'=>$profile_data->toArray());
+        }
+
+        return $data;
+       
+    }
     public function add_child(Request $request)
     {   
         $data=array('status'=>false,'msg'=>'Data not found');
@@ -113,26 +144,56 @@ class Parent_controller extends Controller
 
          echo json_encode($data); 
     }
+   
 
     public function getall_children(Request $request)
     {       
         $data=array('status'=>false,'msg'=>'Data not found','children'=>array());
-
+        
         $logged_user=Auth::mobile_app_user($request['token']);
 
-        $children=User_model::select('users.*','parent_child.parent_id','wallet.balance')      
+        $from_wallet=$this->parent_balance($logged_user);
+
+        $from_wallet_balance=0;
+        
+        if(!empty($from_wallet))
+        {
+            $from_wallet_balance=$from_wallet->balance;
+        }
+        // 'IFNULL( wallet.balance , 0 )'
+        $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,0) as balance')) 
         ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.child_id')    
-        ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')    
+        ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')  
+       
         ->where('parent_child.parent_id',$logged_user['user_id'])
         ->get()->toArray();     
         if(!empty($children))
         {
-            $data=array('status'=>true,'msg'=>'Data found','children'=>$children);
+            $data=array('status'=>true,'msg'=>'Data found','children'=>$children,'parent_balance'=>$from_wallet_balance);
         } 
         
         echo json_encode($data);
     }
+    
+    public function get_child_details(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found','children'=>'');
 
+        if($request['user_id'])
+        {
+            $children=User_model::select('users.*','parent_child.parent_id','wallet.balance')      
+            ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.child_id')    
+            ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')    
+            ->where('parent_child.child_id',$request['user_id'])
+            ->first();     
+            if(!empty($children))
+            {
+                $data=array('status'=>true,'msg'=>'Data found','children'=>$children->toArray());
+            } 
+            
+            echo json_encode($data);
+        }
+    }
 
 
     public function add_money_to_wallet(Request $request)
@@ -144,6 +205,17 @@ class Parent_controller extends Controller
 
             $logged_user=Auth::mobile_app_user($request['token']);
 
+            $from_wallet=Wallet_model::where('user_id',$logged_user['user_id'])->first(); 
+
+            $from_wallet_balance=0;
+            
+            if(!empty($from_wallet))
+            {
+                $from_wallet_balance=$from_wallet->balance;
+            }
+
+            if($from_wallet_balance>=$request['amount'])
+            {
             if(empty($users_wallet_exists))
             {               
                 
@@ -168,12 +240,15 @@ class Parent_controller extends Controller
                         'status_msg' => 'Added money from parent to student',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
-                        ])->wallet_id;
+                        ])->wallet_id;                       
 
                     $data=array('status'=>true,'msg'=>'Money added into the wallet');
                 }else{
                     $data=array('status'=>false,'msg'=>'Money not added');
                 }
+
+                $from_wallet->balance=$from_wallet->balance - $request['amount'];
+                $from_wallet->save();
 
             } else {
 
@@ -200,12 +275,19 @@ class Parent_controller extends Controller
 
                 }
 
+                $from_wallet->balance=$from_wallet->balance - $request['amount'];
+                $from_wallet->save();
+
             }
+        } else {
+            $data=array('status'=>false,'msg'=>'Insufficient balance');
+        }
 
         }      
         
         echo json_encode($data);
     }
+  
 
    
 }

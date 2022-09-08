@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\admin\Dashboard_controller;
 use Illuminate\Http\Request;
 use App;
+use DB;
 
 use App\Models\User_model;
 use App\Models\Auth_users;
@@ -62,15 +63,31 @@ class Users_controller extends Controller
 
     public function register_user_details(Request $request)
     {
-        $result['users']=User_model::select('users.*','auth_user.auth_id','user_roles.role_name')
-                        ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
-                        ->leftjoin('auth_user', 'users.user_id', '=', 'auth_user.user_id')
-                        ->where(function ($query) use ($request) {
-                            if (!empty($request['email'])) $query->where('users.username', $request['email']);
-                            if (!empty($request['user_role'])) $query->where('auth_user.user_role',$request['user_role']);
-                            if (!empty($request['password'])) $query->where('users.password',sha1($request['password'].'appcart systemts pvt ltd'));
-                        })
-                        ->whereIn('users.user_role',array(2,3,4))->get()->toArray();
+        $user_id=base64_decode($request['uid']);
+
+        // $user_details=User_model::where('users.user_id',$user_id)->first();
+            
+
+        $result['user_details']=User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit')
+                                    ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')
+                                    ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
+                                    ->where('users.user_id',$user_id)->groupBy('wallet_transaction.credit')->get()->toArray();
+
+                                    // echo "<pre>";
+                                    // print_r($result);
+                                    // exit;
+
+        
+
+        // if(!empty($user_details))
+        // {
+        //     $user_details->toArray();
+        //     $auth_users=Auth_users::select('auth_user.*')
+        //                             ->leftjoin('users', 'auth_user.user_id', '=', 'users.user_id')
+        //                             ->where('users.user_id',$user_id)
+        //                             ->groupBy('auth_user.user_id')->get()->toArray();
+           
+        // }                        
 
                                               
         return view('admin/register-user-details',$result);
