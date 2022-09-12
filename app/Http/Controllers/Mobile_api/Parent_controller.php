@@ -23,10 +23,7 @@ class Parent_controller extends Controller
 {
     public function __construct()
     {               
-        $this->middleware('CheckApiToken:app');
-        
+        $this->middleware('CheckApiToken:app');        
     }   
-  
-
    
 }

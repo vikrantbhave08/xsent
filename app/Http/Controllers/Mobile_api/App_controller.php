@@ -115,6 +115,16 @@ class App_controller extends Controller
                         'user_role' => $request['user_role']
                     );
 
+
+                    $details = [
+                        'title' => 'Your parent is registred you on xsent.',
+                        'body' => 'See your credentials below.',
+                        'username' => $request['email'],
+                        'password' => $request['password']
+                    ];
+                   
+                    $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+
                 } else {
                     $user=$user->toArray();
                 } 
@@ -131,7 +141,7 @@ class App_controller extends Controller
                     
                     if($create_auth_user)
                     {            
-                        if($request['shop_id'])
+                        if(!empty($request['shop_id']))
                         {
                             $shopkeeper=Shopkeepers_model::create([                        
                                 'salesperson_id' => $user['user_id'],
@@ -192,6 +202,11 @@ class App_controller extends Controller
         echo json_encode($data);
     }
     
+
+    public function get_wallet_transactions(Request $request)  // 1) for shop owner 
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+    }
 
     public function add_money_to_wallet(Request $request)  // 1) parent to child 2) child to shop
     {       
@@ -255,7 +270,7 @@ class App_controller extends Controller
                 if($update)
                 {
 
-                    if($request['shop_id'])
+                    if(!empty($request['shop_id']))
                     {
 
                         Shop_transaction_model::create([ 
