@@ -9,8 +9,8 @@
     <p>{{ $details['body'] }}</p><br>
     
     @if($details['username'])
-    <p>Username : {{ $details['username'] }}</p><br>
-    <p>Password : {{ $details['password'] }}</p><br>
+    <p>Username : {{ $details['username'] }}</p>
+    <p>Password : {{ $details['password'] }}</p>
     @endif
    
     <p>Thank you</p>
