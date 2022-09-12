@@ -116,8 +116,10 @@ class App_controller extends Controller
                     );
 
 
+                    $title=$request['user_role']==4 ? 'Your parent is registred you on xsent.' : 'Shop Owner registred you on xsent.';
+
                     $details = [
-                        'title' => 'Your parent is registred you on xsent.',
+                        'title' => $title ,
                         'body' => 'See your credentials below.',
                         'username' => $request['email'],
                         'password' => $request['password']
