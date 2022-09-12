@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Mobile_api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
-// use App\Http\Controllers\Mobile_api\DB;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +15,13 @@ use App\Models\Auth_users;
 use App\Models\Parent_child_model; 
 use App\Models\Wallet_model;
 use App\Models\Wallet_transaction_model;
+use App\Models\Shop_transaction_model;
 
 class Parent_controller extends Controller
 {
     public function __construct()
     {               
-        $this->middleware('CheckApiToken:app');
+        // $this->middleware('CheckApiToken:app');
         
     }
 
@@ -32,7 +32,7 @@ class Parent_controller extends Controller
     
     public function profile_data($request)
     {
-        return User_model::select('users.*','wallet.balance') 
+        return User_model::select('users.*',DB::raw('ifnull(wallet.balance,0) as balance')) 
             ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')    
             ->where('users.user_id',$request['user_id'])
             ->first(); 
@@ -160,12 +160,13 @@ class Parent_controller extends Controller
         {
             $from_wallet_balance=$from_wallet->balance;
         }
-        // 'IFNULL( wallet.balance , 0 )'
-        $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,0) as balance')) 
+
+        $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,0) as balance'),DB::raw('ifnull(SUM(shop_transactions.amount),0) as spend_amt'))
         ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.child_id')    
         ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')  
+        ->leftjoin('shop_transactions', 'users.user_id', '=', 'shop_transactions.by_user')  
         ->where('parent_child.parent_id',$logged_user['user_id'])
-        ->get()->toArray();     
+        ->groupBy('shop_transactions.by_user')->get()->toArray();     
         if(!empty($children))
         {
             $data=array('status'=>true,'msg'=>'Data found','children'=>$children,'parent_balance'=>(string)$from_wallet_balance);
@@ -180,11 +181,12 @@ class Parent_controller extends Controller
 
         if($request['user_id'])
         {
-            $children=User_model::select('users.*','parent_child.parent_id','wallet.balance')      
+            $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,0) as balance'),DB::raw('ifnull(SUM(shop_transactions.amount),0) as spend_amt'))      
             ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.child_id')    
-            ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')    
+            ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')  
+            ->leftjoin('shop_transactions', 'users.user_id', '=', 'shop_transactions.by_user')  
             ->where('parent_child.child_id',$request['user_id'])
-            ->first();     
+            ->groupBy('shop_transactions.by_user')->first();     
             if(!empty($children))
             {
                 $data=array('status'=>true,'msg'=>'Data found','children'=>$children->toArray());
@@ -285,6 +287,22 @@ class Parent_controller extends Controller
         }      
         
         echo json_encode($data);
+    }
+
+    public function qr_code_generate(Request $request)
+    {
+
+        // echo phpinfo();
+        // exit;
+        return \QrCode::size(200)->generate('{name:"suraj"}');
+
+     
+        
+        return \QrCode::format('png')->merge(public_path('images/logo.png'), 0.3, true)->errorCorrection('H')->size(300)
+        ->generate('{name:"suraj"}', public_path('images/qrcode.png'));
+
+        // return view('qrCode');
+
     }
   
 

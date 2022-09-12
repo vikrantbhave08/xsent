@@ -43,3 +43,5 @@ Route::Post('get-child-details', [Parent_controller::class, 'get_child_details']
 
 Route::Post('add-money-to-wallet', [Parent_controller::class, 'add_money_to_wallet']); 
 
+Route::get('qr-code-generate', [Parent_controller::class, 'qr_code_generate']); 
+
