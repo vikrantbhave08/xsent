@@ -36,7 +36,6 @@ function send_otp($data)
 function admin_user1()
 {    
     // echo session('admin_token');
-
     // $user = User_model::select('users.*','auth_user.auth_id','auth_user.users_token')
     //     ->leftjoin('auth_user', 'users.user_id', '=', 'auth_user.user_id')
     //     ->where('auth_user.users_token', session('admin_token'))

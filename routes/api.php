@@ -36,12 +36,15 @@ Route::post('forgot-password', [Login_controller::class, 'forgot_password']);
 
 Route::post('reset-password', [App_controller::class, 'reset_password']);
 
-Route::post('get-users-profile', [Parent_controller::class, 'get_users_profile']);
-Route::post('add-child', [Parent_controller::class, 'add_child']);
-Route::Post('getall-children', [Parent_controller::class, 'getall_children']); 
-Route::Post('get-child-details', [Parent_controller::class, 'get_child_details']); 
+Route::post('get-users-profile', [App_controller::class, 'get_users_profile']);
+Route::post('add-user', [App_controller::class, 'add_user']);
+Route::Post('get-children', [App_controller::class, 'get_children']); 
+Route::Post('get-child-details', [App_controller::class, 'get_child_details']); 
 
-Route::Post('add-money-to-wallet', [Parent_controller::class, 'add_money_to_wallet']); 
+Route::Post('add-shop', [App_controller::class, 'add_shop']); 
+Route::Post('get-shops-by-owner', [App_controller::class, 'get_shops_by_owner']); 
 
-Route::get('qr-code-generate', [Parent_controller::class, 'qr_code_generate']); 
+Route::Post('add-money-to-wallet', [App_controller::class, 'add_money_to_wallet']); 
+
+Route::Post('qr-code-generate', [App_controller::class, 'qr_code_generate']); 
 
