@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Models\User_model;
 use App\Models\Auth_users;
+use App\Models\Shops_model;
+use App\Models\Shopkeepers_model;
 
 class Login_controller extends Controller
 {
@@ -143,11 +145,9 @@ class Login_controller extends Controller
         {
      
             $request_data=$request->all();
-        $user_validate=$this->check_user_and_validate(array('email'=>$request_data['email'],'password'=>$request_data['password']));
+            $user_validate=$this->check_user_and_validate(array('email'=>$request_data['email'],'password'=>$request_data['password']));
            
-        // echo "<pre>";
-        // print_r($user_validate);
-        // exit;
+       
                 if($user_validate['status'])
                 {
                     $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
@@ -180,6 +180,19 @@ class Login_controller extends Controller
                     }
 
                     $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,'user_role'=> $user_role);
+
+                    if($user_role==2 || $user_role==5)
+                    {
+                        if($user_role==2)
+                        {
+                            $data['shop_details']=Shops_model::where('owner_id',$user_validate['user_data']['user_id'])->first();
+                        } 
+
+                        if($user_role==5)
+                        {
+                            $data['shop_details']=Shopkeepers_model::select('shops.*')->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.shop_id')->where('salesperson_id',$user_validate['user_data']['user_id'])->first();
+                        }
+                    }
 
                 } else {
                     $data=array('status'=>false,'msg'=>'Invalid credentials');

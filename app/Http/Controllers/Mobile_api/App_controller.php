@@ -36,8 +36,11 @@ class App_controller extends Controller
     public function profile_data($request)
     {
         return User_model::select('users.*',DB::raw('ifnull(wallet.balance,0) as balance')) 
-            ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')    
-            ->where('users.user_id',$request['user_id'])
+            ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
+            ->where(function ($query) use ($request) {
+                if (empty($request['for_user'])) $query->where('users.user_id',$request['user_id']);                       
+                if (!empty($request['for_user'])) $query->where('users.user_id',$request['for_user']);                       
+             })    
             ->first(); 
     }
 
@@ -47,6 +50,10 @@ class App_controller extends Controller
 
         $logged_user=Auth::mobile_app_user($request['token']);
 
+        if(!empty($request['user_id']))
+        {
+            $logged_user['for_user']=$request['user_id'];
+        }
         $profile_data=$this->profile_data($logged_user);
         
         if(!empty($profile_data))
@@ -205,19 +212,57 @@ class App_controller extends Controller
     }
     
 
-    public function get_wallet_transactions(Request $request)  // 1) for shop owner 
-    {
-        $data=array('status'=>false,'msg'=>'Data not found');
+    public function transaction_summary(Request $request)  // 1) for shop owner 
+    {        
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        $shop_transactions=array();
+        for($i=1; $i<=12; $i++)
+        {          
+              
+            $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name'.'shops.shop_name')
+                                                       ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
+                                                       ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
+                                                       ->where(function ($query) use ($request,$logged_user) {
+                                                        if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id',$request['shop_gen_id']);  
+                                                        if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']);  
+                                                        if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  
+                                                        }) 
+                                                       ->whereMonth('shop_transactions.created_at',"=",$i)->get()->toArray();
+
+             $monthly_transactions=array();
+            foreach($transactions as $key=>$res)
+            {
+                $monthly_transactions[$key]=$res;
+                $monthly_transactions[$key]['date']=date('d/m/Y', strtotime($res['created_at']));
+                $monthly_transactions[$key]['time']=date('h:i A', strtotime($res['created_at']));
+            }
+
+            if(!empty($monthly_transactions))
+            {
+                $shop_transactions[date('F', mktime(0,0,0,$i, 1, date('Y')))]=$monthly_transactions;
+            }
+        }
+
+        if(!empty($shop_transactions))
+        {
+            $data=array('status'=>true,'msg'=>'Data found','shop_transactions'=>$shop_transactions);
+        }
+
+        echo json_encode($data);
+
     }
 
     public function add_money_to_wallet(Request $request)  // 1) parent to child 2) child to shop
     {       
         $data=array('status'=>false,'msg'=>'Data not found');
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
         if($request['user_id'] && $request['amount'])
         {  
             $users_wallet_exists=Wallet_model::where('user_id',$request['user_id'])->first();
-
-            $logged_user=Auth::mobile_app_user($request['token']);
 
             $from_wallet=Wallet_model::where('user_id',$logged_user['user_id'])->first(); 
 
@@ -272,12 +317,13 @@ class App_controller extends Controller
                 if($update)
                 {
 
-                    if(!empty($request['shop_id']))
+                    if(!empty($request['shop_gen_id']))
                     {
+                        $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
 
                         Shop_transaction_model::create([ 
                             'by_user' => $logged_user['user_id'],
-                            'shop_id' => $request['shop_id'],
+                            'shop_id' => $shop_detail->shop_id,
                             'amount' => $request['amount'],
                             'created_at' => date('Y-m-d H:i:s'),
                             'updated_at' => date('Y-m-d H:i:s')
@@ -322,12 +368,13 @@ class App_controller extends Controller
 
         $logged_user=Auth::mobile_app_user($request['token']);
 
-        $shops=Shops_model::select('users.*','shops.shop_name','shops.shop_id','shops.shop_gen_id')
+        $shops=Shops_model::select('users.first_name','users.last_name','shops.owner_id','shops.shop_name','shops.shop_id','shops.shop_gen_id')
                     ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id') 
-                    ->where(function ($query) use ($request) {
+                    ->where(function ($query) use ($request,$logged_user) {
                         if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id', $request['shop_gen_id']);                       
+                        if ($logged_user==2 || $logged_user==5) $query->where('shops.owner_id',$logged_user['user_id']);                       
                     })
-                    ->where('shops.owner_id',$logged_user['user_id'])->get()->toArray();
+                    ->get()->toArray();
         if(!empty($shops))
         {
             $data=array('status'=>true,'msg'=>'Shops','shops'=>$shops);

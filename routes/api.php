@@ -43,8 +43,10 @@ Route::Post('get-child-details', [App_controller::class, 'get_child_details']);
 
 Route::Post('add-shop', [App_controller::class, 'add_shop']); 
 Route::Post('get-shops-by-owner', [App_controller::class, 'get_shops_by_owner']); 
+Route::Post('transaction-summary', [App_controller::class, 'transaction_summary']); 
 
 Route::Post('add-money-to-wallet', [App_controller::class, 'add_money_to_wallet']); 
 
 Route::Post('qr-code-generate', [App_controller::class, 'qr_code_generate']); 
+
 
