@@ -18,6 +18,7 @@ use App\Models\Wallet_transaction_model;
 use App\Models\Shop_transaction_model;
 use App\Models\Shops_model;
 use App\Models\Shopkeepers_model;
+use App\Models\Amount_requests_model;
 
 class App_controller extends Controller
 {
@@ -215,19 +216,22 @@ class App_controller extends Controller
     public function transaction_summary(Request $request)  // 1) for shop owner 
     {        
 
+        $data=array('status'=>false,'msg'=>'Data not found','shop_transactions'=>array());
+
         $logged_user=Auth::mobile_app_user($request['token']);
 
         $shop_transactions=array();
+        $j=0;
         for($i=1; $i<=12; $i++)
         {          
               
-            $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name'.'shops.shop_name')
+            $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name')
                                                        ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
                                                        ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
                                                        ->where(function ($query) use ($request,$logged_user) {
                                                         if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id',$request['shop_gen_id']);  
-                                                        if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']);  
-                                                        if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  
+                                                        if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
+                                                        if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
                                                         }) 
                                                        ->whereMonth('shop_transactions.created_at',"=",$i)->get()->toArray();
 
@@ -240,8 +244,10 @@ class App_controller extends Controller
             }
 
             if(!empty($monthly_transactions))
-            {
-                $shop_transactions[date('F', mktime(0,0,0,$i, 1, date('Y')))]=$monthly_transactions;
+            {                
+                $shop_transactions[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y')));
+                $shop_transactions[$j]['data']=$monthly_transactions;
+                $j++;
             }
         }
 
@@ -252,6 +258,47 @@ class App_controller extends Controller
 
         echo json_encode($data);
 
+    }
+
+    public function get_users_wallet(Request $request)  
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        if($request['user_id'])
+        {  
+           $users_wallet=Wallet_model::select('wallet.wallet_id','wallet.max_limit_per_day','wallet.max_limit_per_month','wallet.low_balance_alert')->where('user_id',$request['user_id'])->first();
+
+           if(!empty($users_wallet)) 
+           { 
+            $data=array('status'=>true,'msg'=>'Data found','wallet_data'=>$users_wallet->toArray());
+           }
+        } 
+
+        echo json_encode($data);
+    }
+
+    public function update_users_wallet(Request $request)  
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        if($request['wallet_id'])
+        {  
+           $users_wallet=Wallet_model::where('wallet_id',$request['wallet_id'])->first();
+
+           $request['max_limit_per_day'] ? $users_wallet->max_limit_per_day=$request['max_limit_per_day'] : '';
+           $request['max_limit_per_month'] ? $users_wallet->max_limit_per_month=$request['max_limit_per_month'] :'';
+           $request['low_balance_alert'] ? $users_wallet->low_balance_alert=$request['low_balance_alert'] :'';
+           $users_wallet->updated_at=date('Y-m-d H:i:s');
+
+           $is_update=$users_wallet->save();
+
+           if($is_update)
+           {
+            $data=array('status'=>true,'msg'=>'Wallet updated');
+           }
+        }
+
+        echo json_encode($data);
     }
 
     public function add_money_to_wallet(Request $request)  // 1) parent to child 2) child to shop
@@ -289,6 +336,20 @@ class App_controller extends Controller
                                     ])->wallet_id;
                 if($create_wallet)
                 {
+                    if(!empty($request['shop_gen_id']))
+                    {
+                        $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
+
+                        Shop_transaction_model::create([ 
+                            'by_user' => $logged_user['user_id'],
+                            'shop_id' => $shop_detail->shop_id,
+                            'amount' => $request['amount'],
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ])->shop_trans_id;
+
+                    }
+
                     Wallet_transaction_model::create([                        
                         'from_user' => $logged_user['user_id'],
                         'user_id' => $request['user_id'],
@@ -299,15 +360,18 @@ class App_controller extends Controller
                         'status_msg' => 'Added money from parent to student',
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
-                        ])->wallet_id;                       
+                        ])->wallet_id;    
+                        
+                        $remaining_balance=$from_wallet->balance - $request['amount'];
+                        $from_wallet->balance=$remaining_balance;
+                        $from_wallet->save();
 
-                    $data=array('status'=>true,'msg'=>'Money added into the wallet');
+                    $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
                 }else{
                     $data=array('status'=>false,'msg'=>'Money not added');
                 }
 
-                $from_wallet->balance=$from_wallet->balance - $request['amount'];
-                $from_wallet->save();
+              
 
             } else {
 
@@ -343,14 +407,15 @@ class App_controller extends Controller
                         'updated_at' => date('Y-m-d H:i:s')
                         ])->wallet_id;
 
-                    $data=array('status'=>true,'msg'=>'Money added into the wallet');
+                        $remaining_balance=$from_wallet->balance - $request['amount'];
+                        $from_wallet->balance=$remaining_balance;
+                        $from_wallet->save();
+
+                    $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
                 } else {
                     $data=array('status'=>false,'msg'=>'Money not added');
 
                 }
-
-                $from_wallet->balance=$from_wallet->balance - $request['amount'];
-                $from_wallet->save();
 
             }
         } else {
@@ -383,6 +448,7 @@ class App_controller extends Controller
         echo json_encode($data);
     }
 
+   
     public function add_shop(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found');
@@ -416,6 +482,81 @@ class App_controller extends Controller
             }
          }
 
+         echo json_encode($data);
+    }
+
+    public function add_request(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        if($request['amount'])
+         {
+       
+            $amt_request=Amount_requests_model::create([                        
+                'by_user' => $logged_user['user_id'],
+                'to_user' => $logged_user['user_role']==4 ? Parent_child_model::where('child_id',$logged_user['user_id'])->first()->parent_id : 0,
+                'request_amount' => $request['amount'],                   
+                'reason' => $request['reason'] ? $request['reason'] : "",                   
+                'date_of_expenditure' => $request['date_of_expenditure'] ? $request['date_of_expenditure'] : "",                   
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+                ])->amt_request_id;
+
+                if($amt_request)
+                {
+                    $data=array('status'=>true,'msg'=>'Requests added successfully');                   
+                }
+
+         }
+
+         echo json_encode($data);
+    }
+
+    public function request_money_history(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found','requests'=>array());
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        $users_requests=array();
+
+        $j=0;
+        for($i=1; $i<=12; $i++)
+        {           
+            
+        $money_requests=Amount_requests_model::select('amount_requests.*')
+                                                ->where(function ($query) use ($request,$logged_user) {
+                                                    if (empty($request['user_id'])) $query->where('amount_requests.by_user',$logged_user['user_id']);  //parent,child,owner request history
+                                                    if (!empty($request['user_id'])) $query->where('amount_requests.by_user',$request['user_id']);     // user (child) history
+                                                })
+                                                ->whereMonth('amount_requests.created_at',"=",$i)
+                                                ->get()->toArray();
+
+        $requested=array();
+        foreach($money_requests as $key=>$res)
+        {
+            $requested[$key]=$res;
+            $requested[$key]['requested_date']=date('d F Y', strtotime($res['created_at'])).' | '.date('h:i A', strtotime($res['created_at']));          
+        }
+
+        if(!empty($requested))
+        {
+            $users_requests[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y')));
+            $users_requests[$j]['data']=$requested;
+            $j++;
+        }
+
+
+        }
+
+        if(!empty($users_requests))
+        {
+            $data=array('status'=>true,'msg'=>'Data found','requests'=>$users_requests);
+        }
+
+       
          echo json_encode($data);
     }
 
@@ -470,5 +611,21 @@ class App_controller extends Controller
 
         
         echo json_encode($data);
+    }
+
+
+    public function mobile_verified(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        if($request['user_id'])
+        {            
+            $user_data=User_model::where('user_id',$request['user_id'])->first();
+            $user_data->contact_verify=1;
+            $update=$user_data->save();
+            $data=array('status'=>true,'msg'=>'Contact verified successfully');
+        }
+
+        echo json_encode($data); 
     }
 }

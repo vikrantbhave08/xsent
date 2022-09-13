@@ -32,6 +32,7 @@ Route::post('login', [Login_controller::class, 'login']);
 Route::post('logout', [Login_controller::class, 'logout']);
 Route::post('send-otp', [Login_controller::class, 'send_otp']);
 Route::post('verify-mobile', [Login_controller::class, 'verify_mobile']);
+Route::post('mobile-verified', [Login_controller::class, 'mobile_verified']);
 Route::post('forgot-password', [Login_controller::class, 'forgot_password']);
 
 Route::post('reset-password', [App_controller::class, 'reset_password']);
@@ -46,7 +47,11 @@ Route::Post('get-shops-by-owner', [App_controller::class, 'get_shops_by_owner'])
 Route::Post('transaction-summary', [App_controller::class, 'transaction_summary']); 
 
 Route::Post('add-money-to-wallet', [App_controller::class, 'add_money_to_wallet']); 
+Route::Post('get-users-wallet', [App_controller::class, 'get_users_wallet']); 
+Route::Post('update-users-wallet', [App_controller::class, 'update_users_wallet']); 
 
 Route::Post('qr-code-generate', [App_controller::class, 'qr_code_generate']); 
 
+Route::Post('add-request', [App_controller::class, 'add_request']); 
+Route::Post('request-money-history', [App_controller::class, 'request_money_history']); 
 

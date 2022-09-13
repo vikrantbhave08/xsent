@@ -253,6 +253,7 @@ class Login_controller extends Controller
 
         echo json_encode($data); 
     }
+   
 
     public function forgot_password(Request $request)
     {
@@ -277,11 +278,7 @@ class Login_controller extends Controller
             } else {
                 $data=array('status'=>false,'msg'=>'User not found');
             }          
-
-            // $gen_otp=mt_rand(111111,999999);              
-            // $data=array('contact_no'=>'+919075554309','msg'=>$gen_otp.' is your Xsent verification code.');
-            //  $response=send_otp($data); 
-            // $data=array('status'=>true,'msg'=>'Otp sent successfully','otp'=>$gen_otp,'response'=>$response);
+           
         }
 
         echo json_encode($data); 
