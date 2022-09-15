@@ -59,7 +59,7 @@ chart.render();
 var options = {
     series: [{
         name: 'AED',
-        data: [180, 120, 82, 73, 95, 140, 180, 60, 84, 150]
+        data: shops_earn
     }],
     chart: {
         type: 'bar',
@@ -84,7 +84,7 @@ var options = {
         colors: ['transparent']
     },
     xaxis: {
-        categories: ['Shop 1', 'Shop 2', 'Shop 3', 'Shop 4', 'Shop 5', 'Shop 6', 'Shop 7', 'Shop 8', 'Shop 9', 'Shop 10'],
+        categories: shops,
     },
     yaxis: {
         title: {

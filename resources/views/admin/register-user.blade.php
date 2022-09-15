@@ -75,7 +75,7 @@
                                                             <td>{{ $user['parent_name'] }}</td>
                                                             <td>{{ $user['parent_email'] }}</td>
                                                             <td>{{ $user['balance']!=null ? 'AED '.$user['balance'] : 'AED 0' }}</td>
-                                                            <td>{{ $user['created_at'] }}</td>
+                                                            <td>{{ date('Y-m-d',strtotime($user['created_at'])) }}</td>
                                                             <td><button class="active-btn">Active</button></td>
                                                             <td>
                                                                 <span class="table-icon"><a

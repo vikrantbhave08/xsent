@@ -333,17 +333,42 @@ class App_controller extends Controller
             
             $users_wallet_exists=Wallet_model::where('user_id',$request['user_id'])->first();
 
-            $from_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->where('wallet.user_role',$logged_user['user_role'])->first();
-                                   
-            // $from_wallet=Wallet_model::select('wallet.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_per_days'))
-            //                            ->leftjoin('wallet_transaction', 'wallet.wallet_id', '=', 'wallet_transaction.wallet_id')
-            //                            ->where('wallet.user_id',$logged_user['user_id'])
-            //                         //    ->where('wallet_transaction.from_role',$logged_user['user_role'])
-            //                         //    ->where(function ($query) use ($request,$logged_user) { 
-            //                         //       if($logged_user['user_role']==4) $query->orWhereDate('wallet_transaction.created_at', Carbon::today()); //only for children
-            //                         //    })
-            //                         //    ->orWhereDate('wallet_transaction.created_at', Carbon::today()) //only for children
-            //                            ->groupBy('wallet_transaction.user_id')->first(); 
+            $day_limit=$month_limit=true;
+            if($logged_user['user_role']==4)
+            {
+
+                for($i=0; $i<2; $i++)
+                {
+                    $from_wallet=Wallet_model::select('wallet.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
+                    ->leftjoin('wallet_transaction', 'wallet.wallet_id', '=', 'wallet_transaction.wallet_id')
+                    ->where('wallet.user_id',$logged_user['user_id'])
+                    ->where('wallet.user_role',$logged_user['user_role'])
+                    ->where(function ($query) use ($request,$logged_user,$i) { 
+                        if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children                   
+                        if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children                   
+                     })                                 
+                     ->groupBy('wallet_transaction.user_id') 
+                    //  ->having('max_transaction','<=','wallet.balance')                                    
+                     ->first(); 
+                     if($i==0 && !empty($from_wallet))
+                     {
+
+                        $day_limit = (empty($from_wallet->max_limit_per_day) || $from_wallet->max_limit_per_day >= $from_wallet->max_transaction )? true : false ;
+
+                    } else if($i==1 && !empty($from_wallet))
+                    {
+                         $month_limit = (empty($from_wallet->max_limit_per_month) || $from_wallet->max_limit_per_month>=$from_wallet->max_transaction) ? true : false ;
+
+                     }
+                  
+                }
+
+            } else {
+                
+                $from_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->where('wallet.user_role',$logged_user['user_role'])->first();
+            }                       
+            
+         
                                   
             $from_wallet_balance=0;            
             if(!empty($from_wallet))
@@ -353,130 +378,140 @@ class App_controller extends Controller
 
 
             if($from_wallet_balance>$request['amount'])
-            {            
-            // if($from_wallet->max_limit_per_day>=)
-            // {
+            {    
 
-            if(empty($users_wallet_exists))
-            {               
-                
-                $create_wallet=Wallet_model::create([                        
-                                    'user_id' => $request['user_id'],
-                                    'user_role' => $for_user_role,
-                                    'balance' => $request['amount'],
-                                    'max_limit_per_day' => '',
-                                    'max_limit_per_month' => '',
-                                    'low_balance_alert' => '',
-                                    'created_at' => date('Y-m-d H:i:s'),
-                                    'updated_at' => date('Y-m-d H:i:s')
-                                    ])->wallet_id;
-                if($create_wallet)
-                {
-                    if(!empty($request['request_id']))
+                    if($day_limit)
                     {
-                        $request_data=Amount_requests_model::where('amt_request_id',$request['request_id'])->first();
-                        $request_data->status=1;
-                        $request_data->save();
-                    }
+                        if($month_limit)
+                        {
 
-                    if(!empty($request['shop_gen_id']))
-                    {
-                        $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
+                            if(empty($users_wallet_exists))
+                            {               
+                                
+                                $create_wallet=Wallet_model::create([                        
+                                                    'user_id' => $request['user_id'],
+                                                    'user_role' => $for_user_role,
+                                                    'balance' => $request['amount'],
+                                                    'max_limit_per_day' => '',
+                                                    'max_limit_per_month' => '',
+                                                    'low_balance_alert' => '',
+                                                    'created_at' => date('Y-m-d H:i:s'),
+                                                    'updated_at' => date('Y-m-d H:i:s')
+                                                    ])->wallet_id;
+                                if($create_wallet)
+                                {
+                                    if(!empty($request['request_id']))
+                                    {
+                                        $request_data=Amount_requests_model::where('amt_request_id',$request['request_id'])->first();
+                                        $request_data->status=1;
+                                        $request_data->save();
+                                    }
 
-                        Shop_transaction_model::create([ 
-                            'by_user' => $logged_user['user_id'],
-                            'shop_id' => $shop_detail->shop_id,
-                            'amount' => $request['amount'],
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'updated_at' => date('Y-m-d H:i:s')
-                        ])->shop_trans_id;
+                                    if(!empty($request['shop_gen_id']))
+                                    {
+                                        $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
 
-                    }
+                                        Shop_transaction_model::create([ 
+                                            'by_user' => $logged_user['user_id'],
+                                            'shop_id' => $shop_detail->shop_id,
+                                            'amount' => $request['amount'],
+                                            'created_at' => date('Y-m-d H:i:s'),
+                                            'updated_at' => date('Y-m-d H:i:s')
+                                        ])->shop_trans_id;
 
-                    Wallet_transaction_model::create([                        
-                        'from_user' => $logged_user['user_id'],
-                        'from_role' => $logged_user['user_role'],
-                        'user_id' => $request['user_id'],
-                        'to_role' => $for_user_role,
-                        'wallet_id' => $create_wallet,
-                        'credit' => $request['amount'],
-                        'debit' => '',
-                        'payment_gate_id' => '',
-                        'status_msg' => 'Added money from parent to student',
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => date('Y-m-d H:i:s')
-                        ])->wallet_id;    
-                        
-                        $remaining_balance=$from_wallet->balance - $request['amount'];
-                        $from_wallet->balance=$remaining_balance;
-                        $from_wallet->save();
+                                    }
 
-                    $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
-                }else{
-                    $data=array('status'=>false,'msg'=>'Money not added');
-                }
+                                    Wallet_transaction_model::create([                        
+                                        'from_user' => $logged_user['user_id'],
+                                        'from_role' => $logged_user['user_role'],
+                                        'user_id' => $request['user_id'],
+                                        'to_role' => $for_user_role,
+                                        'wallet_id' => $create_wallet,
+                                        'credit' => $request['amount'],
+                                        'debit' => '',
+                                        'payment_gate_id' => '',
+                                        'status_msg' => 'Added money from parent to student',
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                        'updated_at' => date('Y-m-d H:i:s')
+                                        ])->wallet_id;    
+                                        
+                                        $remaining_balance=$from_wallet->balance - $request['amount'];
+                                        $from_wallet->balance=$remaining_balance;
+                                        $from_wallet->save();
 
-              
+                                    $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
+                                }else{
+                                    $data=array('status'=>false,'msg'=>'Money not added');
+                                }
 
-            } else {
+                            
 
-                $users_wallet_exists->balance=$users_wallet_exists->balance + $request['amount'];
-                $users_wallet_exists->updated_at=date('Y-m-d H:i:s');
-                $update=$users_wallet_exists->save();
-                if($update)
-                {
+                               } else {
 
-                    if(!empty($request['request_id']))
-                    {
-                        $request_data=Amount_requests_model::where('amt_request_id',$request['request_id'])->first();
-                        $request_data->status=1;
-                        $request_data->save();
-                    }
+                                $users_wallet_exists->balance=$users_wallet_exists->balance + $request['amount'];
+                                $users_wallet_exists->updated_at=date('Y-m-d H:i:s');
+                                $update=$users_wallet_exists->save();
+                                if($update)
+                                {
 
-                    if(!empty($request['shop_gen_id']))
-                    {
-                        $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
+                                    if(!empty($request['request_id']))
+                                    {
+                                        $request_data=Amount_requests_model::where('amt_request_id',$request['request_id'])->first();
+                                        $request_data->status=1;
+                                        $request_data->save();
+                                    }
 
-                        Shop_transaction_model::create([ 
-                            'by_user' => $logged_user['user_id'],
-                            'shop_id' => $shop_detail->shop_id,
-                            'amount' => $request['amount'],
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'updated_at' => date('Y-m-d H:i:s')
-                        ])->shop_trans_id;
+                                    if(!empty($request['shop_gen_id']))
+                                    {
+                                        $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
 
-                    }
+                                        Shop_transaction_model::create([ 
+                                            'by_user' => $logged_user['user_id'],
+                                            'shop_id' => $shop_detail->shop_id,
+                                            'amount' => $request['amount'],
+                                            'created_at' => date('Y-m-d H:i:s'),
+                                            'updated_at' => date('Y-m-d H:i:s')
+                                        ])->shop_trans_id;
 
-                    Wallet_transaction_model::create([                        
-                        'from_user' => $logged_user['user_id'],
-                        'from_role' => $logged_user['user_role'],
-                        'user_id' => $request['user_id'],
-                        'to_role' => $for_user_role,
-                        'wallet_id' => $users_wallet_exists->wallet_id,
-                        'credit' => $request['amount'],
-                        'debit' => '',
-                        'payment_gate_id' => '',
-                        'status_msg' => 'Added money from parent to student',
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => date('Y-m-d H:i:s')
-                        ])->wallet_id;
+                                    }
 
-                        $remaining_balance=$from_wallet->balance - $request['amount'];
-                        $from_wallet->balance=$remaining_balance;
-                        $from_wallet->save();
+                                    Wallet_transaction_model::create([                        
+                                        'from_user' => $logged_user['user_id'],
+                                        'from_role' => $logged_user['user_role'],
+                                        'user_id' => $request['user_id'],
+                                        'to_role' => $for_user_role,
+                                        'wallet_id' => $users_wallet_exists->wallet_id,
+                                        'credit' => $request['amount'],
+                                        'debit' => '',
+                                        'payment_gate_id' => '',
+                                        'status_msg' => 'Added money from parent to student',
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                        'updated_at' => date('Y-m-d H:i:s')
+                                        ])->wallet_id;
 
-                    $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
+                                        $remaining_balance=$from_wallet->balance - $request['amount'];
+                                        $from_wallet->balance=$remaining_balance;
+                                        $from_wallet->save();
+
+                                    $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
+                                } else {
+                                    $data=array('status'=>false,'msg'=>'Money not added');
+
+                                }
+
+                            }
+                        } else {
+                            
+                            $data=array('status'=>false,'msg'=>'Monthly wallet limit exceeded');
+                        }
+                    } else {                        
+                        $data=array('status'=>false,'msg'=>'One day wallet limit exceeded');
+                      }
                 } else {
-                    $data=array('status'=>false,'msg'=>'Money not added');
-
+                    $data=array('status'=>false,'msg'=>'Your wallet has insufficient balance');
                 }
 
-            }
-        } else {
-            $data=array('status'=>false,'msg'=>'Insufficient balance');
-        }
-
-        }      
+            }      
         
         echo json_encode($data);
     }

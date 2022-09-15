@@ -34,7 +34,7 @@
                                                             <img src="{{ asset('assets/dist/images/icon/register-user.png') }}">
                                                         </div>
                                                         <div class="count-data">
-                                                            <h4 class="count">50</h4>
+                                                            <h4 class="count">{{ !empty($users) ? count($users)  : 0 }}</h4>
                                                             <p class="count-title">Total Registred Users</p>
                                                         </div>
                                                     </div>
@@ -46,7 +46,7 @@
                                                             <img src="{{ asset('assets/dist/images/icon/register-shop.png') }}">
                                                         </div>
                                                         <div class="count-data">
-                                                            <h4 class="count">250</h4>
+                                                            <h4 class="count">{{ !empty($shops) ? count($shops)  : 0 }}</h4>
                                                             <p class="count-title">Total Registred Shops</p>
                                                         </div>
                                                     </div>
@@ -106,6 +106,15 @@
     <!-- page-content" -->
     </div>
     <!-- page-wrapper -->
+
+    <script>
+
+        var shops=JSON.parse('<?php if(!empty($shops)){ echo json_encode(array_column($shops,'shop_name')); } else { echo json_encode(array()); }?>');
+        var shops_earn=JSON.parse('<?php if(!empty($shops)){ echo json_encode(array_column($shops,'shops_earn')); } else { echo json_encode(array()); }?>');
+        console.log(shops);
+        console.log(shops_earn);
+
+     </script>
 
     <script src="{{ asset('assets/dist/js/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>

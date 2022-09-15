@@ -34,7 +34,7 @@ class Users_controller extends Controller
                             if (!empty($request['user_role'])) $query->where('auth_user.user_role',$request['user_role']);
                             if (!empty($request['password'])) $query->where('users.password',sha1($request['password'].'appcart systemts pvt ltd'));
                         })
-                        ->whereIn('users.user_role',array(2,3,4))->get()->toArray();
+                        ->where('users.user_role',"!=",1)->get()->toArray();
 
         foreach($result['users'] as $ukey=>$user)
         {

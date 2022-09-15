@@ -30,48 +30,60 @@
                                                         <tr>
                                                             <th></th>
                                                             <th>Sr. No</th>
-                                                            <th>Request Id</th>
                                                             <th>Request From</th>
                                                             <th>Request Amount</th>
                                                             <th>Wallet Balance</th>
+                                                            <th>Request At</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        
+                                                        @foreach($requests as $key=>$val)
+                                                        <tr>
+                                                            <td><input type="checkbox"></td>
+                                                            <td>{{ $key+1 }}</td>
+                                                            <td>@if($val['by_role']==2) {{ $val['shop_name'] }} @else {{ $val['first_name']." ".$val['last_name'] }} @endif</td>
+                                                            <td>{{ 'AED'.' '.$val['request_amount'] }}</td>
+                                                            <td>{{ 'AED'.' '.$val['balance'] }}</td>
+                                                            <td>{{ date('Y-m-d',strtotime($val['created_at'])) }}</td>
+                                                            <td><button class="btn btn-sm table-btn">Pay</button></td>
+                                                        </tr>
+                                                        @endforeach
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>01</td>
-                                                            <td>541023</td>
                                                             <td>Cafe Peter</td>
                                                             <td>AED 2000</td>
                                                             <td>AED 2200</td>
+                                                            <td>541023</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
                                                         </tr>
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>02</td>
-                                                            <td>985327</td>
                                                             <td>Pimlico</td>
                                                             <td>AED 1500</td>
                                                             <td>AED 1900</td>
+                                                            <td>985327</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
                                                         </tr>
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>03</td>
-                                                            <td>894107</td>
                                                             <td>TGS Stationery</td>
                                                             <td>AED 1420</td>
                                                             <td>AED 1800</td>
+                                                            <td>894107</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
                                                         </tr>
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>04</td>
-                                                            <td>325689</td>
                                                             <td>Water Restaurant</td>
                                                             <td>AED 2100</td>
                                                             <td>AED 1500</td>
+                                                            <td>325689</td>
                                                             <td><button class="btn btn-sm remark-btn"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#sendremarkModal">Send
@@ -80,10 +92,10 @@
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>05</td>
-                                                            <td>894107</td>
                                                             <td>TGS Stationery</td>
                                                             <td>AED 1420</td>
                                                             <td>AED 1800</td>
+                                                            <td>894107</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
                                                         </tr>
                                                     </tbody>
@@ -228,7 +240,7 @@
                 dropdownParent: $('#sendremarkModal')
             });
             $('#request').DataTable({
-                scrollY: 250,
+                scrollY: 600,
                 scrollX: true,
                 // "bPaginate": false,
                 "ordering": false,
