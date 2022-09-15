@@ -141,7 +141,7 @@ class Login_controller extends Controller
     public function login(Request $request)
     {
 
-        if($request['email'] && $request['password'] && $request['user_role'])
+        if($request['email'] && $request['password'] && $request['app_type'])
         {
      
             $request_data=$request->all();
@@ -150,14 +150,24 @@ class Login_controller extends Controller
        
                 if($user_validate['status'])
                 {
+                    if($request['app_type']=="parent")
+                    {
+                        if($user_validate['user_data']['user_role']==2){       //owner will login as a parent
+                            $user_validate['user_data']['user_role']==3;
+                        }
+                    } else {  //else type will be owner
+                        if($user_validate['user_data']['user_role']==3){       //parent will login as a owner
+                            $user_validate['user_data']['user_role']==2;
+                        }
+                    }
+                 
                     $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
 
-                    $auth_user=Auth_users::where('user_id',$user_validate['user_data']['user_id'])->where('user_role',$request['user_role'])->first();
+                    $auth_user=Auth_users::where('user_id',$user_validate['user_data']['user_id'])->where('user_role',$user_validate['user_data']['user_role'])->first();
                   
 
                     if(!empty($auth_user))
                     {
-
                         $user_role=$auth_user->user_role;
                                             
                         $auth_user->users_token=$gen_token;
@@ -285,7 +295,7 @@ class Login_controller extends Controller
     }
 
    
-    public function send_notification($title='',$msg='',$body='',$to='')
+    public function send_notification($title='title',$msg='message',$body='body',$to='')
     {    
 
            $msg = urlencode($msg);
@@ -297,21 +307,18 @@ class Login_controller extends Controller
                 'body'=>$body,
                 'color' => "#79bc64"
             );
-        // if($img){
-        //     $data["image"] = $img;
-        //     $data["style"] = "picture";
-        //     $data["picture"] = $img;
-        // }
+       
         $fields = array(           
             'to'=>$to,
             'notification'=>$data,
-            // 'data'=>'Datapayload',
             "priority" => "high",
         );
+
         $headers = array(
             'Authorization: key='.env("NOTIFICATION_AUTH_KEY"),
             'Content-Type: application/json'
         );
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
         curl_setopt($ch, CURLOPT_POST, true);
@@ -321,8 +328,6 @@ class Login_controller extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
         $result = curl_exec($ch);
         curl_close( $ch );
-        return json_decode($result);
-        //  print_r($result); 
-      
+        return json_decode($result);      
     }
 }

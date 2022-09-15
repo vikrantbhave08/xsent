@@ -1,8 +1,8 @@
 
 @include('admin/header')
     <link rel="stylesheet" href="{{ asset('assets/dist/css/jquery.dataTables.min.css') }}">
+    <!-- <link href="{{ asset('assets/dist/css/checkout.css') }}" rel="stylesheet"> -->
     <link href="{{ asset('assets/dist/sass/main.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/dist/css/checkout.css') }}" rel="stylesheet">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     

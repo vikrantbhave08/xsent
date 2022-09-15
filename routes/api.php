@@ -34,6 +34,7 @@ Route::post('send-otp', [Login_controller::class, 'send_otp']);
 Route::post('verify-mobile', [Login_controller::class, 'verify_mobile']);
 Route::post('mobile-verified', [Login_controller::class, 'mobile_verified']);
 Route::post('forgot-password', [Login_controller::class, 'forgot_password']);
+Route::get('send-notification', [Login_controller::class, 'send_notification']);
 
 Route::post('reset-password', [App_controller::class, 'reset_password']);
 
@@ -54,4 +55,6 @@ Route::Post('qr-code-generate', [App_controller::class, 'qr_code_generate']);
 
 Route::Post('add-request', [App_controller::class, 'add_request']); 
 Route::Post('request-money-history', [App_controller::class, 'request_money_history']); 
+
+Route::Post('topup-history', [App_controller::class, 'topup_history']); 
 

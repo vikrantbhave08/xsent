@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mobile_api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
+use Carbon\Carbon;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -233,9 +234,10 @@ class App_controller extends Controller
                                                         if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
                                                         if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
                                                         }) 
+                                                       ->whereYear('shop_transactions.created_at', '=', date('Y'))
                                                        ->whereMonth('shop_transactions.created_at',"=",$i)->get()->toArray();
 
-             $monthly_transactions=array();
+            $monthly_transactions=array();
             foreach($transactions as $key=>$res)
             {
                 $monthly_transactions[$key]=$res;
@@ -244,9 +246,9 @@ class App_controller extends Controller
             }
 
             if(!empty($monthly_transactions))
-            {                
-                $shop_transactions[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y')));
-                $shop_transactions[$j]['data']=$monthly_transactions;
+            {               
+                $shop_transactions[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
+                $shop_transactions[$j]['data']=$monthly_transactions; 
                 $j++;
             }
         }
@@ -281,21 +283,38 @@ class App_controller extends Controller
     {
         $data=array('status'=>false,'msg'=>'Data not found');
 
-        if($request['wallet_id'])
+        if($request['user_id'])
         {  
-           $users_wallet=Wallet_model::where('wallet_id',$request['wallet_id'])->first();
+           $users_wallet=Wallet_model::where('user_id',$request['user_id'])->first();
 
-           $request['max_limit_per_day'] ? $users_wallet->max_limit_per_day=$request['max_limit_per_day'] : '';
-           $request['max_limit_per_month'] ? $users_wallet->max_limit_per_month=$request['max_limit_per_month'] :'';
-           $request['low_balance_alert'] ? $users_wallet->low_balance_alert=$request['low_balance_alert'] :'';
-           $users_wallet->updated_at=date('Y-m-d H:i:s');
-
-           $is_update=$users_wallet->save();
-
-           if($is_update)
+           if(empty($users_wallet))
            {
-            $data=array('status'=>true,'msg'=>'Wallet updated');
+
+            $users_data=User_model::where('user_id', $request['user_id'])->first();
+            $create_wallet=Wallet_model::create([                        
+                                'user_id' => $request['user_id'],
+                                'user_role' => $users_data->user_role,
+                                'balance' => '',
+                                'max_limit_per_day' => $request['max_limit_per_day'] ? $request['max_limit_per_day'] : '' ,
+                                'max_limit_per_month' => $request['max_limit_per_month'] ? $request['max_limit_per_month'] : '',
+                                'low_balance_alert' => $request['low_balance_alert'] ? $request['low_balance_alert'] : '',
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at' => date('Y-m-d H:i:s')
+                                ])->wallet_id;
+
+           } else {
+               
+               $request['max_limit_per_day'] ? $users_wallet->max_limit_per_day=$request['max_limit_per_day'] : '';
+               $request['max_limit_per_month'] ? $users_wallet->max_limit_per_month=$request['max_limit_per_month'] :'';
+               $request['low_balance_alert'] ? $users_wallet->low_balance_alert=$request['low_balance_alert'] :'';
+               $users_wallet->updated_at=date('Y-m-d H:i:s');
+    
+               $is_update=$users_wallet->save();
            }
+
+
+           $data=array('status'=>true,'msg'=>'Wallet updated');
+         
         }
 
         echo json_encode($data);
@@ -309,24 +328,41 @@ class App_controller extends Controller
 
         if($request['user_id'] && $request['amount'])
         {  
+            $beneficiary_user=User_model::where('user_id', $request['user_id'])->first();
+            $for_user_role=$beneficiary_user->user_role==3 ? 2 : $beneficiary_user->user_role;
+            
             $users_wallet_exists=Wallet_model::where('user_id',$request['user_id'])->first();
 
-            $from_wallet=Wallet_model::where('user_id',$logged_user['user_id'])->first(); 
-
-            $from_wallet_balance=0;
-            
+            $from_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->where('wallet.user_role',$logged_user['user_role'])->first();
+                                   
+            // $from_wallet=Wallet_model::select('wallet.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_per_days'))
+            //                            ->leftjoin('wallet_transaction', 'wallet.wallet_id', '=', 'wallet_transaction.wallet_id')
+            //                            ->where('wallet.user_id',$logged_user['user_id'])
+            //                         //    ->where('wallet_transaction.from_role',$logged_user['user_role'])
+            //                         //    ->where(function ($query) use ($request,$logged_user) { 
+            //                         //       if($logged_user['user_role']==4) $query->orWhereDate('wallet_transaction.created_at', Carbon::today()); //only for children
+            //                         //    })
+            //                         //    ->orWhereDate('wallet_transaction.created_at', Carbon::today()) //only for children
+            //                            ->groupBy('wallet_transaction.user_id')->first(); 
+                                  
+            $from_wallet_balance=0;            
             if(!empty($from_wallet))
             {
                 $from_wallet_balance=$from_wallet->balance;
             }
 
-            if($from_wallet_balance>=$request['amount'])
-            {
+
+            if($from_wallet_balance>$request['amount'])
+            {            
+            // if($from_wallet->max_limit_per_day>=)
+            // {
+
             if(empty($users_wallet_exists))
             {               
                 
                 $create_wallet=Wallet_model::create([                        
                                     'user_id' => $request['user_id'],
+                                    'user_role' => $for_user_role,
                                     'balance' => $request['amount'],
                                     'max_limit_per_day' => '',
                                     'max_limit_per_month' => '',
@@ -336,6 +372,13 @@ class App_controller extends Controller
                                     ])->wallet_id;
                 if($create_wallet)
                 {
+                    if(!empty($request['request_id']))
+                    {
+                        $request_data=Amount_requests_model::where('amt_request_id',$request['request_id'])->first();
+                        $request_data->status=1;
+                        $request_data->save();
+                    }
+
                     if(!empty($request['shop_gen_id']))
                     {
                         $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
@@ -352,7 +395,9 @@ class App_controller extends Controller
 
                     Wallet_transaction_model::create([                        
                         'from_user' => $logged_user['user_id'],
+                        'from_role' => $logged_user['user_role'],
                         'user_id' => $request['user_id'],
+                        'to_role' => $for_user_role,
                         'wallet_id' => $create_wallet,
                         'credit' => $request['amount'],
                         'debit' => '',
@@ -381,6 +426,13 @@ class App_controller extends Controller
                 if($update)
                 {
 
+                    if(!empty($request['request_id']))
+                    {
+                        $request_data=Amount_requests_model::where('amt_request_id',$request['request_id'])->first();
+                        $request_data->status=1;
+                        $request_data->save();
+                    }
+
                     if(!empty($request['shop_gen_id']))
                     {
                         $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
@@ -397,7 +449,9 @@ class App_controller extends Controller
 
                     Wallet_transaction_model::create([                        
                         'from_user' => $logged_user['user_id'],
+                        'from_role' => $logged_user['user_role'],
                         'user_id' => $request['user_id'],
+                        'to_role' => $for_user_role,
                         'wallet_id' => $users_wallet_exists->wallet_id,
                         'credit' => $request['amount'],
                         'debit' => '',
@@ -493,9 +547,35 @@ class App_controller extends Controller
 
         if($request['amount'])
          {
+
+            if($logged_user['user_role']==2 || $logged_user['user_role']==3)
+            {
+                $wallet=Wallet_model::where('user_id',$logged_user['user_id'])->first();
+                $requested_amt=Amount_requests_model::select(DB::raw('ifnull(SUM(amount_requests.request_amount),0) as total_req_amt'))
+                                                        ->where('amount_requests.by_user',$logged_user['user_id'])
+                                                        ->where('amount_requests.by_role',$logged_user['user_role'])
+                                                        ->where('status',0)->groupBy('amount_requests.by_user')->first();
+                
+                if(!empty($requested_amt) && !empty($wallet))
+                {
+                    if(($requested_amt->total_req_amt+$request['amount'])<=$wallet->balance)
+                    {
+                        $request_flag=true;
+                    }else{
+                        $request_flag=false;
+                    }
+                }else{
+                    $request_flag=false;
+                }
+            } else {                
+                $request_flag=true;
+            }
        
+            if($request_flag)
+            {
             $amt_request=Amount_requests_model::create([                        
                 'by_user' => $logged_user['user_id'],
+                'by_role' => $logged_user['user_role'],
                 'to_user' => $logged_user['user_role']==4 ? Parent_child_model::where('child_id',$logged_user['user_id'])->first()->parent_id : 0,
                 'request_amount' => $request['amount'],                   
                 'reason' => $request['reason'] ? $request['reason'] : "",                   
@@ -508,9 +588,58 @@ class App_controller extends Controller
                 {
                     $data=array('status'=>true,'msg'=>'Requests added successfully');                   
                 }
+            } else {
+                $data=array('status'=>false,'msg'=>'Sum of requested amount is more than wallet balance');     
+            }
 
          }
 
+         echo json_encode($data);
+    }
+
+    public function topup_history(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found','topup'=>array());
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        $topup_history=array();
+        $j=0;
+        for($i=1; $i<=12; $i++)
+        {
+            $topup=Wallet_transaction_model::from('wallet_transaction as wt')
+                                            ->select('wt.credit','wt.created_at')
+                                            ->where(function ($query) use ($request,$logged_user) {                                             
+                                                if (!empty($request['user_id'])) $query->where('wt.user_id',$request['user_id']);     // user (child) topup history                                              
+                                                if (empty($request['user_id'])) $query->where('wt.user_id',$logged_user['user_id']);     // user (child) history                                              
+                                            })                                            
+                                            // ->where('wt.from_user',0)
+                                            ->whereYear('wt.created_at', '=', date('Y'))
+                                            ->whereMonth('wt.created_at',"=",$i)
+                                            ->get()->toArray();
+
+            $history=array();
+            foreach($topup as $key=>$res)
+            {
+                $history[$key]=$res;
+                $history[$key]['topup_date']=date('d M Y', strtotime($res['created_at']));          
+                $history[$key]['topup_time']=date('h:i A', strtotime($res['created_at']));          
+            }
+
+            if(!empty($history))
+            {
+                $topup_history[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
+                $topup_history[$j]['data']=$history;
+                $j++;
+            }            
+        }
+
+        if(!empty($topup_history))
+        {
+            $data=array('status'=>true,'msg'=>'Data found','topup'=>$topup_history);
+        }
+
+       
          echo json_encode($data);
     }
 
@@ -522,15 +651,23 @@ class App_controller extends Controller
 
         $users_requests=array();
 
+        $childrens=$logged_user['user_role']==3 && $request['user_id']==0 ? Parent_child_model::select('child_id')->where('parent_id',$logged_user['user_id'])->get()->toArray() : array();
+       
+        $childrens = !empty($childrens) ? array_column($childrens,'child_id') : array(); 
+             
+
         $j=0;
         for($i=1; $i<=12; $i++)
-        {           
+        {   
             
-        $money_requests=Amount_requests_model::select('amount_requests.*')
-                                                ->where(function ($query) use ($request,$logged_user) {
-                                                    if (empty($request['user_id'])) $query->where('amount_requests.by_user',$logged_user['user_id']);  //parent,child,owner request history
+        $money_requests=Amount_requests_model::select('users.first_name','users.last_name','amount_requests.*')
+                                                ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
+                                                ->where(function ($query) use ($request,$logged_user,$childrens) {
+                                                    if ( $logged_user['user_role']==2 || ($logged_user['user_role']==3 && $request['user_id']=="") || $logged_user['user_role']==4 ) $query->where('amount_requests.by_user',$logged_user['user_id']);  //parent,child,owner request self history
                                                     if (!empty($request['user_id'])) $query->where('amount_requests.by_user',$request['user_id']);     // user (child) history
+                                                    if ($logged_user['user_role']==3 && $request['user_id']==0) $query->whereIn('amount_requests.by_user',$childrens);     // user (child) history
                                                 })
+                                                ->whereYear('amount_requests.created_at', '=', date('Y'))
                                                 ->whereMonth('amount_requests.created_at',"=",$i)
                                                 ->get()->toArray();
 
@@ -538,12 +675,12 @@ class App_controller extends Controller
         foreach($money_requests as $key=>$res)
         {
             $requested[$key]=$res;
-            $requested[$key]['requested_date']=date('d F Y', strtotime($res['created_at'])).' | '.date('h:i A', strtotime($res['created_at']));          
+            $requested[$key]['requested_date']=date('d M Y', strtotime($res['created_at'])).' | '.date('h:i A', strtotime($res['created_at']));          
         }
 
         if(!empty($requested))
         {
-            $users_requests[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y')));
+            $users_requests[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
             $users_requests[$j]['data']=$requested;
             $j++;
         }

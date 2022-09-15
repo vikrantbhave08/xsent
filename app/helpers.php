@@ -32,6 +32,28 @@ function send_otp($data)
     return $statusCode;  
 }
 
+function send_notification($data)
+{ 
+    $endpoint = 'https://fcm.googleapis.com/fcm/send';
+    $client = new \GuzzleHttp\Client();
+   
+    $response = $client->request('GET', $endpoint, ['query' => [
+        'action' => 'sendsms', 
+        'user' => env("SEND_OTP_USER"), 
+        'from' => 'ibdaa', 
+        'to' => $data['contact_no'], 
+        'text' => $data['msg'],
+        'password' => env("SEND_OTP_PASS"),
+    ]]);
+
+    // url will be: http://my.domain.com/test.php?key1=5&key2=ABC;
+
+    $statusCode = $response->getStatusCode();
+    $content = $response->getBody();
+    
+    return $statusCode;  
+}
+
 
 function admin_user1()
 {    
