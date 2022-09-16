@@ -68,14 +68,13 @@ class Users_controller extends Controller
         // $user_details=User_model::where('users.user_id',$user_id)->first();
             
 
-        $result['user_details']=User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit')
+        $result['user_details']=User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit','user_roles.role_name')
                                     ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')
+                                    ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
                                     ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
-                                    ->where('users.user_id',$user_id)->groupBy('wallet_transaction.credit')->get()->toArray();
+                                    ->where('users.user_id',$user_id)->groupBy('wallet_transaction.credit')->first()->toArray();
 
-                                    // echo "<pre>";
-                                    // print_r($result);
-                                    // exit;
+                                 
 
         
 

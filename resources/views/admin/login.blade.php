@@ -16,7 +16,7 @@
     <!-- Custom CSS -->
     <link href="{{ asset('assets/dist/css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/dist/css/select2.min.css') }}" rel="stylesheet" />
-    <title>Xsend</title>
+    <title>Xsent</title>
     <style>
     .error{
         color:red
@@ -34,10 +34,10 @@
                             <div class="col-xxl-7 col-xl-7 col-lg-7 col-7 h-100">
                                 <div class="left-panel h-100 d-flex flex-column justify-content-center">
                                     <div class="logo-holder">
-                                        <img src="{{ asset('assets/dist/images/logo.png') }}" alt="Xsend" class="d-block mx-auto" />
+                                        <img src="{{ asset('assets/dist/images/logo.png') }}" alt="Xsent" class="d-block mx-auto" />
                                     </div>
                                     <div class="login-image-holder">
-                                        <img src="{{ asset('assets/dist/images/login.png') }}" alt="Xsend" class="d-block mx-auto img-fluid" />
+                                        <img src="{{ asset('assets/dist/images/login.png') }}" alt="Xsent" class="d-block mx-auto img-fluid" />
                                     </div>
                                 </div>
                             </div>

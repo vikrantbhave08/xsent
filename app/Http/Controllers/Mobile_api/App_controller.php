@@ -20,13 +20,17 @@ use App\Models\Shop_transaction_model;
 use App\Models\Shops_model;
 use App\Models\Shopkeepers_model;
 use App\Models\Amount_requests_model;
+use App\Models\Notifications_model;
 
 class App_controller extends Controller
 {
-    
-    public function __construct()
+    private $logged_user;
+
+    public function __construct(Request $request)
     {               
-        $this->middleware('CheckApiToken:app');        
+        $this->middleware('CheckApiToken:app');     
+        
+        $this->logged_user=Auth::mobile_app_user($request['token']);  
     }
 
 
@@ -501,11 +505,68 @@ class App_controller extends Controller
 
                             }
                         } else {
+
+                            $already_nitify=Notifications_model::where(
+                                array(
+                                    'to_user'=>$logged_user['parent_id'],
+                                    'notify_of'=>$logged_user['user_id'],
+                                    'status'=>2
+                                )
+                            )->first();
+    
                             
-                            $data=array('status'=>false,'msg'=>'Monthly wallet limit exceeded');
+    
+                            if(!empty($already_nitify))
+                            {                           
+                                $already_nitify->status=2;  // 2 for per Month
+                                $already_nitify->is_active=1; 
+                                $already_nitify->updated_at=date('Y-m-d H:i:s');  
+                                $already_nitify->save();
+    
+                            } else {
+                                $notify=Notifications_model::create([   
+                                                'to_user' => $logged_user['parent_id'],
+                                                'notify_of' => $logged_user['user_id'],
+                                                'status' => 2,
+                                                'notification_msg' => 'High Transaction Alert Per month !',
+                                                'created_at' => date('Y-m-d H:i:s'),
+                                                'updated_at' => date('Y-m-d H:i:s')
+                                                ])->wallet_id;     
+                            }
+                            
+                            $data=array('status'=>false,'msg'=>'High Transaction Alert Per month !');
                         }
-                    } else {                        
-                        $data=array('status'=>false,'msg'=>'One day wallet limit exceeded');
+                    } else {
+
+                        $already_nitify=Notifications_model::where(
+                            array(
+                                'to_user'=>$logged_user['parent_id'],
+                                'notify_of'=>$logged_user['user_id'],
+                                'status'=>1
+                            )
+                        )->first();
+
+                        
+
+                        if(!empty($already_nitify))
+                        {                           
+                            $already_nitify->status=1;  // 1 for per day
+                            $already_nitify->is_active=1; 
+                            $already_nitify->updated_at=date('Y-m-d H:i:s'); 
+                            $already_nitify->save();
+
+                        } else {
+                            $notify=Notifications_model::create([   
+                                            'to_user' => $logged_user['parent_id'],
+                                            'notify_of' => $logged_user['user_id'],
+                                            'status' => 1,
+                                            'notification_msg' => 'High Transaction Alert Per Day !',
+                                            'created_at' => date('Y-m-d H:i:s'),
+                                            'updated_at' => date('Y-m-d H:i:s')
+                                            ])->wallet_id;     
+                        }
+
+                        $data=array('status'=>false,'msg'=>'High transaction alert per day !');
                       }
                 } else {
                     $data=array('status'=>false,'msg'=>'Your wallet has insufficient balance');
@@ -513,6 +574,44 @@ class App_controller extends Controller
 
             }      
         
+        echo json_encode($data);
+    }
+
+    public function get_notifications(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found','notifications'=>array());
+
+        $notifications=Notifications_model::select('notifications.*','wallet.balance','users.first_name','users.last_name')
+                                            ->leftjoin('wallet', 'notifications.notify_of', '=', 'wallet.user_id') 
+                                            ->leftjoin('users', 'notifications.notify_of', '=', 'users.user_id')                                            
+                                            ->where('to_user',$this->logged_user['user_id'])->get()->toArray();
+
+        $children=array_column(Parent_child_model::select('child_id')->where('parent_id',$this->logged_user['user_id'])->get()->toArray(),'child_id');
+
+        $childrens_wallet=Wallet_model::select('wallet.*','users.first_name','users.last_name')
+                                        ->leftjoin('users', 'wallet.user_id', '=', 'users.user_id') 
+                                        ->whereIn('wallet.user_id',$children)->get()->toArray();
+
+        foreach($childrens_wallet as $child_key=>$child_wallet)
+        {
+            $new_notify=array(
+                                'first_name'=>$child_wallet['first_name'],
+                                'last_name'=>$child_wallet['last_name'],
+                                'to_user'=>$this->logged_user['user_id'],
+                                'notify_of'=>$child_wallet['user_id'],
+                                'notification_msg'=>'Low Balance ! Please top up the account.',  
+                                'low_balance_alert'=>$child_wallet['low_balance_alert'],
+                                'balance'=>$child_wallet['balance']
+                             );
+
+            $child_wallet['balance']<=$child_wallet['low_balance_alert'] ? array_unshift($notifications, $new_notify) : '';
+        }
+
+        if(!empty($notifications))
+        {
+            $data=array('status'=>true,'msg'=>'Data found','notifications'=>$notifications);
+        }
+
         echo json_encode($data);
     }
 
