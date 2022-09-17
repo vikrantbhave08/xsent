@@ -53,7 +53,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
                 </tr>
                 <tr>
                     <td align="center" valign="top">
-                        <table style="background-color:red" border="0" cellpadding="0" cellspacing="0" width="100%"
+                        <table style="background-image: linear-gradient(to right, #69a1e5, #63b46e)" border="0" cellpadding="0" cellspacing="0" width="100%"
                             id="templateContainerImageFull" style="min-height:15px;">
                             <tr>
                                 <td style="padding: 75px 48px 75px 48px; text-align: center; color: #fff;">
