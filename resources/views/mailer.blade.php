@@ -671,13 +671,13 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
                                         Lorem Ipsum passages, and more recently with desktop publishing software
                                         like Aldus PageMaker including versions of Lorem Ipsum.</p>
 
-                                        <h1>{{ $details['title'] }}</h1>
+                                        <h1 style="color: #fff; text-align: center; margin-bottom: 20px;">{{ $details['title'] }}</h1>
 
-                                        <p>{{ $details['body'] }}</p><br>
+                                        <p style="color: #fff; text-align: center; margin-bottom: 20px;">{{ $details['body'] }}</p><br>
 
                                         @if($details['username'])
-                                        <p>Username : {{ $details['username'] }}</p>
-                                        <p>Password : {{ $details['password'] }}</p>
+                                        <p style="color: #fff; text-align: center; margin-bottom: 20px;">Username : {{ $details['username'] }}</p>
+                                        <p style="color: #fff; text-align: center; margin-bottom: 20px;">Password : {{ $details['password'] }}</p>
                                         @endif
 
                                         <p>Thank you</p> 
