@@ -9,124 +9,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
     <title>Xsent</title>
 
-</head> 
 
-<body yahoo bgcolor="#ffffff">
-<table width="100%" bgcolor="#ffffff" border="0" cellpadding="10" cellspacing="0">
-    <tr>
-        <td>
-            <!--[if (gte mso 9)|(IE)]>
-  <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td>
-<![endif]-->
-            <table bgcolor="#ffffff" class="content" align="center" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                    <td valign="top" mc:edit="headerBrand" id="templateContainerHeader" style="padding-top: 0;">
-
-                        <p style="text-align:center;margin:0;padding:0;">
-                            <img src="{{ asset('assets/dist/images/mailer-logo.png') }}" style="display:inline-block;" />
-                        </p>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" valign="top">
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateContainer">
-                            <tr>
-                                <td valign="top" class="bodyContent" style="width: 300px;">
-                                    <h1 style="font-weight: bold; font-size: 24px; margin-bottom: 20px;">
-                                        <strong>Emailer Title</strong>
-                                    </h1>
-
-                                    <p style="font-size: 16px;">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                        elit, sed do eiusmod
-                                        tempor incididunt ut labore et dolore magna aliqua.
-                                    </p>
-                                </td>
-                                <td valign="top" class="bodyContent" style="width: 300px;">
-                                    <img src="{{ asset('assets/dist/images/mailer-banner.png') }}" style="display:inline-block;" />
-                                </td> 
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" valign="top">
-                        <table style="background-image: linear-gradient(to right, #69a1e5, #63b46e)" border="0" cellpadding="0" cellspacing="0" width="100%"
-                            id="templateContainerImageFull" style="min-height:15px;">
-                            <tr>
-                                <td style="padding: 75px 48px 75px 48px; text-align: center; color: #fff;">
-                                       <p style="color: #fff; text-align: center; margin-bottom: 20px;">Lorem Ipsum is
-                                        simply dummy text of the printing and typesetting industry.</p>
-                                       <p style="color: #fff; text-align: center; margin-bottom: 20px;">Lorem Ipsum has
-                                        been the industry's standard dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type and scrambled it to make a type
-                                        specimen book.
-                                        </p>
-                                        <p style="color: #fff; text-align: center; margin-bottom: 20px;">It has survived
-                                        not only five centuries, but also the leap into electronic typesetting,
-                                        remaining essentially unchanged. </p>
-                                        <p style="color: #fff; text-align: center; margin-bottom: 20px;">It was
-                                        popularised in the 1960s with the release of Letraset sheets containing
-                                        Lorem Ipsum passages, and more recently with desktop publishing software
-                                        like Aldus PageMaker including versions of Lorem Ipsum.</p>
-
-                                        <h1>{{ $details['title'] }}</h1>
-
-                                        <p>{{ $details['body'] }}</p><br>
-
-                                        @if($details['username'])
-                                        <p>Username : {{ $details['username'] }}</p>
-                                        <p>Password : {{ $details['password'] }}</p>
-                                        @endif
-
-                                        <p>Thank you</p> 
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" valign="top">
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-height:15px;">
-                            <!-- <tr>
-                                <td style="padding-top: 10px">
-                                    <ul class="social-icons">
-                                        <li>
-                                            <a href="#"><img src="images/fb.png" /></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="images/twitter.png" /></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="images/insta.png" /></a>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr> -->
-                            <tr>
-                                <td style="padding: 25px 25px 17px 25px; text-align: center;">
-                                    <p
-                                        style=" text-align: center; font-size:16px !important; margin-bottom: 20px; font-weight: 700; color: #000;">
-                                        If you need any further assistance by
-                                        please contact us on x_sent.com or
-                                        <br> contacting on our whatsapp number +971 201458720
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <!--[if (gte mso 9)|(IE)]>
-      </td>
-    </tr>
-</table>
-<![endif]-->
-        </td>
-    </tr>
-</table>
+    
 <style type="text/css">
     /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
 
@@ -723,6 +607,125 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
         margin-right: 0;
     }
 </style>
+
+</head> 
+
+<body yahoo bgcolor="#ffffff">
+<table width="100%" bgcolor="#ffffff" border="0" cellpadding="10" cellspacing="0">
+    <tr>
+        <td>
+            <!--[if (gte mso 9)|(IE)]>
+  <table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td>
+<![endif]-->
+            <table bgcolor="#ffffff" class="content" align="center" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td valign="top" mc:edit="headerBrand" id="templateContainerHeader" style="padding-top: 0;">
+
+                        <p style="text-align:center;margin:0;padding:0;">
+                            <img src="{{ asset('assets/dist/images/mailer-logo.png') }}" style="display:inline-block;" />
+                        </p>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateContainer">
+                            <tr>
+                                <td valign="top" class="bodyContent" style="width: 300px;">
+                                    <h1 style="font-weight: bold; font-size: 24px; margin-bottom: 20px;">
+                                        <strong>Emailer Title</strong>
+                                    </h1>
+
+                                    <p style="font-size: 16px;">Lorem ipsum dolor sit amet, consectetur adipiscing
+                                        elit, sed do eiusmod
+                                        tempor incididunt ut labore et dolore magna aliqua.
+                                    </p>
+                                </td>
+                                <td valign="top" class="bodyContent" style="width: 300px;">
+                                    <img src="{{ asset('assets/dist/images/mailer-banner.png') }}" style="display:inline-block;" />
+                                </td> 
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                            id="templateContainerImageFull" style="min-height:15px;">
+                            <tr>
+                                <td style="padding: 75px 48px 75px 48px; text-align: center; color: #fff;">
+                                       <p style="color: #fff; text-align: center; margin-bottom: 20px;">Lorem Ipsum is
+                                        simply dummy text of the printing and typesetting industry.</p>
+                                       <p style="color: #fff; text-align: center; margin-bottom: 20px;">Lorem Ipsum has
+                                        been the industry's standard dummy text ever since the 1500s, when an
+                                        unknown printer took a galley of type and scrambled it to make a type
+                                        specimen book.
+                                        </p>
+                                        <p style="color: #fff; text-align: center; margin-bottom: 20px;">It has survived
+                                        not only five centuries, but also the leap into electronic typesetting,
+                                        remaining essentially unchanged. </p>
+                                        <p style="color: #fff; text-align: center; margin-bottom: 20px;">It was
+                                        popularised in the 1960s with the release of Letraset sheets containing
+                                        Lorem Ipsum passages, and more recently with desktop publishing software
+                                        like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+                                        <h1>{{ $details['title'] }}</h1>
+
+                                        <p>{{ $details['body'] }}</p><br>
+
+                                        @if($details['username'])
+                                        <p>Username : {{ $details['username'] }}</p>
+                                        <p>Password : {{ $details['password'] }}</p>
+                                        @endif
+
+                                        <p>Thank you</p> 
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-height:15px;">
+                            <!-- <tr>
+                                <td style="padding-top: 10px">
+                                    <ul class="social-icons">
+                                        <li>
+                                            <a href="#"><img src="images/fb.png" /></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="images/twitter.png" /></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="images/insta.png" /></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr> -->
+                            <tr>
+                                <td style="padding: 25px 25px 17px 25px; text-align: center;">
+                                    <p
+                                        style=" text-align: center; font-size:16px !important; margin-bottom: 20px; font-weight: 700; color: #000;">
+                                        If you need any further assistance by
+                                        please contact us on x_sent.com or
+                                        <br> contacting on our whatsapp number +971 201458720
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!--[if (gte mso 9)|(IE)]>
+      </td>
+    </tr>
+</table>
+<![endif]-->
+        </td>
+    </tr>
+</table>
 </body>
 
 </html>
