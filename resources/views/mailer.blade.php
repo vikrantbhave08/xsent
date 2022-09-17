@@ -2,9 +2,7 @@
 <!DOCTYPE html
 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<html>
-    
+<html xmlns="http://www.w3.org/1999/xhtml">    
     <head>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;0,900;1,800&display=swap"
     rel="stylesheet">
