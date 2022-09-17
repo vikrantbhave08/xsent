@@ -73,7 +73,17 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
                                         popularised in the 1960s with the release of Letraset sheets containing
                                         Lorem Ipsum passages, and more recently with desktop publishing software
                                         like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                                      
+
+                                        <h1>{{ $details['title'] }}</h1>
+
+                                        <p>{{ $details['body'] }}</p><br>
+
+                                        @if($details['username'])
+                                        <p>Username : {{ $details['username'] }}</p>
+                                        <p>Password : {{ $details['password'] }}</p>
+                                        @endif
+
+                                        <p>Thank you</p> 
                                 </td>
                             </tr>
                         </table>
@@ -274,10 +284,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     /**
-* @tab Page
-* @section heading 1
-* @tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
-* @style heading 1
+* tab Page
+* section heading 1
+* tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
+* style heading 1
 */
 
     h1 {
@@ -297,10 +307,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     /**
-* @tab Page
-* @section heading 2
-* @tip Set the styling for all second-level headings in your emails.
-* @style heading 2
+* tab Page
+* section heading 2
+* tip Set the styling for all second-level headings in your emails.
+* style heading 2
 */
 
     h2 {
@@ -320,10 +330,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     /**
-* @tab Page
-* @section heading 3
-* @tip Set the styling for all third-level headings in your emails.
-* @style heading 3
+* tab Page
+* section heading 3
+* tip Set the styling for all third-level headings in your emails.
+* style heading 3
 */
 
     h3 {
@@ -343,10 +353,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     /**
-* @tab Page
-* @section heading 4
-* @tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
-* @style heading 4
+* tab Page
+* section heading 4
+* tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
+* style heading 4
 */
 
     h4 {
@@ -490,9 +500,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     /**
-* @tab Body
-* @section body link
-* @tip Set the styling for your email's main content links. Choose a color that helps them stand out from your text.
+* tab Body
+* section body link
+* tip Set the styling for your email's main content links. Choose a color that helps them stand out from your text.
 */
 
     a:visited {
@@ -538,9 +548,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     /**
-* @tab Footer
-* @section footer link
-* @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
+* tab Footer
+* section footer link
+* tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
 */
 
     .footerContent a:link,
@@ -558,9 +568,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     /**
-* @tab Footer
-* @section footer link
-* @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
+* tab Footer
+* section footer link
+* tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
 */
 
     .bodyContentImageFull p {
@@ -621,7 +631,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
         }
     }
 
-    /*@media only screen and (min-device-width: 601px) {
+    /*media only screen and (min-device-width: 601px) {
 .content {width: 600px !important;}
 }*/
 
