@@ -127,8 +127,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     #templateContainerImageFull {
-        background-image: linear-gradient(to right, #69a1e5, #63b46e);
-        /* background-color: #63b46e; */
+        /* background-image: linear-gradient(to right, #69a1e5, #63b46e); */
+        background-color: #4f6a91;
 
     }
 
@@ -709,7 +709,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
                                     <p
                                         style=" text-align: center; font-size:16px !important; margin-bottom: 20px; font-weight: 700; color: #000;">
                                         If you need any further assistance by
-                                        please contact us on x_sent.com or
+                                        please contact us on xsent.ae or
                                         <br> contacting on our whatsapp number +971 201458720
                                     </p>
                                 </td>
