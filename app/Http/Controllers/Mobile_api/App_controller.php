@@ -72,6 +72,15 @@ class App_controller extends Controller
     
     public function add_user(Request $request)
     {   
+        $details = [
+            'title' => "registration email title" ,
+            'body' => 'See your credentials below.',
+            'username' => "suraj@appcartsystems.com",
+            'password' => "abcd1234"
+        ];
+       
+        $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+        exit;
         $data=array('status'=>false,'msg'=>'Data not found');
 
         if($request['email'] && $request['password'] && $request['user_role'] && $request['name'])
