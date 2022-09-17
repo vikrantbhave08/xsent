@@ -34,7 +34,8 @@ class Users_controller extends Controller
                             if (!empty($request['user_role'])) $query->where('auth_user.user_role',$request['user_role']);
                             if (!empty($request['password'])) $query->where('users.password',sha1($request['password'].'appcart systemts pvt ltd'));
                         })
-                        ->where('users.user_role',"!=",1)->get()->toArray();
+                        ->whereIn('users.user_role',array(2,3))->get()->toArray();
+                        // ->where('users.user_role',"!=",1)->get()->toArray();
 
         foreach($result['users'] as $ukey=>$user)
         {
@@ -73,10 +74,25 @@ class Users_controller extends Controller
                                     ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
                                     ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
                                     ->where('users.user_id',$user_id)->groupBy('wallet_transaction.credit')->first()->toArray();
-
-                                 
+       
+        $result['shops_exchange']=Wallet_transaction_model::from('wallet_transaction as wt')->select('wt.*')
+                                                            ->leftjoin('wallet', 'wt.user_id', '=', 'wallet.user_id')
+                                                            ->leftjoin('users', 'wt.user_id', '=', 'users.user_id')
+                                                            ->where('wt.user_id',$user_id)->where('wt.to_role',2)->get()->toArray();
 
         
+        // echo "<pre>";
+        // print_r($result['shops_exchange']);
+        // exit;
+
+        // User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit','user_roles.role_name')
+        //                             ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')
+        //                             ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
+        //                             ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
+        //                             ->where('users.user_id',$user_id)->where('wallet.user_id',$user_id)
+        //                             ->groupBy('wallet_transaction.credit')->first()->toArray();
+
+                        
 
         // if(!empty($user_details))
         // {
@@ -85,7 +101,6 @@ class Users_controller extends Controller
         //                             ->leftjoin('users', 'auth_user.user_id', '=', 'users.user_id')
         //                             ->where('users.user_id',$user_id)
         //                             ->groupBy('auth_user.user_id')->get()->toArray();
-           
         // }                        
 
                                               

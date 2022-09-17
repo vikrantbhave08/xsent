@@ -160,11 +160,16 @@ class Login_controller extends Controller
                             $user_validate['user_data']['user_role']==2;
                         }
                     }
-                 
+
+
+                    $valid_app=($request['app_type']=="parent" && $user_validate['user_data']['user_role']!=5) ? true : ($request['app_type']=="shop" && $user_validate['user_data']['user_role']!=4 ? true : false);
+                                     
                     $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
 
                     $auth_user=Auth_users::where('user_id',$user_validate['user_data']['user_id'])->where('user_role',$user_validate['user_data']['user_role'])->first();
                   
+                    if($valid_app)
+                    {                
 
                     if(!empty($auth_user))
                     {
@@ -203,6 +208,10 @@ class Login_controller extends Controller
                             $data['shop_details']=Shopkeepers_model::select('shops.*')->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.shop_id')->where('salesperson_id',$user_validate['user_data']['user_id'])->first();
                         }
                     }
+                } else {
+
+                    $data=array('status'=>false,'msg'=>'Invalid credentials');
+                }
 
                 } else {
                     $data=array('status'=>false,'msg'=>'Invalid credentials');

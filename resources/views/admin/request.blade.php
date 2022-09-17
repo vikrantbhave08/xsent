@@ -207,6 +207,7 @@
 
         });
         function resizeData() {
+            setTimeout(function () {
             var winWidth = $(window).width();
             var winHeight = $(window).height();
             var sidebarBrandHeight = $(".sidebar-brand").innerHeight();
@@ -226,6 +227,7 @@
             var contentHolder = winHeight - pageHeadingHeight - 15;
 
             $(".content-holder").height(contentHolder);
+            },1000)
         }
 
         resizeData();
@@ -240,6 +242,7 @@
                 dropdownParent: $('#sendremarkModal')
             });
             $('#request').DataTable({
+                "searching": true,
                 scrollY: 600,
                 scrollX: true,
                 // "bPaginate": false,

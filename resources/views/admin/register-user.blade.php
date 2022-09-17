@@ -178,6 +178,7 @@
                 dropdownParent: $('#sendremarkModal')
             });
             $('#registereUser').DataTable({
+                "searching": true,
                 scrollY: 500,
                 scrollX: true,
                 // "bPaginate": false,

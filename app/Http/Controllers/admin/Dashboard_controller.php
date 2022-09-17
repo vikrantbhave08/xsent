@@ -36,7 +36,7 @@ class Dashboard_controller extends Controller
     {
         $this->logged_user;
 
-        $result['users']=User_model::get()->toArray();
+        $result['users']=User_model::get()->whereIn('user_role',array(2,3))->toArray();
         $result['shops']=Shops_model::select('shops.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as shops_earn'))
                                     ->leftjoin('shop_transactions', 'shops.shop_id', '=', 'shop_transactions.shop_id')
                                     ->groupBy('shops.shop_id')->get()->toArray();                                    

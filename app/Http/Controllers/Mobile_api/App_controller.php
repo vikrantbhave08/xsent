@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
-use View;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -73,15 +72,7 @@ class App_controller extends Controller
     
     public function add_user(Request $request)
     {   
-        $details = [
-            'title' => "registration email title" ,
-            'body' => 'See your credentials below.',
-            'username' => "suraj@appcartsystems.com",
-            'password' => "abcd1234"
-        ];
        
-        $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
-        exit;
         $data=array('status'=>false,'msg'=>'Data not found');
 
         if($request['email'] && $request['password'] && $request['user_role'] && $request['name'])
@@ -249,7 +240,8 @@ class App_controller extends Controller
                                                         if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
                                                         }) 
                                                        ->whereYear('shop_transactions.created_at', '=', date('Y'))
-                                                       ->whereMonth('shop_transactions.created_at',"=",$i)->get()->toArray();
+                                                       ->whereMonth('shop_transactions.created_at',"=",$i)
+                                                       ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
 
             $monthly_transactions=array();
             foreach($transactions as $key=>$res)
@@ -350,13 +342,13 @@ class App_controller extends Controller
             $day_limit=$month_limit=true;
             if($logged_user['user_role']==4)
             {
-
+               
                 for($i=0; $i<2; $i++)
                 {
                     $from_wallet=Wallet_model::select('wallet.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
-                    ->leftjoin('wallet_transaction', 'wallet.wallet_id', '=', 'wallet_transaction.wallet_id')
-                    ->where('wallet.user_id',$logged_user['user_id'])
-                    ->where('wallet.user_role',$logged_user['user_role'])
+                    ->leftjoin('wallet_transaction', 'wallet.user_id', '=', 'wallet_transaction.from_user')
+                    ->where('wallet.user_id',$logged_user['user_id']) 
+                    // ->where('wallet_transaction.from_role',$logged_user['user_role'])
                     ->where(function ($query) use ($request,$logged_user,$i) { 
                         if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children                   
                         if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children                   
@@ -364,26 +356,26 @@ class App_controller extends Controller
                      ->groupBy('wallet_transaction.user_id') 
                     //  ->having('max_transaction','<=','wallet.balance')                                    
                      ->first(); 
+                    
+                   
                      if($i==0 && !empty($from_wallet))
                      {
 
-                        $day_limit = (empty($from_wallet->max_limit_per_day) || $from_wallet->max_limit_per_day >= $from_wallet->max_transaction )? true : false ;
+                        $day_limit = (empty($from_wallet->max_limit_per_day) || $from_wallet->max_limit_per_day >= $from_wallet->max_transaction + $request['amount'] )? true : false ;
 
                     } else if($i==1 && !empty($from_wallet))
                     {
-                         $month_limit = (empty($from_wallet->max_limit_per_month) || $from_wallet->max_limit_per_month>=$from_wallet->max_transaction) ? true : false ;
+                         $month_limit = (empty($from_wallet->max_limit_per_month) || $from_wallet->max_limit_per_month>=$from_wallet->max_transaction + $request['amount']) ? true : false ;
 
                      }
                   
                 }
 
-            } else {
+            } 
                 
                 $from_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->where('wallet.user_role',$logged_user['user_role'])->first();
-            }                       
-            
-         
-                                  
+              
+                                             
             $from_wallet_balance=0;            
             if(!empty($from_wallet))
             {
@@ -429,6 +421,7 @@ class App_controller extends Controller
                                             'by_user' => $logged_user['user_id'],
                                             'shop_id' => $shop_detail->shop_id,
                                             'amount' => $request['amount'],
+                                            'note' => !empty($request['note']) ? $request['note'] : "" ,
                                             'created_at' => date('Y-m-d H:i:s'),
                                             'updated_at' => date('Y-m-d H:i:s')
                                         ])->shop_trans_id;
@@ -483,6 +476,7 @@ class App_controller extends Controller
                                             'by_user' => $logged_user['user_id'],
                                             'shop_id' => $shop_detail->shop_id,
                                             'amount' => $request['amount'],
+                                            'note'=>!empty($request['note']) ? $request['note'] : "" ,
                                             'created_at' => date('Y-m-d H:i:s'),
                                             'updated_at' => date('Y-m-d H:i:s')
                                         ])->shop_trans_id;
@@ -743,6 +737,8 @@ class App_controller extends Controller
 
     public function topup_history(Request $request)
     {
+
+       
         $data=array('status'=>false,'msg'=>'Data not found','topup'=>array());
 
         $logged_user=Auth::mobile_app_user($request['token']);
@@ -759,8 +755,8 @@ class App_controller extends Controller
                                             })                                            
                                             // ->where('wt.from_user',0)
                                             ->whereYear('wt.created_at', '=', date('Y'))
-                                            ->whereMonth('wt.created_at',"=",$i)
-                                            ->get()->toArray();
+                                            ->whereMonth('wt.created_at',"=",$i) 
+                                            ->orderBy('wt.created_at', 'DESC')->get()->toArray();
 
             $history=array();
             foreach($topup as $key=>$res)
@@ -813,7 +809,7 @@ class App_controller extends Controller
                                                 })
                                                 ->whereYear('amount_requests.created_at', '=', date('Y'))
                                                 ->whereMonth('amount_requests.created_at',"=",$i)
-                                                ->get()->toArray();
+                                                ->orderBy('amount_requests.created_at', 'DESC')->get()->toArray();
 
         $requested=array();
         foreach($money_requests as $key=>$res)
