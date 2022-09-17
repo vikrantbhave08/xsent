@@ -127,8 +127,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
     }
 
     #templateContainerImageFull {
-        /* background-image: linear-gradient(to right, #69a1e5, #63b46e); */
-        background-color: #63b46e;
+        background-image: linear-gradient(to right, #69a1e5, #63b46e);
+        /* background-color: #63b46e; */
 
     }
 
