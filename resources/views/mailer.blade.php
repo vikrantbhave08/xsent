@@ -73,17 +73,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
                                         popularised in the 1960s with the release of Letraset sheets containing
                                         Lorem Ipsum passages, and more recently with desktop publishing software
                                         like Aldus PageMaker including versions of Lorem Ipsum.</p>
-
-                                        <h1>{{ $details['title'] }}</h1>
-
-                                        <p>{{ $details['body'] }}</p><br>
-
-                                        @if($details['username'])
-                                        <p>Username : {{ $details['username'] }}</p>
-                                        <p>Password : {{ $details['password'] }}</p>
-                                        @endif
-
-                                        <p>Thank you</p>
+                                      
                                 </td>
                             </tr>
                         </table>
