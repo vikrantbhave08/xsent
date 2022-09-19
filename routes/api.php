@@ -40,6 +40,8 @@ Route::post('reset-password', [App_controller::class, 'reset_password']);
 
 Route::post('get-users-profile', [App_controller::class, 'get_users_profile']);
 Route::post('add-user', [App_controller::class, 'add_user']);
+Route::post('update-user', [App_controller::class, 'update_user']);
+Route::post('delete-user', [App_controller::class, 'delete_user']);
 Route::Post('get-children', [App_controller::class, 'get_children']); 
 Route::Post('get-child-details', [App_controller::class, 'get_child_details']); 
 

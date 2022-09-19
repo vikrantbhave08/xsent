@@ -74,6 +74,14 @@ class Login_controller extends Controller
             if(!$check_user_exists['status'])
             {
 
+                if(($request['user_role']==2 && $request['shop_name']) || $request['user_role']==3)
+                {
+                    $shop_exists=Shops_model::where('shop_name',$request['shop_name'])->first();
+                    if(empty($shop_exists))
+                    {              
+                       
+                                     
+
                 $user=User_model::where('username',$request['email'])->first();
 
                 $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
@@ -108,6 +116,28 @@ class Login_controller extends Controller
                 } else {
                     $user=$user->toArray();
                 } 
+
+
+                // ******************************************** Shop Registration **********************************************
+
+                $create_shop=Shops_model::create([                        
+                    'owner_id' => $user['user_id'],
+                    'shop_name' => $request['shop_name'],                   
+                    'city' => $request['shop_city'] ? $request['shop_city'] : "",                   
+                    'country' => $request['shop_country'] ? $request['shop_country'] : "",                   
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                    ])->shop_id;
+
+                    if($create_shop)
+                    {
+                        $shop_gen_id='sh_'.base64_encode($user['user_id'])."_" .base64_encode($create_shop);
+                        $shop=Shops_model::where('shop_id',$create_shop)->first();
+                        $shop->shop_gen_id=$shop_gen_id;
+                        $shop->save();
+                    }
+
+            //    ***************************************** Autherisation generate login token ***********************************************
                
 
                     $create_auth_user = Auth_users::create([
@@ -125,6 +155,15 @@ class Login_controller extends Controller
                     } else {                        
                         $data=array('status'=>false,'msg'=>'Something went wrong');
                     }
+
+                } else {
+                    $data=array('status'=>false,'msg'=>'Shop already exists');
+                }
+
+                } else {
+                        
+                    $data=array('status'=>false,'msg'=>'Please add shop name');
+            }
 
 
             } else {

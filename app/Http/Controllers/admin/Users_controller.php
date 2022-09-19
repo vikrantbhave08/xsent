@@ -56,9 +56,7 @@ class Users_controller extends Controller
                                 }
 
         }
-
-
-                       
+      
         return view('admin/register-user',$result);
     }
 
@@ -75,14 +73,65 @@ class Users_controller extends Controller
                                     ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
                                     ->where('users.user_id',$user_id)->groupBy('wallet_transaction.credit')->first()->toArray();
        
-        $result['shops_exchange']=Wallet_transaction_model::from('wallet_transaction as wt')->select('wt.*')
-                                                            ->leftjoin('wallet', 'wt.user_id', '=', 'wallet.user_id')
-                                                            ->leftjoin('users', 'wt.user_id', '=', 'users.user_id')
-                                                            ->where('wt.user_id',$user_id)->where('wt.to_role',2)->get()->toArray();
+       
+        for($user_role=2; $user_role<=3; $user_role++) //  get first for shop (role=2) and then parent (role=3)
+        {
+            $transactions=array();
+            for($month=1; $month<=12; $month++)
+            {
+                for($i=0; $i<2; $i++) // for two status  bank transfer to user  & user transfer to bank account
+                {
+                    
+        $trans[date('F', mktime(0,0,0,$month, 1, date('Y')))]=Wallet_transaction_model::from('wallet_transaction as wt')->select('wt.*')
+                                                        ->leftjoin('wallet', 'wt.user_id', '=', 'wallet.user_id')
+                                                        ->leftjoin('users', 'wt.user_id', '=', 'users.user_id')                                                   
+                                                        ->where(function ($query) use ($request,$i,$user_role) {                                                    
+                                                                                                
+                                                            if($i==0) $query->where('wt.from_user', 8);         //bank transfer to user
+                                                            if($i==0) $query->where('wt.user_id',23);     //bank transfer to user
+                                                            if($i==0) $query->where('wt.to_role',$user_role);     //for user role 
+                                                            
+                                                            if($i==1) $query->where('wt.from_user', 6);         //user transfer to bank account
+                                                            if($i==1) $query->where('wt.user_id', 8);     //user transfer to bank account
+                                                            if($i==1) $query->where('wt.from_role',$user_role);     //for user role 
+                                                                                                                      
+                                                        })
+                                                        ->whereMonth('wt.created_at',"=",$month) 
+                                                        ->get()->toArray();
 
+                                                    // echo "<pre>";
+                                                    // print_r($trans[date('F', mktime(0,0,0,$month, 1, date('Y')))]);
+                                                        
+                                   if(!empty($trans[date('F', mktime(0,0,0,$month, 1, date('Y')))]))
+                                   {
+                                    //   echo date('F', mktime(0,0,0,$month, 1, date('Y')));
+                                      $transactions = array_merge($transactions, $trans);                
+                                    //   $transactions = array_merge($transactions, $trans);                
+                                   }
+                    }
+                  
+              }
+
+            //   echo "<pre>";
+            //   print_r($transactions);
+            //   exit;
+
+              foreach($transactions as $key=>$val)
+              {
+                usort($val, function($a, $b) {
+                    return strtotime($a['created_at']) - strtotime($b['created_at']);
+                });
+            }
+
+           
+             if($user_role==2) { $transaction['shop'] = $transactions ; } 
+             if($user_role==3) { $transaction['parent'] = $transactions ; } 
+        }
+
+      
         
         // echo "<pre>";
-        // print_r($result['shops_exchange']);
+        // print_r($transaction);
         // exit;
 
         // User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit','user_roles.role_name')
