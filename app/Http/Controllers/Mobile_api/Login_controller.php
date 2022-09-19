@@ -125,6 +125,7 @@ class Login_controller extends Controller
                     'shop_name' => $request['shop_name'],                   
                     'city' => $request['shop_city'] ? $request['shop_city'] : "",                   
                     'country' => $request['shop_country'] ? $request['shop_country'] : "",                   
+                    'shop_address' => $request['shop_address'] ? $request['shop_address'] : "",                   
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                     ])->shop_id;
@@ -150,8 +151,21 @@ class Login_controller extends Controller
                     ])->auth_id;    
                     
                     if($create_auth_user)
-                    {
+                    {                      
+
                         $data=array('status'=>true,'msg'=>'User registered successfully','token'=>$gen_token,'user_role'=> (int)$request['user_role']);
+                        if($request['user_role']==2)
+                        {
+                            if($request['user_role']==2)
+                            {
+                                $data['shop_details']=Shops_model::where('owner_id',$user['user_id'])->first();
+                            }     
+                            // if($user_role==5)
+                            // {
+                            //     $data['shop_details']=Shopkeepers_model::select('shops.*')->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.shop_id')->where('salesperson_id',$user_validate['user_data']['user_id'])->first();
+                            // }
+                        }
+
                     } else {                        
                         $data=array('status'=>false,'msg'=>'Something went wrong');
                     }

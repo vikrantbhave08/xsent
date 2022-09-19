@@ -104,85 +104,38 @@
                                                                 <div>
                                                                     <table id="shopDetails" class="row-border"
                                                                         style="width:100%">
-                                                                        <!-- <h5 class="table-month-title">July </h5> -->
+
+                                                                        @if(!empty($transaction['shop']))
+
+                                                                        @foreach($transaction['shop'] as $month=>$month_transaction)
+                                                                        
                                                                         <thead>
                                                                             <tr>
-                                                                                <th colspan="3">July</th>
+                                                                                <th colspan="3">{{ $month }}</th>
                                                                             </tr>
                                                                         </thead>
+
                                                                         <tbody>
+                                                                        @foreach($month_transaction as $key=>$month_data)
+                                                                        <!-- <i class="ri-arrow-right-up-line"></i> -->
+                                                                        <!-- <i class="ri-arrow-left-down-line"></i> -->
                                                                             <tr>
-                                                                                <td>12/07/2022</td>
-                                                                                <td>Top up from Bank Account </td>
-                                                                                <td class="strongdata">AED 1500.00 <span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-left-down-line"></i></span>
+                                                                                <td>{{ date('d/m/Y',strtotime($month_data['created_at']))." | ".date('h:i A',strtotime($month_data['created_at'])) }}</td>
+                                                                                <td>{{ $month_data['from_user']==0 ? 'Top up from Bank Account' : 'Transfered from wallet to Bank Account' }} </td>
+                                                                                <td class="strongdata">AED {{ $month_data['credit'] }} <span
+                                                                                        class="ms-2"> <i class="{{ $month_data['from_user']==0 ? 'ri-arrow-left-down-line' : 'ri-arrow-right-up-line' }}"></i></span>
                                                                                 </td>
                                                                             </tr>
-                                                                            <tr>
-                                                                                <td>5/07/2022</td>
-                                                                                <td>Top up from Bank Account </td>
-                                                                                <td class="strongdata">AED 850.00 <span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-left-down-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>1/07/2022</td>
-                                                                                <td>Transfered from wallet to Bank
-                                                                                    Account </td>
-                                                                                <td class="strongdata"><strong>AED
-                                                                                        1200.00</strong><span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-right-up-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
+                                                                           
+                                                                            @endforeach
 
                                                                         </tbody>
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th colspan="3">June</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td>30/06/2022</td>
-                                                                                <td>Top up from Bank Account </td>
-                                                                                <td class="strongdata">AED 950.00 <span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-left-down-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>15/07/2022</td>
-                                                                                <td>Transfered from wallet to Bank
-                                                                                    Account</td>
-                                                                                <td class="strongdata"><strong>AED
-                                                                                        540.00</strong>
-                                                                                    <span class="ms-2"><i
-                                                                                            class="ri-arrow-right-up-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>8/07/2022</td>
-                                                                                <td>Transfered from wallet to Bank
-                                                                                    Account </td>
-                                                                                <td class="strongdata"><strong>AED
-                                                                                        360.00</strong><span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-right-up-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>8/07/2022</td>
-                                                                                <td>Top up from Bank Account </td>
-                                                                                <td class="strongdata">AED 1450.00<span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-left-down-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
+                                                                         
+                                                                        @endforeach
 
-                                                                        </tbody>
+                                                                        @endif
+
+                                                                       
 
                                                                     </table>
                                                                 </div>
@@ -269,40 +222,37 @@
                                                                     <table id="parentDetails" class="row-border"
                                                                         style="width:100%">
 
+                                                                        @if(!empty($transaction['parent']))
+
+                                                                   
+
+                                                                        @foreach($transaction['parent'] as $month=>$month_transaction)
+                                                                       
                                                                         <thead>
                                                                             <tr>
-                                                                                <th colspan="3">July</th>
+                                                                                <th colspan="3">{{ $month }}</th>
                                                                             </tr>
                                                                         </thead>
+
                                                                         <tbody>
+                                                                        @foreach($month_transaction as $key=>$month_data)
+                                                                        <!-- <i class="ri-arrow-right-up-line"></i> -->
+                                                                        <!-- <i class="ri-arrow-left-down-line"></i> -->
                                                                             <tr>
-                                                                                <td>12/07/2022</td>
-                                                                                <td>Top up from Bank Account </td>
-                                                                                <td class="strongdata">AED 1500.00 <span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-left-down-line"></i></span>
+                                                                                <td>{{ date('d/m/Y',strtotime($month_data['created_at']))." | ".date('h:i A',strtotime($month_data['created_at'])) }}</td>
+                                                                                <td>{{ $month_data['from_user']==0 ? 'Top up from Bank Account' : 'Transfered from wallet to Bank Account' }} </td>
+                                                                                <td class="strongdata">AED {{ $month_data['credit'] }} <span
+                                                                                        class="ms-2"> <i class="{{ $month_data['from_user']==0 ? 'ri-arrow-left-down-line' : 'ri-arrow-right-up-line' }}"></i></span>
                                                                                 </td>
                                                                             </tr>
-                                                                            <tr>
-                                                                                <td>5/07/2022</td>
-                                                                                <td>Top up from Bank Account </td>
-                                                                                <td class="strongdata">AED 850.00 <span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-left-down-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>1/07/2022</td>
-                                                                                <td>Transfered from wallet to Bank
-                                                                                    Account </td>
-                                                                                <td class="strongdata"><strong>AED
-                                                                                        1200.00</strong><span
-                                                                                        class="ms-2"><i
-                                                                                            class="ri-arrow-right-up-line"></i></span>
-                                                                                </td>
-                                                                            </tr>
+                                                                           
+                                                                            @endforeach
 
                                                                         </tbody>
+
+                                                                        @endforeach
+
+                                                                        @endif
 
 
                                                                     </table>
