@@ -132,7 +132,7 @@ class App_controller extends Controller
                     );
 
 
-                    $title=$request['user_role']==4 ? 'Your parent is registred you on xsent.' : 'Shop Owner registred you on xsent.';
+                    $title=$request['user_role']==4 ? 'Your parent added you on xsent.' : 'Shop Owner added you on xsent.';
 
                     $details = [
                         'title' => $title ,
@@ -1021,6 +1021,15 @@ class App_controller extends Controller
                     $auth_user->passphrase = $request['new_password'];
                     $auth_user->updated_at= date('Y-m-d H:i:s');
                     $auth_user->save();
+
+                    $details = [
+                        'title' => 'Reset Password Email' ,
+                        'body' => 'See your credentials below.',
+                        'username' => $request['email'],
+                        'password' => $request['password']
+                    ];
+                   
+                    // $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
                     $data=array('status'=>true,'msg'=>'Password changed successfully');                                   
                 } else {
 

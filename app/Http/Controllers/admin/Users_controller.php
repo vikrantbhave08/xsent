@@ -64,8 +64,7 @@ class Users_controller extends Controller
     {
         $user_id=base64_decode($request['uid']);
 
-        // $user_details=User_model::where('users.user_id',$user_id)->first();
-            
+        // $user_details=User_model::where('users.user_id',$user_id)->first();            
 
         $result['user_details']=User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit','user_roles.role_name')
                                     ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')

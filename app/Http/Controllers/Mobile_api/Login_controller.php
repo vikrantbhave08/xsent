@@ -151,7 +151,17 @@ class Login_controller extends Controller
                     ])->auth_id;    
                     
                     if($create_auth_user)
-                    {                      
+                    {
+                        
+                        
+                        $details = [
+                            'title' => 'You are successfully registered on xsent.' ,
+                            'body' => 'See your credentials below.',
+                            'username' => $request['email'],
+                            'password' => $request['password']
+                        ];
+                       
+                        // $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
 
                         $data=array('status'=>true,'msg'=>'User registered successfully','token'=>$gen_token,'user_role'=> (int)$request['user_role']);
                         if($request['user_role']==2)
@@ -338,9 +348,10 @@ class Login_controller extends Controller
             if(!empty($check_user_exists))
             {
                 $check_user_exists=$check_user_exists->toArray();
+                
                 $details = [
                     'title' => 'Forgot Password Email',
-                    'body' => 'Your password is '.$check_user_exists['user_data']['passphrase']
+                    'body' => 'Your password for xsent is '.$check_user_exists['user_data']['passphrase']
                 ];
                
                 $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
