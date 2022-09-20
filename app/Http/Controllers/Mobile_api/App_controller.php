@@ -21,6 +21,8 @@ use App\Models\Shops_model;
 use App\Models\Shopkeepers_model;
 use App\Models\Amount_requests_model;
 use App\Models\Notifications_model;
+use App\Models\Cities_model;
+use App\Models\Province_model;
 
 class App_controller extends Controller
 {
@@ -107,6 +109,7 @@ class App_controller extends Controller
                         'password' => sha1($request['password'].'appcart systemts pvt ltd'),
                         'passphrase' => $request['password'],
                         'country' => $request['country'],
+                        'province' => $request['province'],
                         'city' => $request['city'],
                         'birth_date' => $request['birth_date'],
                         'gender' => $request['gender'],
@@ -213,118 +216,52 @@ class App_controller extends Controller
 
     public function update_user(Request $request)
     {   
-       
+
+               
         $data=array('status'=>false,'msg'=>'Data not found');
 
         if($request['user_id'])
          {
-            $fullname=explode(" ",$request['name']);
-            $request['first_name']=count($fullname)>=1 ? $fullname[0] : '' ;
-            $request['last_name']=count($fullname)>1 ? $fullname[1] : '' ;
 
-            $request_data=$request->all();
-            $check_user_exists=Login_controller::check_user_and_validate(array('email'=>$request_data['email'],'user_role'=>$request['user_role']));  //here user role 4 is for child
+                     
+            $update_user=User_model::where('user_id',$request['user_id'])->first();
+
+            count(explode(" ",$request['name']))>=1 ? $update_user->first_name=$fullname[0] : "";
+            count(explode(" ",$request['name']))>1 ? $update_user->last_name=$fullname[1] : "";
+            $request['email'] ? $update_user->email=$request['email'] : "";
+            $request['email'] ? $update_user->username=$request['email'] : "";
+            $request['contact_no'] ? $update_user->contact_no=$request['contact_no'] : "";
+            $request['country'] ? $update_user->country=$request['country'] : "";
+            $request['province'] ? $update_user->province=$request['province'] : "";
+            $request['birth_date'] ? $update_user->birth_date=$request['birth_date'] : "";
+            $request['university'] ? $update_user->university=$request['university'] : "";
+            $request['is_active']==0 ? $update_user->is_active=$request['is_active'] : "";
+            $request['is_active']==1 ? $update_user->is_active=$request['is_active'] : "";
+            $update_user->updated_at=date('Y-m-d H:i:s');
+
+            $is_update=$update_user->save();
+
            
-            if(!$check_user_exists['status'])
-            {
-                $logged_user=Auth::mobile_app_user($request['token']);
-                $logged_users_shop=Shops_model::where('owner_id',$logged_user['user_id'])->first();
-
-               
-                $user=User_model::where('username',$request['email'])->first();
-
-                $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
-
-              
-                if(empty($user))
+           
+                if($is_update)
                 {
-                    $create_user = User_model::create([                        
-                        'user_role' => $request['user_role'],
-                        'first_name' => $request['first_name'],
-                        'last_name' => $request['last_name'],
-                        'username' => $request['email'],
-                        'email' => $request['email'],
-                        'contact_no' => $request['contact_no'],
-                        'password' => sha1($request['password'].'appcart systemts pvt ltd'),
-                        'passphrase' => $request['password'],
-                        'country' => $request['country'],
-                        'city' => $request['city'],
-                        'birth_date' => $request['birth_date'],
-                        'gender' => $request['gender'],
-                        'university' => $request['university'],
-                        'token' => $gen_token,
-                        'created_at' =>  date('Y-m-d H:i:s'),
-                        'updated_at' =>  date('Y-m-d H:i:s')
-                    ])->user_id;
+                    $data=array('status'=>true,'msg'=>'User updated successfully');
 
-                    if($create_user)
-                    {
-                        Parent_child_model::create([  
-                            'parent_id' => $logged_user['user_id'],
-                            'child_id' => $create_user,
-                            'created_at' =>  date('Y-m-d H:i:s'),
-                            'updated_at' =>  date('Y-m-d H:i:s')
-                        ])->assign_id;
-                    }
+                    // $title=$request['user_role']==4 ? 'Your parent is registred you on xsent.' : 'Shop Owner registred you on xsent.';
 
-                    $user=array(
-                        'user_id' => $create_user,
-                        'user_role' => $request['user_role']
-                    );
-
-
-                    $title=$request['user_role']==4 ? 'Your parent is registred you on xsent.' : 'Shop Owner registred you on xsent.';
-
-                    $details = [
-                        'title' => $title ,
-                        'body' => 'See your credentials below.',
-                        'username' => $request['email'],
-                        'password' => $request['password']
-                    ];
-                   
+                    // $details = [
+                    //     'title' => $title ,
+                    //     'body' => 'See your credentials below.',
+                    //     'username' => $request['email'],
+                    //     'password' => $request['password']
+                    // ];                   
                     // $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
 
-                } else {
-                    $user=$user->toArray();
                 } 
                
-
-                    $create_auth_user = Auth_users::create([
-                        'user_id' => $user['user_id'],
-                        'user_role' => $request['user_role'],
-                        'users_token' => $gen_token,
-                        'fcm_token' => $request['fcm_token'],
-                        'created_at' =>  date('Y-m-d H:i:s'),
-                        'updated_at' =>  date('Y-m-d H:i:s')
-                    ])->auth_id;    
-                    
-                    if($create_auth_user)
-                    {            
-                        if(!empty($logged_users_shop->shop_id) && $request['user_role']==5)
-                        {
-                            $shopkeeper=Shopkeepers_model::create([                        
-                                'salesperson_id' => $user['user_id'],
-                                'shop_id' => $logged_users_shop->shop_id,
-                                'owner_id' => $logged_user['user_id'],                 
-                                'created_at' => date('Y-m-d H:i:s'),
-                                'updated_at' => date('Y-m-d H:i:s')
-                                ])->shopkeeper_id;
-                        }
-
-                        $data=array('status'=>true,'msg'=>'User added successfully','token'=>$gen_token);
-                    } else {                        
-                        $data=array('status'=>false,'msg'=>'Something went wrong');
-                    }
-
-
-            } else {         
-
-                $data=array('status'=>false,'msg'=>'User already exists');
-            }
-
-           
-         }
-
+  
+            } 
+         
          echo json_encode($data); 
     }
    
@@ -344,7 +281,7 @@ class App_controller extends Controller
             $from_wallet_balance=$from_wallet->balance;
         }
 
-        $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,0) as balance'),DB::raw('ifnull(SUM(shop_transactions.amount),0) as spend_amt'))
+        $children=User_model::select('users.*','parent_child.parent_id',DB::raw('ifnull(wallet.balance,0) as balance'),DB::raw('ifnull(SUM(shop_transactions.amount),"0") as spend_amt'))
         ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.child_id')    
         ->leftjoin('wallet', 'parent_child.child_id', '=', 'wallet.user_id')  
         ->leftjoin('shop_transactions', 'users.user_id', '=', 'shop_transactions.by_user')  
@@ -352,7 +289,7 @@ class App_controller extends Controller
             if (!empty($request['user_id'])) $query->where('parent_child.child_id',$request['user_id']);                       
          }) 
         ->where('parent_child.parent_id',$logged_user['user_id'])
-        ->groupBy('shop_transactions.by_user')->get()->toArray();     
+        ->groupBy('users.user_id')->get()->toArray();     
         
         if(!empty($children))
         {
@@ -573,7 +510,8 @@ class App_controller extends Controller
 
                                     }
 
-                                    Wallet_transaction_model::create([                        
+                                    Wallet_transaction_model::create([          
+                                        'txn_id'=>"TXN".sha1($logged_user['user_id'].date('Y-m-d H:i:s').mt_rand(1111,9999)),
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
@@ -628,7 +566,8 @@ class App_controller extends Controller
 
                                     }
 
-                                    Wallet_transaction_model::create([                        
+                                    Wallet_transaction_model::create([   
+                                        'txn_id'=>"TXN".sha1($logged_user['user_id'].date('Y-m-d H:i:s').mt_rand(1111,9999)),                     
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
@@ -801,7 +740,8 @@ class App_controller extends Controller
                     'owner_id' => $logged_user['user_id'],
                     'shop_name' => $request['shop_name'],                   
                     'city' => $request['shop_city'] ? $request['shop_city'] : "",                   
-                    'country' => $request['shop_country'] ? $request['shop_country'] : "",                   
+                    'country' => $request['shop_country'] ? $request['shop_country'] : "", 
+                    'province' => $request['province'] ? $request['province'] : "",                    
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                     ])->shop_id;
@@ -1057,4 +997,6 @@ class App_controller extends Controller
 
         echo json_encode($data); 
     }
+
+
 }

@@ -9,6 +9,9 @@ use App\Models\User_model;
 use App\Models\Auth_users;
 use App\Models\Shops_model;
 use App\Models\Shopkeepers_model;
+use App\Models\Cities_model;
+use App\Models\Province_model;
+use App\Models\Shop_cat_model;
 
 class Login_controller extends Controller
 {
@@ -99,6 +102,7 @@ class Login_controller extends Controller
                         'password' => sha1($request['password'].'appcart systemts pvt ltd'),
                         'passphrase' => $request['password'],
                         'country' => $request['country'],
+                        'province' => $request['province'],
                         'city' => $request['city'],
                         'birth_date' => $request['birth_date'],
                         'gender' => $request['gender'],
@@ -124,7 +128,8 @@ class Login_controller extends Controller
                     'owner_id' => $user['user_id'],
                     'shop_name' => $request['shop_name'],                   
                     'city' => $request['shop_city'] ? $request['shop_city'] : "",                   
-                    'country' => $request['shop_country'] ? $request['shop_country'] : "",                   
+                    'country' => $request['shop_country'] ? $request['shop_country'] : "",  
+                    'province' => $request['shop_province'] ? $request['shop_province'] : "",                  
                     'shop_address' => $request['shop_address'] ? $request['shop_address'] : "",                   
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
@@ -364,6 +369,39 @@ class Login_controller extends Controller
            
         }
 
+        echo json_encode($data); 
+    }
+
+    
+    public function getall_province(Request $request)
+    {                       
+            $province=Province_model::get()->toArray();
+           
+            $data=array('status'=>true,'msg'=>'Province data','province'=>$province);
+     
+        echo json_encode($data); 
+    }
+
+    public function getall_shop_categories(Request $request)
+    {                       
+            $categories=Shop_cat_model::get()->toArray();
+           
+            $data=array('status'=>true,'msg'=>'Province data','categories'=>$categories);
+     
+        echo json_encode($data); 
+    }
+
+    public function getall_cities_by_province(Request $request)
+    {                       
+        $data=array('status'=>false,'msg'=>'Data not found','cities'=>array());
+
+        if($request['province_id'])
+        { 
+            $cities=Cities_model::where('province_id',$request['province_id'])->get()->toArray();
+           
+            $data=array('status'=>true,'msg'=>'Cities data','cities'=>$cities);
+        }
+     
         echo json_encode($data); 
     }
 

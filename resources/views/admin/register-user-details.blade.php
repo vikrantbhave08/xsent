@@ -43,19 +43,19 @@
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">User Name :</li>
-                                                            <li class="list-inline-item data-label">{{ !empty($user_details) ? $user_details['first_name']." ".$user_details['last_name']  : "" }}</li>
+                                                            <li class="list-inline-item data-label">{{ !empty($shop_user_details) ? $shop_user_details['first_name']." ".$shop_user_details['last_name']  : "" }}</li>
                                                         </ul>
                                                     </div>
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Registered As:</li>
-                                                            <li class="list-inline-item data-label"> {{ !empty($user_details) ? ( $user_details['user_role']==2 || $user_details['user_role']==3  ? "Shop"  : $user_details['role_name'] ) : ""  }}  </li>
+                                                            <li class="list-inline-item data-label"> {{ !empty($shop_user_details) ? ( $shop_user_details['user_role']==2 || $shop_user_details['user_role']==3  ? "Shop"  : $shop_user_details['role_name'] ) : ""  }}  </li>
                                                         </ul>
                                                     </div>
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Wallet Balance:</li>
-                                                            <li class="list-inline-item data-label">AED {{ !empty($user_details) ? $user_details['wallet_balance']  : "" }}</li>
+                                                            <li class="list-inline-item data-label">AED {{ !empty($shop_user_details) ? $shop_user_details['wallet_balance']  : "0" }}</li>
                                                         </ul>
                                                     </div>
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
@@ -68,7 +68,7 @@
                                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
                                                         <ul class="list-inline mb-0">
                                                             <li class="list-inline-item form-label">Registered On :</li>
-                                                            <li class="list-inline-item data-label">{{ !empty($user_details) ? date("d M Y | H:i A",strtotime($user_details['created_at']))  : "" }} 
+                                                            <li class="list-inline-item data-label">{{ !empty($shop_user_details) ? date("d M Y | H:i A",strtotime($shop_user_details['created_at']))  : "" }} 
                                                                 </li>
                                                         </ul>
                                                     </div>
@@ -160,19 +160,19 @@
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">User Name :</li>
-                                                            <li class="list-inline-item data-label">{{ !empty($user_details) ? $user_details['first_name']." ".$user_details['last_name']  : "" }}</li>
+                                                            <li class="list-inline-item data-label">{{ !empty($parent_user_details) ? $parent_user_details['first_name']." ".$parent_user_details['last_name']  : "" }}</li>
                                                         </ul>
                                                     </div>
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Registered As:</li>
-                                                            <li class="list-inline-item data-label">{{ !empty($user_details) ? ( $user_details['user_role']==2 || $user_details['user_role']==3  ? "Parent"  : $user_details['role_name'] ) : ""  }}</li>
+                                                            <li class="list-inline-item data-label">{{ !empty($parent_user_details) ? ( $parent_user_details['user_role']==2 || $parent_user_details['user_role']==3  ? "Parent"  : $parent_user_details['role_name'] ) : ""  }}</li>
                                                         </ul>
                                                     </div>
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Wallet Balance:</li>
-                                                            <li class="list-inline-item data-label">AED 2200</li>
+                                                            <li class="list-inline-item data-label"> AED {{ !empty($parent_user_details) ? $parent_user_details['wallet_balance']  : "0" }}</li>
                                                         </ul>
                                                     </div>
                                                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
@@ -185,7 +185,7 @@
                                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
                                                         <ul class="list-inline mb-0">
                                                             <li class="list-inline-item form-label">Registered On :</li>
-                                                            <li class="list-inline-item data-label">{{ !empty($user_details) ? date("d M Y | H:i A",strtotime($user_details['created_at']))  : "" }} 
+                                                            <li class="list-inline-item data-label">{{ !empty($parent_user_details) ? date("d M Y | H:i A",strtotime($parent_user_details['created_at']))  : "" }} 
                                                                 </li>
                                                         </ul>
                                                     </div>

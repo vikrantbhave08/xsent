@@ -61,3 +61,6 @@ Route::Post('request-money-history', [App_controller::class, 'request_money_hist
 
 Route::Post('topup-history', [App_controller::class, 'topup_history']); 
 
+Route::get('getall-province', [Login_controller::class, 'getall_province']); 
+Route::Post('getall-cities-by-province', [Login_controller::class, 'getall_cities_by_province']); 
+Route::get('getall-shop-categories', [Login_controller::class, 'getall_shop_categories']); 

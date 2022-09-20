@@ -64,14 +64,19 @@ class Users_controller extends Controller
     {
         $user_id=base64_decode($request['uid']);
 
-        // $user_details=User_model::where('users.user_id',$user_id)->first();            
+        $user_details=User_model::where('users.user_id',$user_id)->first()->toArray();  
 
-        $result['user_details']=User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit','user_roles.role_name')
-                                    ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')
-                                    ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
-                                    ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
-                                    ->where('users.user_id',$user_id)->groupBy('wallet_transaction.credit')->first()->toArray();
-       
+        $result['shop_user_details'] = $result['parent_user_details'] = $user_details;
+         
+        
+        $as_a_shop=Wallet_model::where('user_id',$user_id)->where('user_role',2)->first();
+        $result['shop_user_details']['wallet_balance'] = !empty($as_a_shop) ? $as_a_shop->balance : 0 ;
+
+        $as_a_parent=Wallet_model::where('user_id',$user_id)->where('user_role',3)->first();
+        $result['parent_user_details']['wallet_balance'] = !empty($as_a_parent) ? $as_a_parent->balance : 0 ;
+      
+
+
                                     $transaction=array();
         for($user_role=2; $user_role<=3; $user_role++) //  get first for shop (role=2) and then parent (role=3)
         {
