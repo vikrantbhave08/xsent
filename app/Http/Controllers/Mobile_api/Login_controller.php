@@ -351,7 +351,7 @@ class Login_controller extends Controller
                 
                 $details = [
                     'title' => 'Forgot Password Email',
-                    'body' => 'Your password for xsent is '.$check_user_exists['user_data']['passphrase']
+                    'body' => 'Your password for xsent is '.$check_user_exists['passphrase']
                 ];
                
                 $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
