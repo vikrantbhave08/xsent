@@ -124,24 +124,31 @@ class Login_controller extends Controller
 
                 // ******************************************** Shop Registration **********************************************
 
-                $create_shop=Shops_model::create([                        
-                    'owner_id' => $user['user_id'],
-                    'shop_name' => $request['shop_name'],                   
-                    'city' => $request['shop_city'] ? $request['shop_city'] : "",                   
-                    'country' => $request['shop_country'] ? $request['shop_country'] : "",  
-                    'province' => $request['shop_province'] ? $request['shop_province'] : "",                  
-                    'shop_address' => $request['shop_address'] ? $request['shop_address'] : "",                   
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s')
-                    ])->shop_id;
+                if($request['shop_name'])
+                {
 
-                    if($create_shop)
-                    {
-                        $shop_gen_id='sh_'.base64_encode($user['user_id'])."_" .base64_encode($create_shop);
-                        $shop=Shops_model::where('shop_id',$create_shop)->first();
-                        $shop->shop_gen_id=$shop_gen_id;
-                        $shop->save();
-                    }
+                    $create_shop=Shops_model::create([                        
+                        'shop_cat_id' => $request['shop_cat_id'],
+                        'owner_id' => $user['user_id'],
+                        'shop_name' => $request['shop_name'],                   
+                        'city' => $request['shop_city'] ? $request['shop_city'] : "",                   
+                        'country' => $request['shop_country'] ? $request['shop_country'] : "",  
+                        'province' => $request['shop_province'] ? $request['shop_province'] : "",                  
+                        'shop_address' => $request['shop_address'] ? $request['shop_address'] : "",                   
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                        ])->shop_id;
+    
+                        if($create_shop)
+                        {
+                            $shop_gen_id='sh_'.base64_encode($user['user_id'])."_" .base64_encode($create_shop);
+                            $shop=Shops_model::where('shop_id',$create_shop)->first();
+                            $shop->shop_gen_id=$shop_gen_id;
+                            $shop->save();
+                        }
+
+                }
+               
 
             //    ***************************************** Autherisation generate login token ***********************************************
                
@@ -156,8 +163,7 @@ class Login_controller extends Controller
                     ])->auth_id;    
                     
                     if($create_auth_user)
-                    {
-                        
+                    {                        
                         
                         $details = [
                             'title' => 'You are successfully registered on xsent.' ,

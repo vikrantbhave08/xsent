@@ -173,11 +173,11 @@ class App_controller extends Controller
                                 ])->shopkeeper_id;
                         }
 
-                        $data=array('status'=>true,'msg'=>'User added successfully','token'=>$gen_token);
+                        $data=array('status'=>true,'msg'=> $request['user_role']==5 ? 'Sales Person added successfully' : 'Child added successfully','token'=>$gen_token);
                     } else {                        
                         $data=array('status'=>false,'msg'=>'Something went wrong');
                     }
-
+ 
 
             } else {         
 
@@ -312,14 +312,14 @@ class App_controller extends Controller
         for($i=1; $i<=12; $i++)
         {          
               
-            $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name')
+            $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name','shops.shop_gen_id')
                                                        ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
                                                        ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
                                                        ->where(function ($query) use ($request,$logged_user) {
                                                         if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id',$request['shop_gen_id']);  
                                                         if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
                                                         if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
-                                                        if ($logged_user['user_role']==5) $query->where('shop_transactions.created_at',date('Y-m-d'));  //for shopkeeper
+                                                        if ($logged_user['user_role']==5) $query->wheredate('shop_transactions.created_at',date('Y-m-d'));  //for shopkeeper
                                                         }) 
                                                        ->whereYear('shop_transactions.created_at', '=', date('Y'))
                                                        ->whereMonth('shop_transactions.created_at',"=",$i)
@@ -432,8 +432,8 @@ class App_controller extends Controller
                     ->where('wallet.user_id',$logged_user['user_id']) 
                     // ->where('wallet_transaction.from_role',$logged_user['user_role'])
                     ->where(function ($query) use ($request,$logged_user,$i) { 
-                        if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children                   
-                        if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children                   
+                        if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
+                        if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
                      })                                 
                      ->groupBy('wallet_transaction.user_id') 
                     //  ->having('max_transaction','<=','wallet.balance')                                    
@@ -511,7 +511,7 @@ class App_controller extends Controller
                                     }
 
                                     Wallet_transaction_model::create([          
-                                        'txn_id'=>"TXN".sha1($logged_user['user_id'].date('Y-m-d H:i:s').mt_rand(1111,9999)),
+                                        'txn_id'=>"TXN".date('smdHy1i').$logged_user['user_id'].$shop_detail->shop_id.mt_rand(1111,9999),
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
@@ -567,7 +567,7 @@ class App_controller extends Controller
                                     }
 
                                     Wallet_transaction_model::create([   
-                                        'txn_id'=>"TXN".sha1($logged_user['user_id'].date('Y-m-d H:i:s').mt_rand(1111,9999)),                     
+                                        'txn_id'=>"TXN".date('smdHyi').$logged_user['user_id'].$shop_detail->shop_id.mt_rand(1111,9999),                     
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
@@ -874,40 +874,49 @@ class App_controller extends Controller
 
         $users_requests=array();
 
-        $childrens=$logged_user['user_role']==3 && $request['user_id']==0 ? Parent_child_model::select('child_id')->where('parent_id',$logged_user['user_id'])->get()->toArray() : array();
+        $childrens=$logged_user['user_role']==3 && $request['user_id']=='0' ? Parent_child_model::select('child_id')->where('parent_id',$logged_user['user_id'])->get()->toArray() : array();
        
         $childrens = !empty($childrens) ? array_column($childrens,'child_id') : array(); 
              
 
-        $j=0;
-        for($i=1; $i<=12; $i++)
-        {   
-            
-        $money_requests=Amount_requests_model::select('users.first_name','users.last_name','amount_requests.*')
+        $j=0;  $month = empty($request['limit']) ? 12 : 1 ;
+        for($i=1; $i<=$month; $i++)
+        {           
+                       
+        $money_requests=Amount_requests_model::select('amount_requests.*','users.first_name','users.last_name')
                                                 ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
                                                 ->where(function ($query) use ($request,$logged_user,$childrens) {
                                                     if ( $logged_user['user_role']==2 || ($logged_user['user_role']==3 && $request['user_id']=="") || $logged_user['user_role']==4 ) $query->where('amount_requests.by_user',$logged_user['user_id']);  //parent,child,owner request self history
                                                     if (!empty($request['user_id'])) $query->where('amount_requests.by_user',$request['user_id']);     // user (child) history
-                                                    if ($logged_user['user_role']==3 && $request['user_id']==0) $query->whereIn('amount_requests.by_user',$childrens);     // user (child) history
+                                                    if ($logged_user['user_role']==3 && $request['user_id']=='0') $query->whereIn('amount_requests.by_user',$childrens);     // user (child) history
                                                 })
-                                                ->whereYear('amount_requests.created_at', '=', date('Y'))
-                                                ->whereMonth('amount_requests.created_at',"=",$i)
-                                                ->orderBy('amount_requests.created_at', 'DESC')->get()->toArray();
+                                                ->where(function ($query) use ($request,$i) {
+                                                    if ( empty($request['limit']) ) $query->whereYear('amount_requests.created_at', '=', date('Y'));
+                                                    if ( empty($request['limit']) ) $query->whereMonth('amount_requests.created_at',"=",$i);
+                                                })
+                                                ->orderBy('amount_requests.created_at', 'DESC')                                                
+                                                ->get()->toArray();
 
-        $requested=array();
-        foreach($money_requests as $key=>$res)
-        {
-            $requested[$key]=$res;
-            $requested[$key]['requested_date']=date('d M Y', strtotime($res['created_at'])).' | '.date('h:i A', strtotime($res['created_at']));          
-        }
+               
+                foreach($money_requests as $key=>$res)
+                {
+                   $money_requests[$key]['requested_date']=date('d M Y', strtotime($res['created_at'])).' | '.date('h:i A', strtotime($res['created_at']));          
+                 }
 
-        if(!empty($requested))
-        {
-            $users_requests[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
-            $users_requests[$j]['data']=$requested;
-            $j++;
-        }
+            if ( empty($request['limit']) )
+            {
+                    if(!empty($money_requests))
+                    {
+                        $users_requests[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
+                        $users_requests[$j]['data']=$money_requests;
+                        $j++;
+                    }
 
+
+                    
+            }  else {
+                $users_requests=array_slice($money_requests, 0, $request['limit']);
+            }
 
         }
 

@@ -32,6 +32,7 @@
                                                             <th>Sr. No</th>
                                                             <th>Request From</th>
                                                             <th>Request Amount</th>
+                                                            <th>User Type</th>
                                                             <th>Wallet Balance</th>
                                                             <th>Request At</th>
                                                             <th>Action</th>
@@ -45,12 +46,13 @@
                                                             <td>{{ $key+1 }}</td>
                                                             <td>@if($val['by_role']==2) {{ $val['shop_name'] }} @else {{ $val['first_name']." ".$val['last_name'] }} @endif</td>
                                                             <td>{{ 'AED'.' '.$val['request_amount'] }}</td>
+                                                            <td>{{ $val['by_role']==2 ? "Owner" : "Parent" }}</td>
                                                             <td>{{ 'AED'.' '.$val['balance'] }}</td>
                                                             <td>{{ date('Y-m-d',strtotime($val['created_at'])) }}</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
                                                         </tr>
                                                         @endforeach
-                                                        <tr>
+                                                        <!-- <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>01</td>
                                                             <td>Cafe Peter</td>
@@ -97,7 +99,7 @@
                                                             <td>AED 1800</td>
                                                             <td>894107</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
-                                                        </tr>
+                                                        </tr> -->
                                                     </tbody>
                                                 </table>
                                             </div>

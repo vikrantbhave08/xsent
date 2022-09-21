@@ -54,8 +54,8 @@
                                                             <th>User Name</th>
                                                             <th>Email Id</th>
                                                             <th>Registered As</th>
-                                                            <th>Parent Name</th>
-                                                            <th>Parent Email</th>
+                                                            <!-- <th>Parent Name</th>
+                                                            <th>Parent Email</th> -->
                                                             <th>Wallet Balance</th>
                                                             <th>Created At</th>
                                                             <th>Status</th>
@@ -72,8 +72,8 @@
                                                             <td>{{ $user['first_name'].' '.$user['last_name'] }}</td>
                                                             <td>{{ $user['email'] }}</td>
                                                             <td>{{ $user['role_name'] }}</td>
-                                                            <td>{{ $user['parent_name'] }}</td>
-                                                            <td>{{ $user['parent_email'] }}</td>
+                                                            <!-- <td>{{ $user['parent_name'] }}</td>
+                                                            <td>{{ $user['parent_email'] }}</td> -->
                                                             <td>{{ $user['balance']!=null ? 'AED '.$user['balance'] : 'AED 0' }}</td>
                                                             <td>{{ date('Y-m-d',strtotime($user['created_at'])) }}</td>
                                                             <td><button class="active-btn">Active</button></td>

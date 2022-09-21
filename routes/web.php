@@ -48,3 +48,5 @@ Route::post('admin/payment', [Users_controller::class, 'prebuild_checkout_page']
 Route::get('admin/payment-status', [Users_controller::class, 'payment_status']);
 
 Route::get('admin/register-user-details', [Users_controller::class, 'register_user_details']);
+
+Route::get('admin/bank-transfer', [Dashboard_controller::class, 'bank_transfer']);

@@ -32,13 +32,13 @@ class Requests_controller extends Controller
                                                 ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
                                                 ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
                                                 ->leftjoin('shops', 'amount_requests.by_user', '=', 'shops.owner_id') 
-                                                // ->whereIn('wallet.user_role',array(2,3))
+                                                ->whereIn('wallet.user_role',array(2,3))
                                                 // ->whereIn('amount_requests.by_role',array(2,3))
                                                 // ->whereYear('amount_requests.created_at', '=', date('Y'))
                                                 // ->whereMonth('amount_requests.created_at',"=",$i)
                                                 ->get()->toArray();
 
-                                                $result['requests']=array();
+                                                // $result['requests']=array();
                                                 // echo "<pre>";
                                                 // print_r($result);
                                                 // exit;

@@ -58,7 +58,7 @@
                                                             <img src="{{ asset('assets/dist/images/icon/amount-received.png') }}">
                                                         </div>
                                                         <div class="count-data">
-                                                            <h4 class="count">AED 2500</h4>
+                                                            <h4 class="count">AED {{ $admin_recieve[0]['admin_earn'] }} </h4>
                                                             <p class="count-title">Total Amount Received from
                                                                 Shops</p>
                                                         </div>
@@ -111,8 +111,10 @@
 
         var shops=JSON.parse('<?php if(!empty($shops)){ echo json_encode(array_column($shops,'shop_name')); } else { echo json_encode(array()); }?>');
         var shops_earn=JSON.parse('<?php if(!empty($shops)){ echo json_encode(array_column($shops,'shops_earn')); } else { echo json_encode(array()); }?>');
+        var cat_sales_by_month=JSON.parse('<?php if(!empty($cat_sales_by_month)){ echo json_encode($cat_sales_by_month); } else { echo json_encode(array()); }?>');
         console.log(shops);
         console.log(shops_earn);
+        console.log(cat_sales_by_month);
 
      </script>
 
@@ -166,6 +168,64 @@
         $(window).resize(function () {
             resizeData();
         })
+
+
+        
+var options = {
+    // series: [{
+    //     name: 'Food',
+    //     data: [40, 50, 55, 55, 60, 55, 65, 75, 89, 55, 45, 60]
+    // }, {
+    //     name: 'Stationery',
+    //     data: [53, 32, 33, 52, 13, 44, 32, 56, 32, 87, 90, 67]
+    // },
+    // {
+    //     name: 'Library',
+    //     data: [45, 67, 98, 34, 67, 53, 32, 33, 52, 13, 44, 32]
+    // }],
+    series:cat_sales_by_month,
+    chart: {
+        type: 'bar',
+        height: 430
+    },
+    plotOptions: {
+        bar: {
+            vertical: true,
+            dataLabels: {
+                position: 'top',
+            },
+        }
+    },
+    dataLabels: {
+        enabled: false,
+        offsetX: -6,
+        style: {
+            fontSize: '12px',
+            colors: ['#fff']
+        }
+    },
+    stroke: {
+        show: true,
+        width: 1,
+        colors: ['#fff']
+    },
+    tooltip: {
+        shared: true,
+        intersect: false
+
+    },
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    },
+    yaxis: {
+        title: {
+            text: 'AED'
+        }
+    },
+};
+
+var chart = new ApexCharts(document.querySelector("#financeStatistic"), options);
+chart.render();
 
 
 
