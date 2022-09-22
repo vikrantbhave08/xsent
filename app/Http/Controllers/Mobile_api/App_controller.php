@@ -513,7 +513,7 @@ class App_controller extends Controller
                                     }
 
                                     Wallet_transaction_model::create([          
-                                        'txn_id'=>"TXN".date('smdHy1i').$logged_user['user_id'].$shop_detail->shop_id.mt_rand(1111,9999),
+                                        'txn_id'=>"TXN".date('smdHy1i').$logged_user['user_id'].mt_rand(1111,9999),
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
@@ -569,7 +569,7 @@ class App_controller extends Controller
                                     }
 
                                     Wallet_transaction_model::create([   
-                                        'txn_id'=>"TXN".date('smdHyi').$logged_user['user_id'].$shop_detail->shop_id.mt_rand(1111,9999),                     
+                                        'txn_id'=>"TXN".date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999),                     
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
@@ -664,6 +664,19 @@ class App_controller extends Controller
 
             }      
         
+        echo json_encode($data);
+    }
+
+    public function get_bank_details(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        $bank_details=Bank_details_model::where('user_id',$logged_user['user_id'])->where('is_active',1)->first();
+
+        $data=!empty($bank_details) ? array('status'=>true,'msg'=>'Data found','bank_details'=>$bank_details->toArray()) : array('status'=>false,'msg'=>'Data not found','bank_details'=>'') ;
+
         echo json_encode($data);
     }
 
