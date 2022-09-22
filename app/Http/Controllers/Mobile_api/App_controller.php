@@ -424,20 +424,21 @@ class App_controller extends Controller
             $users_wallet_exists=Wallet_model::where('user_id',$request['user_id'])->first();
 
             $day_limit=$month_limit=true;
-            if($logged_user['user_role']==4)
+            $my_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->first();
+            if($logged_user['user_role']==4 && !empty($my_wallet))
             {
-                $my_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->first();
                
                 for($i=0; $i<2; $i++)
                 {
-                    $wallet_transaction=Wallet_transaction_model::select('wallet_transaction.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
-                                                    ->where(function ($query) use ($request,$logged_user,$i) { 
-                                                        if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
-                                                        if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
-                                                    })    
-                                                    ->groupBy('wallet_transaction.user_id') 
-                                                    ->get()->toArray(); 
+                    // $wallet_transaction=Wallet_transaction_model::select('wallet_transaction.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
+                    //                                 ->where(function ($query) use ($request,$logged_user,$i) { 
+                    //                                     if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
+                    //                                     if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
+                    //                                 })    
+                    //                                 ->groupBy('wallet_transaction.user_id') 
+                    //                                 ->get()->toArray(); 
 
+                                                  
                     $from_wallet=Wallet_model::select('wallet.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
                                                 ->leftjoin('wallet_transaction', 'wallet.user_id', '=', 'wallet_transaction.from_user')
                                                 ->where('wallet.user_id',$logged_user['user_id']) 
@@ -446,70 +447,88 @@ class App_controller extends Controller
                                                     if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
                                                     if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
                                                 })                                 
-                                                ->groupBy('wallet_transaction.user_id') 
-                                                //  ->having('max_transaction','<=','wallet.balance')                                    
-                                                ->get(); 
+                                                ->groupBy('wallet.user_id')                                                                         
+                                                ->first(); 
 
-                                                // echo "<pre>";
-                                                // print_r($from_wallet);
-                    
+                                                // echo "<pre>loop : ".$i;
+                                                // print_r($from_wallet);                    
                    
                      if($i==0)
                      {
 
-                        if(!empty($my_wallet))
+                        if(!empty($from_wallet))
                         {
-                            if(!empty($wallet_transaction))
-                            {
-                                if(empty($my_wallet->max_limit_per_day) || ((int)$my_wallet->max_limit_per_day >= $wallet_transaction[0]['max_transaction']+$request['amount']))
-                                {
-                                    $day_limit = true;  
-                                } else {
-                                    $day_limit = false;
-                                }
-                            } else {
-                                if(empty($my_wallet->max_limit_per_day) || ((int)$my_wallet->max_limit_per_day >= $request['amount']))
-                                {
-                                    $day_limit = true;
-                                } else {
-                                    $day_limit = false;
-                                }
+                            $day_limit = (empty($from_wallet->max_limit_per_day) || ((int)$from_wallet->max_limit_per_day >= (int)$from_wallet->max_transaction + $request['amount']) ) ? true : false ;
 
-                            }
+                        } else {
+                            
+                            $day_limit = empty($my_wallet->max_limit_per_day) || ($request['amount'] <= (int)$my_wallet->max_limit_per_day) ? true : false ;
 
-                            // $day_limit = !empty($wallet_transaction) ? ( ($wallet_transaction[0]['max_transaction']+$request['amount'] <= (int) $my_wallet->max_limit_per_day) ? true : false) : ($request['amount'] <= (int) $my_wallet->max_limit_per_day)
-                        }else{
-                            $day_limit = false;  
                         }
+
+                        // if(!empty($my_wallet))
+                        // {
+                        //     if(!empty($wallet_transaction))
+                        //     {
+                        //         if(empty($my_wallet->max_limit_per_day) || ((int)$my_wallet->max_limit_per_day >= $wallet_transaction[0]['max_transaction']+$request['amount']))
+                        //         {
+                        //             $day_limit = true;  
+                        //         } else {
+                        //             $day_limit = false;
+                        //         }
+                        //     } else {
+                        //         if(empty($my_wallet->max_limit_per_day) || ((int)$my_wallet->max_limit_per_day >= $request['amount']))
+                        //         {
+                        //             $day_limit = true;
+                        //         } else {
+                        //             $day_limit = false;
+                        //         }
+
+                        //     }
+
+                        //     // $day_limit = !empty($wallet_transaction) ? ( ($wallet_transaction[0]['max_transaction']+$request['amount'] <= (int) $my_wallet->max_limit_per_day) ? true : false) : ($request['amount'] <= (int) $my_wallet->max_limit_per_day)
+                        // }else{
+                        //     $day_limit = false;  
+                        // }
 
                         // $day_limit = (empty($from_wallet->max_limit_per_day) || $from_wallet->max_limit_per_day >= $from_wallet->max_transaction + $request['amount'] )? true : false ;
 
                     } else if($i==1)
                     {
 
-                        if(!empty($my_wallet))
+                        if(!empty($from_wallet))
                         {
-                            if(!empty($wallet_transaction))
-                            {
-                                if(empty($my_wallet->max_limit_per_month) || ((int)$my_wallet->max_limit_per_month >= $wallet_transaction[0]['max_transaction']+$request['amount']))
-                                {
-                                    $day_limit = true;  
-                                } else {
-                                    $day_limit = false;
-                                }
-                            } else {
+                            $month_limit = (empty($from_wallet->max_limit_per_month) || ((int)$from_wallet->max_limit_per_month >= (int)$from_wallet->max_transaction + $request['amount']) ) ? true : false ;
 
-                                if(empty($my_wallet->max_limit_per_month) || ((int)$my_wallet->max_limit_per_month >= $request['amount']))
-                                {
-                                    $day_limit = true;
-                                } else {
-                                    $day_limit = false;
-                                }
+                        } else {
+                            
+                            $month_limit = empty($my_wallet->max_limit_per_month) || ($request['amount'] <= (int)$my_wallet->max_limit_per_month) ? true : false ;
 
-                            }
-
-                            // $day_limit = !empty($wallet_transaction) ? ( ($wallet_transaction[0]['max_transaction']+$request['amount'] <= (int) $my_wallet->max_limit_per_day) ? true : false) : ($request['amount'] <= (int) $my_wallet->max_limit_per_day)
                         }
+
+                        // if(!empty($my_wallet))
+                        // {
+                        //     if(!empty($wallet_transaction))
+                        //     {
+                        //         if(empty($my_wallet->max_limit_per_month) || ((int)$my_wallet->max_limit_per_month >= $wallet_transaction[0]['max_transaction']+$request['amount']))
+                        //         {
+                        //             $month_limit = true;  
+                        //         } else {
+                        //             $month_limit = false;
+                        //         }
+                        //     } else {
+
+                        //         if(empty($my_wallet->max_limit_per_month) || ((int)$my_wallet->max_limit_per_month >= $request['amount']))
+                        //         {
+                        //             $month_limit = true;
+                        //         } else {
+                        //             $month_limit = false;
+                        //         }
+
+                        //     }
+
+                        //     // $month_limit = !empty($wallet_transaction) ? ( ($wallet_transaction[0]['max_transaction']+$request['amount'] <= (int) $my_wallet->max_limit_per_day) ? true : false) : ($request['amount'] <= (int) $my_wallet->max_limit_per_day)
+                        // }
                         //  $month_limit = (empty($from_wallet->max_limit_per_month) || $from_wallet->max_limit_per_month>=$from_wallet->max_transaction + $request['amount']) ? true : false ;
 
                      }
@@ -517,10 +536,11 @@ class App_controller extends Controller
                 }
 
             }
-            
+
+            // echo $day_limit."-".$month_limit;            
             // exit;
                 
-                $from_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->where('wallet.user_role',$logged_user['user_role'])->first();
+            $from_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->where('wallet.user_role',$logged_user['user_role'])->first();
               
                                              
             $from_wallet_balance=0;            
