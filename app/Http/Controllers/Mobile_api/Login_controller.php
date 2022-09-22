@@ -215,87 +215,100 @@ class Login_controller extends Controller
     public function login(Request $request)
     {
 
+        $data=array('status'=>false,'msg'=>'Data not found');
+
         if($request['email'] && $request['password'] && $request['app_type'])
         {
      
             $request_data=$request->all();
-            $user_validate=$this->check_user_and_validate(array('email'=>$request_data['email'],'password'=>$request_data['password']));
+            $user_validate=$this->check_user_and_validate(array('email'=>$request_data['email'],'password'=>$request_data['password'],'email_verify'=>true));
            
        
                 if($user_validate['status'])
                 {
-                    if($request['app_type']=="parent")
+                   
+                    if($user_validate['email_verify']==1)
                     {
-                        if($user_validate['user_data']['user_role']==2){       //owner will login as a parent
-                            $user_validate['user_data']['user_role']==3;
+
+                        if($request['app_type']=="parent")
+                        {
+                            if($user_validate['user_data']['user_role']==2){       //owner will login as a parent
+                                $user_validate['user_data']['user_role']==3;
+                            }
+                        } else {  //else type will be owner
+                            if($user_validate['user_data']['user_role']==3){       //parent will login as a owner
+                                $user_validate['user_data']['user_role']==2;
+                            }
                         }
-                    } else {  //else type will be owner
-                        if($user_validate['user_data']['user_role']==3){       //parent will login as a owner
-                            $user_validate['user_data']['user_role']==2;
+
+
+                        $valid_app=($request['app_type']=="parent" && $user_validate['user_data']['user_role']!=5) ? true : ($request['app_type']=="shop" && $user_validate['user_data']['user_role']!=4 ? true : false);
+                                        
+                        $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
+
+                        $auth_user=Auth_users::where('user_id',$user_validate['user_data']['user_id'])->where('user_role',$user_validate['user_data']['user_role'])->first();
+                    
+                        if($valid_app)
+                        {                
+
+                        if(!empty($auth_user))
+                        {
+                            $user_role=$auth_user->user_role;
+                                                
+                            $auth_user->users_token=$gen_token;
+                            $auth_user->fcm_token=$request['fcm_token'];                        
+                            $auth_user->updated_at= date('Y-m-d H:i:s');
+                            $auth_user->save();                    
+                            
+                        } else {
+                            $user_role=$user_validate['user_data']['user_role'];
+
+                            $create_auth_user = Auth_users::create([
+                                'user_id' => $user_validate['user_data']['user_id'],
+                                'user_role' => $user_validate['user_data']['user_role'],
+                                'fcm_token' => $request['fcm_token'],
+                                'users_token' => $gen_token,
+                                'created_at' =>  date('Y-m-d H:i:s'),
+                                'updated_at' =>  date('Y-m-d H:i:s')
+                            ])->auth_id;
+
                         }
-                    }
 
+                        $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,'user_role'=> $user_role);
 
-                    $valid_app=($request['app_type']=="parent" && $user_validate['user_data']['user_role']!=5) ? true : ($request['app_type']=="shop" && $user_validate['user_data']['user_role']!=4 ? true : false);
-                                     
-                    $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
+                        if($user_role==2 || $user_role==5)
+                        {
+                            if($user_role==2)
+                            {
+                                $data['shop_details']=Shops_model::where('owner_id',$user_validate['user_data']['user_id'])->first();
+                            } 
 
-                    $auth_user=Auth_users::where('user_id',$user_validate['user_data']['user_id'])->where('user_role',$user_validate['user_data']['user_role'])->first();
-                  
-                    if($valid_app)
-                    {                
-
-                    if(!empty($auth_user))
-                    {
-                        $user_role=$auth_user->user_role;
-                                            
-                        $auth_user->users_token=$gen_token;
-                        $auth_user->fcm_token=$request['fcm_token'];                        
-                        $auth_user->updated_at= date('Y-m-d H:i:s');
-                        $auth_user->save();                    
-                        
+                            if($user_role==5)
+                            {
+                                $data['shop_details']=Shopkeepers_model::select('shops.*')->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.shop_id')->where('salesperson_id',$user_validate['user_data']['user_id'])->first();
+                            }
+                        }
                     } else {
-                        $user_role=$user_validate['user_data']['user_role'];
 
-                        $create_auth_user = Auth_users::create([
-                            'user_id' => $user_validate['user_data']['user_id'],
-                            'user_role' => $user_validate['user_data']['user_role'],
-                            'fcm_token' => $request['fcm_token'],
-                            'users_token' => $gen_token,
-                            'created_at' =>  date('Y-m-d H:i:s'),
-                            'updated_at' =>  date('Y-m-d H:i:s')
-                        ])->auth_id;
-
-                    }
-
-                    $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,'user_role'=> $user_role);
-
-                    if($user_role==2 || $user_role==5)
-                    {
-                        if($user_role==2)
-                        {
-                            $data['shop_details']=Shops_model::where('owner_id',$user_validate['user_data']['user_id'])->first();
-                        } 
-
-                        if($user_role==5)
-                        {
-                            $data['shop_details']=Shopkeepers_model::select('shops.*')->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.shop_id')->where('salesperson_id',$user_validate['user_data']['user_id'])->first();
-                        }
+                        $data=array('status'=>false,'msg'=>'Invalid credentials');
                     }
                 } else {
 
-                    $data=array('status'=>false,'msg'=>'Invalid credentials');
+                    $details = [
+                        'title' => 'Click on verification link to verify email',
+                        'body' => ''
+                    ];
+                   
+                    $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+
+                    $data=array('status'=>false,'msg'=>'Please verify email');
                 }
 
                 } else {
                     $data=array('status'=>false,'msg'=>'Invalid credentials');
                 }
                 
-            } else {
-                
-                $data=array('status'=>false,'msg'=>'Data not found');
-                
-            }
+            } 
 
             echo json_encode($data);
     }

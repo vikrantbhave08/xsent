@@ -430,16 +430,19 @@ class App_controller extends Controller
                 for($i=0; $i<2; $i++)
                 {
                     $from_wallet=Wallet_model::select('wallet.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
-                    ->leftjoin('wallet_transaction', 'wallet.user_id', '=', 'wallet_transaction.from_user')
-                    ->where('wallet.user_id',$logged_user['user_id']) 
-                    // ->where('wallet_transaction.from_role',$logged_user['user_role'])
-                    ->where(function ($query) use ($request,$logged_user,$i) { 
-                        if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
-                        if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
-                     })                                 
-                     ->groupBy('wallet_transaction.user_id') 
-                    //  ->having('max_transaction','<=','wallet.balance')                                    
-                     ->first(); 
+                                                ->leftjoin('wallet_transaction', 'wallet.user_id', '=', 'wallet_transaction.from_user')
+                                                ->where('wallet.user_id',$logged_user['user_id']) 
+                                                // ->where('wallet_transaction.from_role',$logged_user['user_role'])
+                                                ->where(function ($query) use ($request,$logged_user,$i) { 
+                                                    if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
+                                                    if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
+                                                })                                 
+                                                ->groupBy('wallet_transaction.user_id') 
+                                                //  ->having('max_transaction','<=','wallet.balance')                                    
+                                                ->first(); 
+
+                                                echo "<pre>";
+                                                print_r($from_wallet);
                     
                    
                      if($i==0 && !empty($from_wallet))
@@ -455,7 +458,9 @@ class App_controller extends Controller
                   
                 }
 
-            } 
+            }
+            
+            exit;
                 
                 $from_wallet=Wallet_model::where('wallet.user_id',$logged_user['user_id'])->where('wallet.user_role',$logged_user['user_role'])->first();
               
