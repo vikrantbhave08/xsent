@@ -49,6 +49,9 @@ Route::Post('add-shop', [App_controller::class, 'add_shop']);
 Route::Post('get-shops-by-owner', [App_controller::class, 'get_shops_by_owner']); 
 Route::Post('transaction-summary', [App_controller::class, 'transaction_summary']); 
 
+Route::Post('add-bank-details', [App_controller::class, 'add_bank_details']); 
+Route::Post('get-bank-details', [App_controller::class, 'get_bank_details']); 
+
 Route::Post('add-money-to-wallet', [App_controller::class, 'add_money_to_wallet']); 
 Route::Post('get-notifications', [App_controller::class, 'get_notifications']); 
 Route::Post('get-users-wallet', [App_controller::class, 'get_users_wallet']); 

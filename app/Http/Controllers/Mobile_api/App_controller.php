@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use Validator;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,7 @@ use App\Models\Amount_requests_model;
 use App\Models\Notifications_model;
 use App\Models\Cities_model;
 use App\Models\Province_model;
+use App\Models\Bank_details_model;
 
 class App_controller extends Controller
 {
@@ -144,7 +146,7 @@ class App_controller extends Controller
                         'password' => $request['password']
                     ];
                    
-                    // $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+                    $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
 
                 } else {
                     $user=$user->toArray();
@@ -665,6 +667,59 @@ class App_controller extends Controller
         echo json_encode($data);
     }
 
+    public function add_bank_details(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+       
+        $rules = [
+            'account_no' => 'required',
+            'bank_name' => 'required',
+            'acc_holder_name' => 'required',
+            'iban_no' => 'required',
+        ];    
+        $customMessages = [
+            'required' => 'The :attribute field is required.'
+        ];
+        $validator=Validator::make($request->all(),$rules,$customMessages);
+    
+
+        $validation_flag=true;
+        if($validator->fails())
+        {
+            $messages=$validator->messages();
+            $errors=$messages->all();
+           
+            $data['errors']=$errors;
+            $validation_flag=false;
+
+        } else {
+
+            $bank_details=$request->all();
+            unset($bank_details['token']);
+               
+            if(!Bank_details_model::where('user_id',$logged_user['user_id'])->first())
+            {
+
+            $add_bank=Bank_details_model::create($bank_details)->bank_detail_id;                 
+            if($add_bank)
+            {
+                $data=array('status'=>true,'msg'=>'Bank details added successfully');
+            } else {
+                $data=array('status'=>false,'msg'=>'Something went wrong');
+            }
+
+            } else {
+                $data=array('status'=>false,'msg'=>'Bank details already added');
+            }
+            
+        } 
+
+
+        echo json_encode($data);
+    }
+
     public function get_notifications(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found','notifications'=>array());
@@ -978,7 +1033,7 @@ class App_controller extends Controller
                         'password' => $request['password']
                     ];
                    
-                    // $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+                    $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
                     $data=array('status'=>true,'msg'=>'Password changed successfully');                                   
                 } else {
 

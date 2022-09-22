@@ -172,7 +172,7 @@ class Login_controller extends Controller
                             'password' => $request['password']
                         ];
                        
-                        // $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+                        $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
 
                         $data=array('status'=>true,'msg'=>'User registered successfully','token'=>$gen_token,'user_role'=> (int)$request['user_role']);
                         if($request['user_role']==2)
