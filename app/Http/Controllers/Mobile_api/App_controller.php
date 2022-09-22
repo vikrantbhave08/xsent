@@ -437,7 +437,7 @@ class App_controller extends Controller
                                                     if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
                                                     if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
                                                 })                                 
-                                                ->groupBy('wallet_transaction.user_id') 
+                                                // ->groupBy('wallet_transaction.user_id') 
                                                 //  ->having('max_transaction','<=','wallet.balance')                                    
                                                 ->first(); 
 
