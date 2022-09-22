@@ -450,11 +450,11 @@ class App_controller extends Controller
                                                 //  ->having('max_transaction','<=','wallet.balance')                                    
                                                 ->get(); 
 
-                                                echo "<pre>";
-                                                print_r($from_wallet);
+                                                // echo "<pre>";
+                                                // print_r($from_wallet);
                     
                    
-                     if($i==0 && !empty($from_wallet))
+                     if($i==0)
                      {
 
                         if(!empty($my_wallet))
@@ -484,7 +484,7 @@ class App_controller extends Controller
 
                         // $day_limit = (empty($from_wallet->max_limit_per_day) || $from_wallet->max_limit_per_day >= $from_wallet->max_transaction + $request['amount'] )? true : false ;
 
-                    } else if($i==1 && !empty($from_wallet))
+                    } else if($i==1)
                     {
 
                         if(!empty($my_wallet))
