@@ -227,8 +227,8 @@ class Login_controller extends Controller
                 if($user_validate['status'])
                 {
                    
-                    if($user_validate['email_verify']==1)
-                    {
+                    // if($user_validate['email_verify']==1)
+                    // {
 
                         if($request['app_type']=="parent")
                         {
@@ -292,17 +292,17 @@ class Login_controller extends Controller
 
                         $data=array('status'=>false,'msg'=>'Invalid credentials');
                     }
-                } else {
+                // } else {
 
-                    $details = [
-                        'title' => 'Click on verification link to verify email',
-                        'body' => ''
-                    ];
+                //     $details = [
+                //         'title' => 'Click on verification link to verify email',
+                //         'body' => ''
+                //     ];
                    
-                    $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+                //     $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
 
-                    $data=array('status'=>false,'msg'=>'Please verify email');
-                }
+                //     $data=array('status'=>false,'msg'=>'Please verify email');
+                // }
 
                 } else {
                     $data=array('status'=>false,'msg'=>'Invalid credentials');
