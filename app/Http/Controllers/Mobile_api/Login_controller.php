@@ -35,6 +35,9 @@ class Login_controller extends Controller
             if(!empty($user))
             {    
                 $updated_date=date('Y-m-d H:i:s');
+                $user->updated_at=$updated_date;
+                $user->save();
+
                 $red_url=URL::to('/api/verify-email?access_tkn='.$request['access_tkn'].'_xsent_'.strtotime($updated_date));
 
                       $details = [
@@ -44,8 +47,7 @@ class Login_controller extends Controller
                    
                     $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));
 
-                    $user->updated_at=$updated_date;
-                    $user->save();
+                  
 
              
                 $data=array('flag'=>true,'msg'=>'Verification link send successfully');
@@ -381,6 +383,8 @@ class Login_controller extends Controller
                 } else {
 
                     $updated_date=date('Y-m-d H:i:s');
+                    echo $updated_date;
+                    exit;
                     $red_url=URL::to('/api/verify-email?access_tkn='.$user_validate['user_data']['token'].'_xsent_'.strtotime($updated_date));
     
                           $details = [
@@ -389,11 +393,12 @@ class Login_controller extends Controller
                         ];
 
                         $user= User_model::select('users.*')->where('user_id',$user_validate['user_data']['user_id'])->first(); 
+                        $user->updated_at=$updated_date;
+                        $user->save();
                        
                         $email_response=\Mail::to($user_validate['user_data']['email'])->send(new \App\Mail\SendMail($details));
     
-                        $user->updated_at=$updated_date;
-                        $user->save();
+                        
 
                     $data=array('status'=>false,'msg'=>'Please verify email');
                 }
