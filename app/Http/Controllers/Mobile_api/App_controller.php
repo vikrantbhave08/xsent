@@ -650,13 +650,13 @@ class App_controller extends Controller
                                                 'to_user' => $logged_user['parent_id'],
                                                 'notify_of' => $logged_user['user_id'],
                                                 'status' => 2,
-                                                'notification_msg' => 'High Transaction Alert Per month !',
+                                                'notification_msg' => 'You have exceeded the maximum transaction amount per month !',
                                                 'created_at' => date('Y-m-d H:i:s'),
                                                 'updated_at' => date('Y-m-d H:i:s')
                                                 ])->wallet_id;     
                             }
                             
-                            $data=array('status'=>false,'msg'=>'High Transaction Alert Per month !');
+                            $data=array('status'=>false,'msg'=>'You have exceeded the maximum transaction amount per month !');
                         }
                     } else {
 
@@ -684,13 +684,13 @@ class App_controller extends Controller
                                             'to_user' => $logged_user['parent_id'],
                                             'notify_of' => $logged_user['user_id'],
                                             'status' => 1,
-                                            'notification_msg' => 'High Transaction Alert Per Day !',
+                                            'notification_msg' => 'You have exceeded the maximum transaction amount per day !',
                                             'created_at' => date('Y-m-d H:i:s'),
                                             'updated_at' => date('Y-m-d H:i:s')
                                             ])->wallet_id;     
                         }
 
-                        $data=array('status'=>false,'msg'=>'High transaction alert per day !');
+                        $data=array('status'=>false,'msg'=>'You have exceeded the maximum transaction amount per day !');
                       }
                 } else {
                     $data=array('status'=>false,'msg'=>'Your wallet has insufficient balance');
@@ -709,9 +709,9 @@ class App_controller extends Controller
 
         $bank_details=Bank_details_model::where('user_id',$logged_user['user_id'])->where('is_active',1)->first();
 
-        $data=!empty($bank_details) ? array('status'=>true,'msg'=>'Data found','bank_details'=>$bank_details->toArray()) : array('status'=>false,'msg'=>'Data not found','bank_details'=>'') ;
+        $data=!empty($bank_details) ? array('status'=>true,'msg'=>'Data found','bank_details'=>array($bank_details->toArray())) : array('status'=>false,'msg'=>'Data not found','bank_details'=>array()) ;
 
-        echo json_encode($data);
+        echo json_encode($data); 
     }
 
     public function add_bank_details(Request $request)
@@ -749,13 +749,17 @@ class App_controller extends Controller
             if(!Bank_details_model::where('user_id',$logged_user['user_id'])->first())
             {
 
-            $add_bank=Bank_details_model::create($bank_details)->bank_detail_id;                 
-            if($add_bank)
-            {
-                $data=array('status'=>true,'msg'=>'Bank details added successfully');
-            } else {
-                $data=array('status'=>false,'msg'=>'Something went wrong');
-            }
+                $bank_details['user_id']=$logged_user['user_id'];
+                $bank_details['created_at']=date('Y-m-d H:i:s');
+                $bank_details['updated_at']=date('Y-m-d H:i:s');
+
+                $add_bank=Bank_details_model::create($bank_details)->bank_detail_id;                 
+                if($add_bank)
+                {
+                    $data=array('status'=>true,'msg'=>'Bank details added successfully');
+                } else {
+                    $data=array('status'=>false,'msg'=>'Something went wrong');
+                }
 
             } else {
                 $data=array('status'=>false,'msg'=>'Bank details already added');

@@ -24,9 +24,9 @@ class Login_controller extends Controller
     }
 
     public function send_verification_link(Request $request)
-    {
-        $data=array('status'=>false,'msg'=>'Data not found');
-
+    { 
+        
+        $data=array('flag'=>false,'msg'=>'Invalid User');
         
         if($request['access_tkn'])
         {
@@ -54,6 +54,7 @@ class Login_controller extends Controller
             }
         }
 
+        
         echo json_encode($data);
     }
 
@@ -295,7 +296,7 @@ class Login_controller extends Controller
         {
      
             $request_data=$request->all();
-            $user_validate=$this->check_user_and_validate(array('email'=>$request_data['email'],'password'=>$request_data['password'],'email_verify'=>true));
+            $user_validate=$this->check_user_and_validate(array('email'=>$request_data['email'],'password'=>$request_data['password']));
            
        
                 if($user_validate['status'])
@@ -376,12 +377,18 @@ class Login_controller extends Controller
                     }
                 // } else {
 
-                //     $details = [
-                //         'title' => 'Click on verification link to verify email',
-                //         'body' => ''
-                //     ];
-                   
-                //     $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+                    // $updated_date=date('Y-m-d H:i:s');
+                    // $red_url=URL::to('/api/verify-email?access_tkn='.$user_validate['user_data']['token'].'_xsent_'.strtotime($updated_date));
+    
+                    //       $details = [
+                    //         'title' => 'Click on verification link to verify email',
+                    //         'body' => $red_url
+                    //     ];
+                       
+                    //     $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));
+    
+                    //     $user->updated_at=$updated_date;
+                    //     $user->save();
 
                 //     $data=array('status'=>false,'msg'=>'Please verify email');
                 // }

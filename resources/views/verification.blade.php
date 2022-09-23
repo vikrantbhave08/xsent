@@ -45,7 +45,7 @@
                     <div class="banner-image">
                         <img src="{{ asset('assets/dist/images/verification_login.png') }}">
                     </div>
-                    @if($status==3) <span class="success-msg"></span> <button class="send-link-btn" onclick=send_verification_link("{{ $access_tkn }}") class="btn btn-primary gradient">Resend Verification Link</button> @endif
+                    @if($status==3) <span style="font-weight:bold;" class="success-msg"></span> <br> <button onclick=send_verification_link("{{ $access_tkn }}") class="send-link-btn btn btn-primary gradient">Resend Verification Link</button> @endif
                 </div>
             </div>
             <div class="row mb-3">
@@ -117,21 +117,20 @@
                     console.log(res);
 
                     if (res.flag) {
-                        //     $(".login-err").css("color", "green");
+                        $(".success-msg").html(res.msg);
+                        $(".success-msg").css("color", "#63b46e");
+                        $(".send-link-btn").css("display", "none");
+                        
                         //     $(".login-err").html(res.msg);
                         //     setTimeout(function () {
                         //         window.location.href = "{{ url('/admin/dashboard') }}";
                         //     }, 3000);
 
+                    } else {
 
+                        $(".success-msg").html(res.msg);
+                        $(".success-msg").css("color", "#e12f2f");
 
-                        // } else {
-                        //     // fp1.close();
-                        //     $(".login-err").css("color", "red");
-                        //     $(".login-err").html(res.msg);
-                        //     setTimeout(function () {
-                        //         // location.reload();
-                        //     }, 3000);
                     }
 
 
