@@ -24,7 +24,7 @@ class Login_controller extends Controller
     }
 
     public function send_verification_link(Request $request)
-    { 
+    {        
         
         $data=array('flag'=>false,'msg'=>'Invalid User');
         
@@ -59,7 +59,8 @@ class Login_controller extends Controller
     }
 
     public function verify_email(Request $request)
-    {
+    {     
+
         $data=array('status'=>false,'msg'=>'Data not found');
 
         // echo $request['access_tkn']='4f4a2948954fdfceb2b9a589673b108f921d455f_xsent_'.strtotime('2022-09-20 09:18:44');
@@ -301,9 +302,11 @@ class Login_controller extends Controller
        
                 if($user_validate['status'])
                 {
+
+                    $url_explode=explode('/',URL::to('/'));
                    
-                    // if($user_validate['email_verify']==1)
-                    // {
+                    if($user_validate['email_verify']==1 || in_array("localhost", $url_explode))
+                    {
 
                         if($request['app_type']=="parent")
                         {
@@ -375,23 +378,23 @@ class Login_controller extends Controller
 
                         $data=array('status'=>false,'msg'=>'Invalid credentials','shop_details'=>array());
                     }
-                // } else {
+                } else {
 
-                    // $updated_date=date('Y-m-d H:i:s');
-                    // $red_url=URL::to('/api/verify-email?access_tkn='.$user_validate['user_data']['token'].'_xsent_'.strtotime($updated_date));
+                    $updated_date=date('Y-m-d H:i:s');
+                    $red_url=URL::to('/api/verify-email?access_tkn='.$user_validate['user_data']['token'].'_xsent_'.strtotime($updated_date));
     
-                    //       $details = [
-                    //         'title' => 'Click on verification link to verify email',
-                    //         'body' => $red_url
-                    //     ];
+                          $details = [
+                            'title' => 'Click on verification link to verify email',
+                            'body' => $red_url
+                        ];
                        
-                    //     $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));
+                        $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));
     
-                    //     $user->updated_at=$updated_date;
-                    //     $user->save();
+                        $user->updated_at=$updated_date;
+                        $user->save();
 
-                //     $data=array('status'=>false,'msg'=>'Please verify email');
-                // }
+                    $data=array('status'=>false,'msg'=>'Please verify email');
+                }
 
                 } else {
                     $data=array('status'=>false,'msg'=>'Invalid credentials','shop_details'=>array());
