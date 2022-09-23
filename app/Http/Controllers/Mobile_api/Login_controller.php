@@ -75,7 +75,7 @@ class Login_controller extends Controller
             $user= !empty($last_que[0]) ? User_model::select('users.*')->where('token',$last_que[0])->first() : array() ;
             if(!empty($user))
             {        
-                $link_expire=!empty($last_que[2]) && round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1) <= 24 ? ($last_que[2]==$user->updated_at ? true : false) : false ;
+                $link_expire=!empty($last_que[2]) && round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1) <= 24 ? (date('Y-m-d H:i:s',$last_que[2])==$user->updated_at ? true : false) : false ;
 
                 if($link_expire)
                 {                   
@@ -383,8 +383,7 @@ class Login_controller extends Controller
                 } else {
 
                     $updated_date=date('Y-m-d H:i:s');
-                    echo $updated_date;
-                    exit;
+                  
                     $red_url=URL::to('/api/verify-email?access_tkn='.$user_validate['user_data']['token'].'_xsent_'.strtotime($updated_date));
     
                           $details = [
