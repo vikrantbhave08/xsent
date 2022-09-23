@@ -45,7 +45,7 @@
                     <div class="banner-image">
                         <img src="{{ asset('assets/dist/images/verification_login.png') }}">
                     </div>
-                    @if($status==3) <span></span> <button onclick=send_verification_link("{{ $access_tkn }}") class="btn btn-primary gradient">Resend Verification Link</button> @endif
+                    @if($status==3) <span class="success-msg"></span> <button class="send-link-btn" onclick=send_verification_link("{{ $access_tkn }}") class="btn btn-primary gradient">Resend Verification Link</button> @endif
                 </div>
             </div>
             <div class="row mb-3">
@@ -116,24 +116,23 @@
 
                     console.log(res);
 
-                    // if (res.flag) {
-
-                    //     $(".login-err").css("color", "green");
-                    //     $(".login-err").html(res.msg);
-                    //     setTimeout(function () {
-                    //         window.location.href = "{{ url('/admin/dashboard') }}";
-                    //     }, 3000);
-
+                    if (res.flag) {
+                        //     $(".login-err").css("color", "green");
+                        //     $(".login-err").html(res.msg);
+                        //     setTimeout(function () {
+                        //         window.location.href = "{{ url('/admin/dashboard') }}";
+                        //     }, 3000);
 
 
-                    // } else {
-                    //     // fp1.close();
-                    //     $(".login-err").css("color", "red");
-                    //     $(".login-err").html(res.msg);
-                    //     setTimeout(function () {
-                    //         // location.reload();
-                    //     }, 3000);
-                    // }
+
+                        // } else {
+                        //     // fp1.close();
+                        //     $(".login-err").css("color", "red");
+                        //     $(".login-err").html(res.msg);
+                        //     setTimeout(function () {
+                        //         // location.reload();
+                        //     }, 3000);
+                    }
 
 
                 },

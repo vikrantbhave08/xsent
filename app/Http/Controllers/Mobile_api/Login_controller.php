@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mobile_api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use URL;
 
 use \ArrayObject;
 
@@ -26,21 +27,25 @@ class Login_controller extends Controller
     {
         $data=array('status'=>false,'msg'=>'Data not found');
 
+        
         if($request['access_tkn'])
         {
             $user= User_model::select('users.*')->where('token',$request['access_tkn'])->first();  
             
             if(!empty($user))
             {    
-                $user->updated_at=date('Y-m-d H:i:s');
-                $user->save();
+                $updated_date=date('Y-m-d H:i:s');
+                $red_url=URL::to('/api/verify-email?access_tkn='.$request['access_tkn'].'_xsent_'.strtotime($updated_date));
 
                       $details = [
                         'title' => 'Click on verification link to verify email',
-                        'body' => ''
+                        'body' => $red_url
                     ];
                    
-                    $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+                    $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));
+
+                    $user->updated_at=$updated_date;
+                    $user->save();
 
              
                 $data=array('flag'=>true,'msg'=>'Verification link send successfully');
