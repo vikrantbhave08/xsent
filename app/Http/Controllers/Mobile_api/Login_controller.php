@@ -20,9 +20,41 @@ class Login_controller extends Controller
        
     }
 
-    public function greeting(Request $request)
+    public function verify_email(Request $request)
     {
-        echo "greeting";
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        if($request['access_tkn'])
+        {
+            $user=User_model::select('users.*')->where('token',$request['access_tkn'])->first();
+            if(!empty($user))
+            {
+                
+                if(round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1) <= 24)
+                {
+
+                    echo date('Y-m-d H:i:s');
+
+                    echo round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1);
+                    exit;
+                    if($user->email_verify)
+                    {
+                        $data=array('status'=>false,'msg'=>'Email already verified');
+                    } else {
+                        $user->email_verify=1;
+                        $user->save();
+
+                        $data=array('status'=>true,'msg'=>'Email verified');
+                    }
+                } else {
+                    $data=array('status'=>false,'msg'=>'Link Expired');
+                }
+            } else {
+                $data=array('status'=>false,'msg'=>'User not found');
+            }           
+        }
+
+        return $data;
     }
 
     public function check_user_and_validate($request)
@@ -215,7 +247,7 @@ class Login_controller extends Controller
     public function login(Request $request)
     {
 
-        $data=array('status'=>false,'msg'=>'Data not found');
+        $data=array('status'=>false,'msg'=>'Data not found','shop_details'=>array());
 
         if($request['email'] && $request['password'] && $request['app_type'])
         {
@@ -253,7 +285,8 @@ class Login_controller extends Controller
 
                         if(!empty($auth_user))
                         {
-                            $user_role=$auth_user->user_role;
+                            // $user_role=$auth_user->user_role;
+                            $user_role=$user_validate['user_data']['user_role'];
                                                 
                             $auth_user->users_token=$gen_token;
                             $auth_user->fcm_token=$request['fcm_token'];                        

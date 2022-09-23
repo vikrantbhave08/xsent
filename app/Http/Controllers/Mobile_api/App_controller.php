@@ -465,34 +465,6 @@ class App_controller extends Controller
                             $day_limit = empty($my_wallet->max_limit_per_day) || ($request['amount'] <= (int)$my_wallet->max_limit_per_day) ? true : false ;
 
                         }
-
-                        // if(!empty($my_wallet))
-                        // {
-                        //     if(!empty($wallet_transaction))
-                        //     {
-                        //         if(empty($my_wallet->max_limit_per_day) || ((int)$my_wallet->max_limit_per_day >= $wallet_transaction[0]['max_transaction']+$request['amount']))
-                        //         {
-                        //             $day_limit = true;  
-                        //         } else {
-                        //             $day_limit = false;
-                        //         }
-                        //     } else {
-                        //         if(empty($my_wallet->max_limit_per_day) || ((int)$my_wallet->max_limit_per_day >= $request['amount']))
-                        //         {
-                        //             $day_limit = true;
-                        //         } else {
-                        //             $day_limit = false;
-                        //         }
-
-                        //     }
-
-                        //     // $day_limit = !empty($wallet_transaction) ? ( ($wallet_transaction[0]['max_transaction']+$request['amount'] <= (int) $my_wallet->max_limit_per_day) ? true : false) : ($request['amount'] <= (int) $my_wallet->max_limit_per_day)
-                        // }else{
-                        //     $day_limit = false;  
-                        // }
-
-                        // $day_limit = (empty($from_wallet->max_limit_per_day) || $from_wallet->max_limit_per_day >= $from_wallet->max_transaction + $request['amount'] )? true : false ;
-
                     } else if($i==1)
                     {
 
@@ -505,32 +477,6 @@ class App_controller extends Controller
                             $month_limit = empty($my_wallet->max_limit_per_month) || ($request['amount'] <= (int)$my_wallet->max_limit_per_month) ? true : false ;
 
                         }
-
-                        // if(!empty($my_wallet))
-                        // {
-                        //     if(!empty($wallet_transaction))
-                        //     {
-                        //         if(empty($my_wallet->max_limit_per_month) || ((int)$my_wallet->max_limit_per_month >= $wallet_transaction[0]['max_transaction']+$request['amount']))
-                        //         {
-                        //             $month_limit = true;  
-                        //         } else {
-                        //             $month_limit = false;
-                        //         }
-                        //     } else {
-
-                        //         if(empty($my_wallet->max_limit_per_month) || ((int)$my_wallet->max_limit_per_month >= $request['amount']))
-                        //         {
-                        //             $month_limit = true;
-                        //         } else {
-                        //             $month_limit = false;
-                        //         }
-
-                        //     }
-
-                        //     // $month_limit = !empty($wallet_transaction) ? ( ($wallet_transaction[0]['max_transaction']+$request['amount'] <= (int) $my_wallet->max_limit_per_day) ? true : false) : ($request['amount'] <= (int) $my_wallet->max_limit_per_day)
-                        // }
-                        //  $month_limit = (empty($from_wallet->max_limit_per_month) || $from_wallet->max_limit_per_month>=$from_wallet->max_transaction + $request['amount']) ? true : false ;
-
                      }
                   
                 }
