@@ -10,6 +10,8 @@
         rel="stylesheet" />
     <!-- Font - Remix Icons -->
     <link href="{{ asset('assets/dist/css/remixicon.css') }}" rel="stylesheet" />
+    
+    <!-- <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet"> -->
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/dist/css/bootstrap.min.css') }}" rel="stylesheet" />
 

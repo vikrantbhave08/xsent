@@ -34,6 +34,7 @@ Route::post('send-otp', [Login_controller::class, 'send_otp']);
 Route::post('verify-mobile', [Login_controller::class, 'verify_mobile']);
 Route::post('mobile-verified', [Login_controller::class, 'mobile_verified']);
 Route::get('verify-email', [Login_controller::class, 'verify_email']);
+Route::get('send-verification-link', [Login_controller::class, 'send_verification_link']);
 Route::post('forgot-password', [Login_controller::class, 'forgot_password']);
 Route::get('send-notification', [Login_controller::class, 'send_notification']);
 

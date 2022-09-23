@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Mobile_api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use \ArrayObject;
+
 use App\Models\User_model;
 use App\Models\Auth_users;
 use App\Models\Shops_model;
@@ -20,37 +22,73 @@ class Login_controller extends Controller
        
     }
 
-    public function verify_email(Request $request)
+    public function send_verification_link(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found');
 
         if($request['access_tkn'])
         {
-            $user=User_model::select('users.*')->where('token',$request['access_tkn'])->first();
+            $user= User_model::select('users.*')->where('token',$request['access_tkn'])->first();  
+            
             if(!empty($user))
-            {
-                
-                if(round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1) <= 24)
-                {
+            {    
+                $user->updated_at=date('Y-m-d H:i:s');
+                $user->save();
+
+                      $details = [
+                        'title' => 'Click on verification link to verify email',
+                        'body' => ''
+                    ];
                    
+                    $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
+
+             
+                $data=array('flag'=>true,'msg'=>'Verification link send successfully');
+            } else {
+                $data=array('flag'=>false,'msg'=>'Invalid User');
+            }
+        }
+
+        echo json_encode($data);
+    }
+
+    public function verify_email(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        // echo $request['access_tkn']='4f4a2948954fdfceb2b9a589673b108f921d455f_xsent_'.strtotime('2022-09-20 09:18:44');
+        // exit;
+      
+        if($request['access_tkn'])
+        {
+            $last_que=explode('_',$request['access_tkn']);
+
+            $user= !empty($last_que[0]) ? User_model::select('users.*')->where('token',$last_que[0])->first() : array() ;
+            if(!empty($user))
+            {        
+                $link_expire=!empty($last_que[2]) && round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1) <= 24 ? ($last_que[2]==$user->updated_at ? true : false) : false ;
+
+                if($link_expire)
+                {                   
                     if($user->email_verify)
                     {
-                        $data=array('status'=>false,'msg'=>'Email already verified');
-                    } else {
+                        $data=array('flag'=>true,'msg'=>'Email has already verified','status'=>2);
+                    } else {                        
                         $user->email_verify=1;
                         $user->save();
 
-                        $data=array('status'=>true,'msg'=>'Email verified');
+                        $data=array('flag'=>true,'msg'=>'Email is successfully verified !','status'=>1);
                     }
                 } else {
-                    $data=array('status'=>false,'msg'=>'Link Expired');
+                    $data=array('flag'=>false,'msg'=>'Email Verification Link Expired !','status'=>3,'access_tkn'=>$last_que[0]);
                 }
             } else {
-                $data=array('status'=>false,'msg'=>'User not found');
+                $data=array('flag'=>false,'msg'=>'Invalid verification link','status'=>4);
             }           
-        }
+        }        
+        
 
-        return $data;
+        return view('verification',$data);
     }
 
     public function check_user_and_validate($request)
@@ -207,7 +245,10 @@ class Login_controller extends Controller
                         {
                             if($request['user_role']==2)
                             {
-                                $data['shop_details']=Shops_model::where('owner_id',$user['user_id'])->first();
+                                $data['shop_details'][]=Shops_model::select('shops.*','users.first_name','users.last_name')
+                                ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
+                                ->where('owner_id',$user['user_id'])
+                                ->first()->toArray();
                             }     
                             // if($user_role==5)
                             // {
@@ -310,12 +351,18 @@ class Login_controller extends Controller
                         {
                             if($user_role==2)
                             {
-                                $data['shop_details']=Shops_model::where('owner_id',$user_validate['user_data']['user_id'])->first();
+                                $data['shop_details'][]=Shops_model::select('shops.*','users.first_name','users.last_name')
+                                                        ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
+                                                        ->where('owner_id',$user_validate['user_data']['user_id'])
+                                                        ->first()->toArray();
                             } 
 
                             if($user_role==5)
                             {
-                                $data['shop_details']=Shopkeepers_model::select('shops.*')->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.shop_id')->where('salesperson_id',$user_validate['user_data']['user_id'])->first();
+                                $data['shop_details'][]=Shopkeepers_model::select('shops.*','users.first_name','users.last_name')
+                                                        ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
+                                                        ->where('salesperson_id',$user_validate['user_data']['user_id'])
+                                                        ->first()->toArray();
                             }
                         }
                     } else {
@@ -362,9 +409,8 @@ class Login_controller extends Controller
                 $data=array('status'=>true,'msg'=>'Logout successfully');
 
             } else {
-
-                $data=array('status'=>false,'msg'=>'User not found');
-
+                $data=array('status'=>true,'msg'=>'Logout successfully');
+                // $data=array('status'=>false,'msg'=>'User not found');
             }
 
         }
