@@ -32,11 +32,7 @@ class Login_controller extends Controller
                 
                 if(round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1) <= 24)
                 {
-
-                    echo date('Y-m-d H:i:s');
-
-                    echo round((strtotime(date('Y-m-d H:i:s')) - strtotime($user->updated_at))/3600, 1);
-                    exit;
+                   
                     if($user->email_verify)
                     {
                         $data=array('status'=>false,'msg'=>'Email already verified');
@@ -308,7 +304,7 @@ class Login_controller extends Controller
 
                         }
 
-                        $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,'user_role'=> $user_role);
+                        $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,'user_role'=> $user_role,'shop_details'=>array());
 
                         if($user_role==2 || $user_role==5)
                         {
@@ -324,7 +320,7 @@ class Login_controller extends Controller
                         }
                     } else {
 
-                        $data=array('status'=>false,'msg'=>'Invalid credentials');
+                        $data=array('status'=>false,'msg'=>'Invalid credentials','shop_details'=>array());
                     }
                 // } else {
 
@@ -339,7 +335,7 @@ class Login_controller extends Controller
                 // }
 
                 } else {
-                    $data=array('status'=>false,'msg'=>'Invalid credentials');
+                    $data=array('status'=>false,'msg'=>'Invalid credentials','shop_details'=>array());
                 }
                 
             } 
