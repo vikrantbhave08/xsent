@@ -34,7 +34,7 @@ class App_controller extends Controller
     {               
         $this->middleware('CheckApiToken:app');     
         
-        $this->logged_user=Auth::mobile_app_user($request['token']);  
+        // $this->logged_user=Auth::mobile_app_user($request['token']);  
     }
 
 
@@ -195,6 +195,7 @@ class App_controller extends Controller
     public function delete_user(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found');
+        $this->logged_user=Auth::mobile_app_user($request['token']);
 
         if($request['user_id'])
          {
@@ -769,6 +770,7 @@ class App_controller extends Controller
     public function get_notifications(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found','notifications'=>array());
+        $this->logged_user=Auth::mobile_app_user($request['token']);
 
         $notifications=Notifications_model::select('notifications.*','wallet.balance','users.first_name','users.last_name')
                                             ->leftjoin('wallet', 'notifications.notify_of', '=', 'wallet.user_id') 
