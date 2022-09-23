@@ -659,6 +659,8 @@ class App_controller extends Controller
                         }
                     } else {
 
+                        $logged_user['parent_id']=Parent_child_model::where('child_id',$logged_user['user_id'])->first()->parent_id;
+
                         $already_nitify=Notifications_model::where(
                             array(
                                 'to_user'=>$logged_user['parent_id'],
