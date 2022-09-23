@@ -267,14 +267,15 @@ class Login_controller extends Controller
                             if($user_validate['user_data']['user_role']==2){       //owner will login as a parent
                                 $user_validate['user_data']['user_role']==3;
                             }
-                        } else {  //else type will be owner
-                            if($user_validate['user_data']['user_role']==3){       //parent will login as a owner
-                                $user_validate['user_data']['user_role']==2;
-                            }
-                        }
+                        } 
+                        // else {  //else type will be owner
+                        //     if($user_validate['user_data']['user_role']==3){       //parent will login as a owner
+                        //         $user_validate['user_data']['user_role']==2;
+                        //     }
+                        // }
 
 
-                        $valid_app=($request['app_type']=="parent" && $user_validate['user_data']['user_role']!=5) ? true : ($request['app_type']=="shop" && $user_validate['user_data']['user_role']!=4 ? true : false);
+                        $valid_app=($request['app_type']=="parent" && $user_validate['user_data']['user_role']!=5) ? true : ($request['app_type']=="shop" && $user_validate['user_data']['user_role']!=4 && $user_validate['user_data']['user_role']!=3 ? true : false);
                                         
                         $gen_token=sha1(mt_rand(11111,99999).date('Y-m-d H:i:s'));
 
