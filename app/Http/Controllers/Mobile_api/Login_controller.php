@@ -305,7 +305,7 @@ class Login_controller extends Controller
 
                     $url_explode=explode('/',URL::to('/'));
                    
-                    if($user_validate['email_verify']==1 || in_array("localhost", $url_explode))
+                    if($user_validate['user_data']['email_verify']==1 || in_array("localhost", $url_explode))
                     {
 
                         if($request['app_type']=="parent")
