@@ -388,7 +388,7 @@ class Login_controller extends Controller
                             'body' => $red_url
                         ];
                        
-                        $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));
+                        $email_response=\Mail::to($user_validate['user_data']['email'])->send(new \App\Mail\SendMail($details));
     
                         $user->updated_at=$updated_date;
                         $user->save();
