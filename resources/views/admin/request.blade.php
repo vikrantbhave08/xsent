@@ -21,6 +21,8 @@
                                     </div>
                                 </div>
 
+                                @csrf
+
                                 <div class="table-design">
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12">
@@ -49,7 +51,11 @@
                                                             <td>{{ $val['by_role']==2 ? "Owner" : "Parent" }}</td>
                                                             <td>{{ 'AED'.' '.$val['balance'] }}</td>
                                                             <td>{{ date('Y-m-d',strtotime($val['created_at'])) }}</td>
-                                                            <td><button class="btn btn-sm table-btn">Pay</button></td>
+                                                            <td><button class="btn btn-sm table-btn"
+                                                                    onclick="get_payment_details({{$val['amt_request_id']}})"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#transfer_money">Pay</button></td>
+                                                            <!-- <td><button onclick="get_payment_details({{$val['amt_request_id']}})" class="btn btn-sm table-btn">Pay</button></td> -->
                                                         </tr>
                                                         @endforeach
                                                         <!-- <tr>
@@ -88,7 +94,7 @@
                                                             <td>325689</td>
                                                             <td><button class="btn btn-sm remark-btn"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#sendremarkModal">Send
+                                                                    data-bs-target="#transfer_money">Send
                                                                     Remark</button></td>
                                                         </tr>
                                                         <tr>
@@ -117,59 +123,68 @@
 
 
             <!--Send Remark Modal -->
-            <div class="modal fade" id="sendremarkModal" tabindex="-1" aria-labelledby="sendremarkLabel"
+            <div class="modal fade" id="transfer_money" tabindex="-1" aria-labelledby="payremarkLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header gradient">
-                            <h5 class="modal-title" id="sendremarkLabel">Transfer Money To Bank Account</h5>
+                            <h5 class="modal-title" id="payremarkLabel">Transfer Money To Bank Account</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form>
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Wallet Balance</label><br />
-                                        <label class="data-label">AED 1500</label>
+                                        <label class="form-label">Request From</label><br />
+                                        <label class="data-label req_from"></label>
                                     </div>
                                     <div class="col-sm-6 mb-3">
-
+                                        <label class="form-label">User Type</label><br />
+                                        <label class="data-label user_type"></label>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
                                         <label class="form-label">Request Amount</label><br />
-                                        <label class="data-label">AED 2100</label>
+                                        <label class="data-label req_amt"></label>
                                     </div>
                                     <div class="col-sm-6 mb-3">
                                         <label class="form-label">Wallet Balance</label><br />
-                                        <label class="data-label">AED 1500</label>
-
+                                        <label class="data-label wallet_balance"></label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <label class="form-label">Reason</label>
+                                        <label class="form-label">Transfered By</label>
                                         <div class="custom-dropdown">
-                                            <select id="reason">
-                                                <option value=""></option>
-                                                <option value="Reason1">Reason 1</option>
-                                                <option value="Reason2">Reason 2</option>
-                                                <option value="Reason3">Reason 3</option>
-                                                <option value="Reason4">Reason 4</option>
+                                            <select id="transfer_by">
+                                                <!-- <option value=""></option> -->
+                                                <option value="Net Banking">Net Banking</option>
+                                                <!-- <option value="Cash">Cash</option> -->
+                                                <!-- <option value="Reason3">Reason 3</option> -->
+                                                <option value="Other">Other</option>
                                             </select>
                                         </div>
-
                                     </div>
                                     <div class="col-sm-6">
+                                        <label class="form-label">Bank Name</label>
+                                        <input type="text" name="bank_name" class="form-control" id="bank_name" value="">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label">Transaction Id</label>
+                                        <input type="text" name="txn_id" class="form-control" id="txn_id" value="">
+                                    </div>
+
+                                    <!-- <div class="col-sm-6">
                                         <div>
                                             <label class="form-label">Remark</label>
                                             <textarea class="form-control" placeholder="Enter remark"></textarea>
-
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary">Send</button>
+                            <button type="button" class="btn btn-primary">Pay</button>
                         </div>
                     </div>
                 </div>
@@ -238,11 +253,12 @@
             resizeData();
         })
         $(document).ready(function () {
-            $("#reason").select2({
-                placeholder: "Select your reason",
+            $("#transfer_by").select2({
+                placeholder: "Select transfer by",
                 minimumResultsForSearch: Infinity,
-                dropdownParent: $('#sendremarkModal')
+                dropdownParent: $('#transfer_money')
             });
+            
             $('#request').DataTable({
                 "searching": true,
                 scrollY: 600,
@@ -261,6 +277,53 @@
                 }
             });
         });
+
+        function get_payment_details(request_id)
+        {
+
+            redUrl = "{{url('/admin/get-payment-details')}}";             
+
+                $.ajax({
+                    url: redUrl,
+                    type: 'post',
+                    data: {request_id:request_id,  "_token": "{{ csrf_token() }}"},
+                    dataType: 'json',
+                    // contentType: false, // The content type used when sending data to the server.while using formdata
+                    // cache: false, // To unable request pages to be cached .while using formdata
+                    // processData: false, // To send DOMDocument or non processed data file it is set to false .while using formdata
+                    success: function (res) {
+
+                        console.log(res);
+
+                        // if (res.flag) {
+
+                        //     $(".login-err").css("color", "green");
+                        //     $(".login-err").html(res.msg);
+                        //     setTimeout(function () {
+                        //         window.location.href = "{{ url('/admin/dashboard') }}";
+                        //     }, 3000);
+
+
+
+                        // } else {
+                        //     // fp1.close();
+                        //     $(".login-err").css("color", "red");
+                        //     $(".login-err").html(res.msg);
+                        //     setTimeout(function () {
+                        //         // location.reload();
+                        //     }, 3000);
+                        // }
+
+
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
+                });
+
+        }
+
+
     </script>
 </body>
 

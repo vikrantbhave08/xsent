@@ -52,16 +52,16 @@ class Requests_controller extends Controller
         if($request['request_id'])
         {
 
-            $result['requests']=Amount_requests_model::select('users.first_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance')
+            $payment_details=array();
+            // $result['requests']=Amount_requests_model::select('*')->get()->toArray();
+            $payment_details=Amount_requests_model::select('users.first_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance')
             ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
             ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
             ->leftjoin('shops', 'amount_requests.by_user', '=', 'shops.owner_id') 
-            ->where('amount_requests.amt_request_id',$request['request_id'])
-         
-            ->get()->toArray();
+            ->where('amount_requests.amt_request_id',$request['request_id'])         
+            ->first();
 
-            $payment_details=array();
-            $result=array('status'=>true,'msg'=>'Data found','pay_details'=>$payment_details);
+            $result=array('status'=>true,'msg'=>'Data found','pay_details'=>!empty($payment_details) ? $payment_details->toArray() : array() );
         }
 
         echo json_encode($result);

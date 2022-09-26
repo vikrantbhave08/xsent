@@ -908,6 +908,10 @@ class App_controller extends Controller
                                                         ->where('amount_requests.by_role',$logged_user['user_role'])
                                                         ->where('amount_requests.status',0)->groupBy('amount_requests.by_user')->first();
                 
+                                                        // amount request status 
+                                                        //    0 request pending
+                                                        //    1 request paid
+                                                        //    2 
                 if(!empty($requested_amt) && !empty($wallet))
                 {
                     $request_flag = ($requested_amt->total_req_amt+$request['amount']) <= $wallet->balance ? true : false ;
