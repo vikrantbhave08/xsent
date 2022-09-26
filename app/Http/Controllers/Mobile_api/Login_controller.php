@@ -371,7 +371,7 @@ class Login_controller extends Controller
                             if($user_role==5)
                             {
                                 $data['shop_details'][]=Shopkeepers_model::select('shops.*','users.first_name','users.last_name')
-                                                        ->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.user_id')
+                                                        ->leftjoin('shops', 'shopkeepers.owner_id', '=', 'shops.owner_id')
                                                         ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
                                                         ->where('shopkeepers.salesperson_id',$user_validate['user_data']['user_id'])
                                                         ->first()->toArray();
