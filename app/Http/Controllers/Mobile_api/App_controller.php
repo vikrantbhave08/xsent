@@ -516,7 +516,7 @@ class App_controller extends Controller
             }
 
 
-            if($from_wallet_balance>$request['amount'])
+            if($from_wallet_balance>=$request['amount'])
             {    
 
                     if($day_limit)
@@ -914,9 +914,9 @@ class App_controller extends Controller
                                                         //    2 
                 if(!empty($requested_amt) && !empty($wallet))
                 {
-                    $request_flag = ($requested_amt->total_req_amt+$request['amount']) <= $wallet->balance ? true : false ;
-                   
-                }else{
+                    // $request_flag = ($requested_amt->total_req_amt+$request['amount']) <= $wallet->balance ? true : false ;                   
+                    $request_flag = ($request['amount']) <= $wallet->balance ? true : false ;                   
+                } else {
                     $request_flag= empty($requested_amt) && !empty($wallet) ? true :false;
                 }
             } else {                
@@ -938,6 +938,11 @@ class App_controller extends Controller
 
                 if($amt_request)
                 {
+                    if($logged_user['user_role']==2 || $logged_user['user_role']==3)
+                    {
+                        $wallet->balance = ($wallet->balance)-$request['amount'];
+                        $wallet->save();
+                    }
                     $data=array('status'=>true,'msg'=>'Requests added successfully');                   
                 }
             } else {
