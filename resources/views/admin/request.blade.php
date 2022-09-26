@@ -52,7 +52,7 @@
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
                                                         </tr>
                                                         @endforeach
-                                                        <!-- <tr>
+                                                        <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>01</td>
                                                             <td>Cafe Peter</td>
@@ -99,7 +99,7 @@
                                                             <td>AED 1800</td>
                                                             <td>894107</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
-                                                        </tr> -->
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -122,7 +122,7 @@
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header gradient">
-                            <h5 class="modal-title" id="sendremarkLabel">Send Remark</h5>
+                            <h5 class="modal-title" id="sendremarkLabel">Transfer Money To Bank Account</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

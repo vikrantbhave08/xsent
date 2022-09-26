@@ -40,13 +40,14 @@ Route::post('admin/loginme', [Login_controller::class, 'loginme']);
 Route::get('admin/dashboard', [Dashboard_controller::class, 'index']);
 Route::get('admin/complaints', [Complaints_controller::class, 'index']);
 Route::get('admin/complaint-details', [Complaints_controller::class, 'complaint_details']);
-Route::get('admin/requests', [Requests_controller::class, 'index']);
-Route::get('admin/register-users', [Users_controller::class, 'index']);
 
+Route::get('admin/requests', [Requests_controller::class, 'index']);
+Route::post('admin/get-payment-details', [Requests_controller::class, 'get_payment_details']);
+
+Route::get('admin/register-users', [Users_controller::class, 'index']);
 Route::post('admin/payment_details', [Users_controller::class, 'payment_details']);
 Route::post('admin/payment', [Users_controller::class, 'prebuild_checkout_page']);
 Route::get('admin/payment-status', [Users_controller::class, 'payment_status']);
-
 Route::get('admin/register-user-details', [Users_controller::class, 'register_user_details']);
 
 Route::get('admin/bank-transfer', [Dashboard_controller::class, 'bank_transfer']);

@@ -400,7 +400,7 @@ class Login_controller extends Controller
     
                         
 
-                    $data=array('status'=>false,'msg'=>'Please verify email');
+                    $data=array('status'=>false,'msg'=>'Please verify email','shop_details'=>array());
                 }
 
                 } else {
