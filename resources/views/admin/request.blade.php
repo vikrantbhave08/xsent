@@ -258,7 +258,7 @@
                 minimumResultsForSearch: Infinity,
                 dropdownParent: $('#transfer_money')
             });
-            
+
             $('#request').DataTable({
                 "searching": true,
                 scrollY: 600,
@@ -295,24 +295,28 @@
 
                         console.log(res);
 
-                        // if (res.flag) {
+                        if (res.status) {
 
-                        //     $(".login-err").css("color", "green");
-                        //     $(".login-err").html(res.msg);
-                        //     setTimeout(function () {
-                        //         window.location.href = "{{ url('/admin/dashboard') }}";
-                        //     }, 3000);
+                            // html(res.balance);
+                            // html(res.first_name+" "+res.last_name);
+                            // html(res.role_name);
+
+                            //     $(".login-err").css("color", "green");
+                            //     $(".login-err").html(res.msg);
+                            //     setTimeout(function () {
+                            //         window.location.href = "{{ url('/admin/dashboard') }}";
+                            //     }, 3000);
 
 
 
-                        // } else {
-                        //     // fp1.close();
-                        //     $(".login-err").css("color", "red");
-                        //     $(".login-err").html(res.msg);
-                        //     setTimeout(function () {
-                        //         // location.reload();
-                        //     }, 3000);
-                        // }
+                            // } else {
+                            //     // fp1.close();
+                            //     $(".login-err").css("color", "red");
+                            //     $(".login-err").html(res.msg);
+                            //     setTimeout(function () {
+                            //         // location.reload();
+                            //     }, 3000);
+                            }
 
 
                     },

@@ -14,7 +14,14 @@ class CreatePaymentHistoryTable extends Migration
     public function up()
     {
         Schema::create('payment_history', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('payment_id');         
+            $table->string('pay_txn_id',50);   
+            $table->integer('from_user')->default(0);   
+            $table->integer('to_user')->default(0);  
+            $table->integer('amt_request_id')->nullable();  
+            $table->string('bank_detail_id',50)->nullable(); 
+            $table->string('amount',50); 
+            $table->tinyInteger('is_active')->default(1); 
             $table->timestamps();
         });
     }
