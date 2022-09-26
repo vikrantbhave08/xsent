@@ -18,7 +18,7 @@ class CreateBankDetailsTable extends Migration
             $table->integer('user_id');   
             $table->string('account_no',50);   
             $table->string('bank_name',50);   
-            $table->string('iban_no',50);   
+            $table->string('iban_no',50);    
             $table->tinyInteger('is_active')->default(1); 
             $table->timestamps();
         });

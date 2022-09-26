@@ -15,7 +15,7 @@ class AddColumnToBankDetailsTable extends Migration
     {
         Schema::table('bank_details', function (Blueprint $table) {
             $table->string('acc_holder_name',50);   
-        });
+        }); 
     }
 
     /**
