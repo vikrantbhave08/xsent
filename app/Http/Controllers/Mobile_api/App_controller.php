@@ -543,7 +543,7 @@ class App_controller extends Controller
                                     }
 
                                     Wallet_transaction_model::create([          
-                                        'txn_id'=>"TXN".date('smdHy1i').$logged_user['user_id'].mt_rand(1111,9999),
+                                        'txn_id'=>"txn".md5(date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999)),
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
@@ -599,7 +599,7 @@ class App_controller extends Controller
                                     }
 
                                     Wallet_transaction_model::create([   
-                                        'txn_id'=>"TXN".date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999),                     
+                                        'txn_id'=>"txn".md5(date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999)),
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],
