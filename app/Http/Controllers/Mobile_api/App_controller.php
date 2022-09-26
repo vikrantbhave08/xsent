@@ -411,7 +411,7 @@ class App_controller extends Controller
         echo json_encode($data);
     }
 
-    public function add_money_to_wallet(Request $request)  // 1) parent to child 2) child to shop
+    public function add_money_to_wallet(Request $request)  // 1) parent to child 2) child to shop 3)parent to shop
     {       
         $data=array('status'=>false,'msg'=>'Data not found');
 

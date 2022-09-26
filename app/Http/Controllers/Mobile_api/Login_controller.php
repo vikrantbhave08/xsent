@@ -371,8 +371,9 @@ class Login_controller extends Controller
                             if($user_role==5)
                             {
                                 $data['shop_details'][]=Shopkeepers_model::select('shops.*','users.first_name','users.last_name')
+                                                        ->leftjoin('shops', 'shopkeepers.shop_id', '=', 'shops.user_id')
                                                         ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
-                                                        ->where('salesperson_id',$user_validate['user_data']['user_id'])
+                                                        ->where('shopkeepers.salesperson_id',$user_validate['user_data']['user_id'])
                                                         ->first()->toArray();
                             }
                         }
@@ -463,8 +464,7 @@ class Login_controller extends Controller
         $data=array('status'=>false,'msg'=>'Data not found');
 
         if($request['email'])
-        {
-            
+        {            
             $check_user_exists= User_model::where('email',$request['email'])->first(); 
             if(!empty($check_user_exists))
             {
@@ -481,8 +481,7 @@ class Login_controller extends Controller
 
             } else {
                 $data=array('status'=>false,'msg'=>'User not found');
-            }          
-           
+            }
         }
 
         echo json_encode($data); 
