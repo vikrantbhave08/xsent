@@ -45,10 +45,10 @@ class App_controller extends Controller
     
     public function get_dashboard_data(Request $request)
     {
-        $data=array('status'=>false,'msg'=>'Data not found','dashboard_data'=>array());
+        $data=array('status'=>false,'msg'=>'Data not found','balance'=>0,'dashboard_data'=>array());
 
         $return_data=array();
-        
+
         $logged_user=Auth::mobile_app_user($request['token']);
 
         $users_wallet=Wallet_model::select('wallet.*')
@@ -56,9 +56,7 @@ class App_controller extends Controller
 
         if(!empty($users_wallet)) 
         { 
-          $return_data['wallet_balance']=$users_wallet->toArray();
-
-          $data=array('status'=>true,'msg'=>'Data found','dashboard_data'=>$return_data);
+          $data=array('status'=>true,'msg'=>'Data found','balance'=>$users_wallet->balance,'dashboard_data'=>$return_data);
         }
        
         echo json_encode($data);
