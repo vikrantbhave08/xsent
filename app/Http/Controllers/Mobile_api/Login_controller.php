@@ -241,15 +241,15 @@ class Login_controller extends Controller
                     {                        
                         
                         $details = [
-                            'title' => 'You are successfully registered on xsent.' ,
-                            'body' => 'See your credentials below.',
-                            'username' => $request['email'],
-                            'password' => $request['password']
+                            'title' => 'You have successfully registered on xsent.' ,
+                            'body' => 'Below is your username.',
+                            'username' => $request['email']
+                            // 'password' => $request['password']
                         ];
                        
                         $email_response=\Mail::to($request['email'])->send(new \App\Mail\SendMail($details));
 
-                        $data=array('status'=>true,'msg'=>'User registered successfully','token'=>$gen_token,'user_role'=> (int)$request['user_role']);
+                        $data=array('status'=>true,'msg'=>'Registered successfully. Verification link sent to email, please verify and login.','token'=>$gen_token,'user_role'=> (int)$request['user_role']);
                         if($request['user_role']==2)
                         {
                             if($request['user_role']==2)

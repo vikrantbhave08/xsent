@@ -43,6 +43,27 @@ class App_controller extends Controller
         return Wallet_model::where('user_id',$request['user_id'])->first();
     }
     
+    public function get_dashboard_data(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found','dashboard_data'=>array());
+
+        $return_data=array();
+        
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        $users_wallet=Wallet_model::select('wallet.*')
+                                   ->where('user_id',$logged_user['user_id'])->first();
+
+        if(!empty($users_wallet)) 
+        { 
+          $return_data['wallet_balance']=$users_wallet->toArray();
+
+          $data=array('status'=>true,'msg'=>'Data found','dashboard_data'=>$return_data);
+        }
+       
+        echo json_encode($data);
+    }
+
     public function profile_data($request)
     {
         return User_model::select('users.*',DB::raw('ifnull(wallet.balance,0) as balance')) 

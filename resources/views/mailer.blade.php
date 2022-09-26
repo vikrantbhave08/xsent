@@ -677,6 +677,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD
 
                                         @if(!empty($details['username']))
                                         <p style="color: #fff; text-align: center; margin-bottom: 20px;">Username : {{ $details['username'] }}</p>
+                                        @endif
+                                        @if(!empty($details['password']))
                                         <p style="color: #fff; text-align: center; margin-bottom: 20px;">Password : {{ $details['password'] }}</p>
                                         @endif
 

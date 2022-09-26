@@ -52,7 +52,7 @@
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
                                                         </tr>
                                                         @endforeach
-                                                        <tr>
+                                                        <!-- <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>01</td>
                                                             <td>Cafe Peter</td>
@@ -99,7 +99,7 @@
                                                             <td>AED 1800</td>
                                                             <td>894107</td>
                                                             <td><button class="btn btn-sm table-btn">Pay</button></td>
-                                                        </tr>
+                                                        </tr> -->
                                                     </tbody>
                                                 </table>
                                             </div>

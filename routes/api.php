@@ -63,8 +63,10 @@ Route::Post('qr-code-generate', [App_controller::class, 'qr_code_generate']);
 
 Route::Post('add-request', [App_controller::class, 'add_request']); 
 Route::Post('request-money-history', [App_controller::class, 'request_money_history']); 
+ 
+Route::Post('topup-history', [App_controller::class, 'topup_history']);
 
-Route::Post('topup-history', [App_controller::class, 'topup_history']); 
+Route::Post('get-dashboard-data', [App_controller::class, 'get_dashboard_data']); 
 
 Route::get('getall-province', [Login_controller::class, 'getall_province']); 
 Route::Post('getall-cities-by-province', [Login_controller::class, 'getall_cities_by_province']); 
