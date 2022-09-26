@@ -746,7 +746,8 @@ class App_controller extends Controller
             $bank_details=$request->all();
             unset($bank_details['token']);
                
-            if(!Bank_details_model::where('user_id',$logged_user['user_id'])->first())
+            $is_details=Bank_details_model::where('user_id',$logged_user['user_id'])->first();
+            if(empty($is_details))
             {
 
                 $bank_details['user_id']=$logged_user['user_id'];
@@ -1018,8 +1019,6 @@ class App_controller extends Controller
                         $users_requests[$j]['data']=$money_requests;
                         $j++;
                     }
-
-
                     
             }  else {
                 $users_requests=array_slice($money_requests, 0, $request['limit']);
