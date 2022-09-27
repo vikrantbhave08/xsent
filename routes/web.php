@@ -43,6 +43,7 @@ Route::get('admin/complaint-details', [Complaints_controller::class, 'complaint_
 
 Route::get('admin/requests', [Requests_controller::class, 'index']);
 Route::post('admin/get-payment-details', [Requests_controller::class, 'get_payment_details']);
+Route::post('admin/add-payment', [Requests_controller::class, 'add_payment']);
 
 Route::get('admin/register-users', [Users_controller::class, 'index']);
 Route::post('admin/payment_details', [Users_controller::class, 'payment_details']);

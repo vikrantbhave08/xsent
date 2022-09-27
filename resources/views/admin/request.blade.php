@@ -3,6 +3,12 @@
     <link rel="stylesheet" href="{{ asset('assets/dist/css/jquery.dataTables.min.css') }}">
     <link href="{{ asset('assets/dist/sass/main.css') }}" rel="stylesheet">
 
+    <style>
+        .error {
+            color:red;
+        }      
+        </style>
+
             <main class="content-holder">
                 <div class="container-fluid">
                     <div class="row">
@@ -46,15 +52,30 @@
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>{{ $key+1 }}</td>
-                                                            <td>@if($val['by_role']==2) {{ $val['shop_name'] }} @else {{ $val['first_name']." ".$val['last_name'] }} @endif</td>
+                                                            <td>@if($val['by_role']==2) 
+                                                                {{ $val['shop_name']." (".$val['first_name']." ".$val['last_name'].")" }} 
+                                                                @else 
+                                                                {{ $val['first_name']." ".$val['last_name'] }}                                                             
+                                                                @endif</td>
                                                             <td>{{ 'AED'.' '.$val['request_amount'] }}</td>
                                                             <td>{{ $val['by_role']==2 ? "Owner" : "Parent" }}</td>
                                                             <td>{{ 'AED'.' '.$val['balance'] }}</td>
                                                             <td>{{ date('Y-m-d',strtotime($val['created_at'])) }}</td>
-                                                            <td><button class="btn btn-sm table-btn"
+                                                            <td>
+                                                            @if($val['status']==0)
+
+                                                                <button class="btn btn-sm table-btn"
                                                                     onclick="get_payment_details({{$val['amt_request_id']}})"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#transfer_money">Pay</button></td>
+                                                                    data-bs-target="#transfer_money">Pay</button>
+
+                                                            @else
+                                                            
+                                                            <span class="badge bg-success" style="font-size: 1.2em;">Paid</span>
+
+                                                            @endif
+
+                                                                </td>
                                                             <!-- <td><button onclick="get_payment_details({{$val['amt_request_id']}})" class="btn btn-sm table-btn">Pay</button></td> -->
                                                         </tr>
                                                         @endforeach
@@ -131,8 +152,11 @@
                             <h5 class="modal-title" id="payremarkLabel">Transfer Money To Bank Account</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <form id="payment_form">
+                            @csrf
+                            <input type="hidden" id="amt_request_id"  name="amt_request_id">
+                            <input type="hidden" id="bank_detail_id"  name="bank_detail_id">
                         <div class="modal-body">
-                            <form>
                                 <div class="row">
                                     <div class="col-sm-6 mb-3">
                                         <label class="form-label">Request From</label><br />
@@ -155,7 +179,7 @@
                                     <div class="col-sm-6">
                                         <label class="form-label">Transfered By</label>
                                         <div class="custom-dropdown">
-                                            <select id="transfer_by">
+                                            <select name="transfered_by" id="transfer_by">
                                                 <!-- <option value=""></option> -->
                                                 <option value="Net Banking">Net Banking</option>
                                                 <!-- <option value="Cash">Cash</option> -->
@@ -164,28 +188,31 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Bank Name</label>
+                                    <!-- <div class="col-sm-6">
+                                        <label class="form-label" for="bank_name">Bank Name</label>
                                         <input type="text" name="bank_name" class="form-control" id="bank_name" value="">
-                                    </div>
+                                    </div> -->
                                     <div class="col-sm-6">
-                                        <label class="form-label">Transaction Id</label>
+                                        <label class="form-label" for="txn_id">Transaction Id</label>
                                         <input type="text" name="txn_id" class="form-control" id="txn_id" value="">
                                     </div>
 
-                                    <!-- <div class="col-sm-6">
+                                    <div class="col-sm-6">
                                         <div>
                                             <label class="form-label">Remark</label>
                                             <textarea class="form-control" placeholder="Enter remark"></textarea>
                                         </div>
-                                    </div> -->
+                                    </div> 
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary">Pay</button>
-                        </div>
+                            </div>
+                            <div style="text-align: center;">
+                            <span class="payment-err"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Pay</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -199,6 +226,7 @@
 
 
     <script src="{{ asset('assets/dist/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/dist/js/jquery.validate.js') }}"></script>
     <script src="{{ asset('assets/dist/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>
@@ -223,6 +251,7 @@
             },
 
         });
+
         function resizeData() {
             setTimeout(function () {
             var winWidth = $(window).width();
@@ -280,6 +309,7 @@
 
         function get_payment_details(request_id)
         {
+            $('.payment-err, .error').html("");
 
             redUrl = "{{url('/admin/get-payment-details')}}";             
 
@@ -297,25 +327,22 @@
 
                         if (res.status) {
 
-                            // html(res.balance);
-                            // html(res.first_name+" "+res.last_name);
-                            // html(res.role_name);
+                            var res= res.pay_details;
 
-                            //     $(".login-err").css("color", "green");
-                            //     $(".login-err").html(res.msg);
-                            //     setTimeout(function () {
-                            //         window.location.href = "{{ url('/admin/dashboard') }}";
-                            //     }, 3000);
+                            if(res.bank_detail_id==null)
+                            {
+                                $(".payment-err").css("color", "red");
+                                $(".payment-err").html("Bank details not added.");
+                            }
 
+                                $(".req_from").html(res.first_name+" "+res.last_name);
+                                $(".user_type").html(res.role_name);
+                                $(".req_amt").html("AED "+res.request_amount);
+                                $(".wallet_balance").html("AED "+res.balance);
+                                $("#amt_request_id").val(res.amt_request_id);
+                                $("#bank_detail_id").val(res.bank_detail_id);                                        
 
-
-                            // } else {
-                            //     // fp1.close();
-                            //     $(".login-err").css("color", "red");
-                            //     $(".login-err").html(res.msg);
-                            //     setTimeout(function () {
-                            //         // location.reload();
-                            //     }, 3000);
+                          
                             }
 
 
@@ -326,6 +353,67 @@
                 });
 
         }
+
+
+        $("#payment_form").validate({
+            rules: {                
+                // bank_name: {
+                //     required: true
+                // },
+                txn_id: {
+                    required: true
+                },
+
+            },
+            messages: {
+                           
+                // bank_name: {
+                //     required: "Enter Bank Name"
+                // },
+                txn_id: {
+                    required: "Enter Transaction Id"
+                },
+            },          
+            submitHandler: function (form, message) {
+             
+                    redUrl = "{{url('/admin/add-payment')}}";             
+
+                $.ajax({
+                    url: redUrl,
+                    type: 'post',
+                    data: new FormData(form),
+                    dataType: 'json',
+                    contentType: false, // The content type used when sending data to the server.
+                    cache: false, // To unable request pages to be cached
+                    processData: false, // To send DOMDocument or non processed data file it is set to false
+                    success: function (res) {
+
+                        if (res.status) {
+
+                            $(".payment-err").css("color", "green");
+                            $(".payment-err").html(res.msg);
+                            setTimeout(function () {
+                              location.reload();
+                            }, 3000);
+
+                        } else {
+                            // fp1.close();
+                            $(".payment-err").css("color", "red");
+                            $(".payment-err").html(res.msg);
+                            setTimeout(function () {
+                                // location.reload();
+                            }, 3000);
+                        }
+
+
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
+                });
+
+            }
+        }); 
 
 
     </script>

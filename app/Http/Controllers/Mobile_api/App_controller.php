@@ -262,7 +262,6 @@ class App_controller extends Controller
             $update_user->updated_at=date('Y-m-d H:i:s');
 
             $is_update=$update_user->save();
-
            
            
                 if($is_update)
@@ -323,8 +322,7 @@ class App_controller extends Controller
     
 
     public function transaction_summary(Request $request)  // 1) for shop owner 
-    {        
-
+    {  
         $data=array('status'=>false,'msg'=>'Data not found','shop_transactions'=>array());
 
         $logged_user=Auth::mobile_app_user($request['token']);
@@ -332,8 +330,7 @@ class App_controller extends Controller
         $shop_transactions=array();
         $j=0;
         for($i=1; $i<=12; $i++)
-        {          
-              
+        {     
             $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name','shops.shop_gen_id')
                                                        ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
                                                        ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
@@ -369,7 +366,6 @@ class App_controller extends Controller
         }
 
         echo json_encode($data);
-
     }
 
     public function get_users_wallet(Request $request)  
@@ -768,7 +764,6 @@ class App_controller extends Controller
             $is_details=Bank_details_model::where('user_id',$logged_user['user_id'])->first();
             if(empty($is_details))
             {
-
                 $bank_details['user_id']=$logged_user['user_id'];
                 $bank_details['created_at']=date('Y-m-d H:i:s');
                 $bank_details['updated_at']=date('Y-m-d H:i:s');
@@ -780,7 +775,6 @@ class App_controller extends Controller
                 } else {
                     $data=array('status'=>false,'msg'=>'Something went wrong');
                 }
-
             } else {
                 $data=array('status'=>false,'msg'=>'Bank details already added');
             }
@@ -1037,7 +1031,7 @@ class App_controller extends Controller
                 foreach($money_requests as $key=>$res)
                 {
                    $money_requests[$key]['requested_date']=date('d M Y', strtotime($res['created_at'])).' | '.date('h:i A', strtotime($res['created_at']));          
-                 }
+                }
 
             if ( empty($request['limit']) )
             {

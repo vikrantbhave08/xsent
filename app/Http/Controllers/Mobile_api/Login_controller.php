@@ -293,7 +293,7 @@ class Login_controller extends Controller
     public function login(Request $request)
     {
 
-        $data=array('status'=>false,'msg'=>'Data not found','shop_details'=>array());
+        $data=array('status'=>false,'msg'=>'Data not found','first_name'=>'','last_name'=>'','shop_details'=>array());
 
         if($request['email'] && $request['password'] && $request['app_type'])
         {
@@ -356,7 +356,11 @@ class Login_controller extends Controller
 
                         }
 
-                        $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,'user_role'=> $user_role,'shop_details'=>array());
+                        $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,
+                                    'first_name'=>$user_validate['user_data']['first_name'],
+                                    'last_name'=>$user_validate['user_data']['last_name'],
+                                    'user_role'=> $user_role,
+                                    'shop_details'=>array());
 
                         if($user_role==2 || $user_role==5)
                         {
@@ -379,7 +383,7 @@ class Login_controller extends Controller
                         }
                     } else {
 
-                        $data=array('status'=>false,'msg'=>'Invalid credentials','shop_details'=>array());
+                        $data=array('status'=>false,'msg'=>'Invalid credentials','first_name'=>'','last_name'=>'','shop_details'=>array());
                     }
                 } else {
 
@@ -400,11 +404,11 @@ class Login_controller extends Controller
     
                         
 
-                    $data=array('status'=>false,'msg'=>'Please verify email','shop_details'=>array());
+                    $data=array('status'=>false,'msg'=>'Please verify email','first_name'=>'','last_name'=>'','shop_details'=>array());
                 }
 
                 } else {
-                    $data=array('status'=>false,'msg'=>'Invalid credentials','shop_details'=>array());
+                    $data=array('status'=>false,'msg'=>'Invalid credentials','first_name'=>'','last_name'=>'','shop_details'=>array());
                 }
                 
             } 

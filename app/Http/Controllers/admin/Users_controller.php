@@ -13,6 +13,7 @@ use App\Models\Auth_users;
 use App\Models\Parent_child_model; 
 use App\Models\Wallet_model;
 use App\Models\Wallet_transaction_model;
+use App\Models\Payment_history_model;
 
 class Users_controller extends Controller
 {
@@ -54,7 +55,6 @@ class Users_controller extends Controller
                                     $result['users'][$ukey]['parent_name']='';
                                     $result['users'][$ukey]['parent_email']='';
                                 }
-
         }
       
         return view('admin/register-user',$result);
@@ -124,9 +124,6 @@ class Users_controller extends Controller
                                    }
                                   
                     }
-
-                   
-
                   
               }
 
@@ -158,9 +155,7 @@ class Users_controller extends Controller
         //                             ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
         //                             ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
         //                             ->where('users.user_id',$user_id)->where('wallet.user_id',$user_id)
-        //                             ->groupBy('wallet_transaction.credit')->first()->toArray();
-
-                        
+        //                             ->groupBy('wallet_transaction.credit')->first()->toArray();                        
 
         // if(!empty($user_details))
         // {
@@ -170,7 +165,6 @@ class Users_controller extends Controller
         //                             ->where('users.user_id',$user_id)
         //                             ->groupBy('auth_user.user_id')->get()->toArray();
         // }                        
-
                                               
         return view('admin/register-user-details',$result);
     }
