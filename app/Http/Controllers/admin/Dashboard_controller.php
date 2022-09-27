@@ -51,11 +51,9 @@ class Dashboard_controller extends Controller
         foreach($categories as $cat_key=>$cat)
         {            
             $shops_by_categories=array_column(Shops_model::select('shop_id')->where('shop_cat_id',$cat['shop_cat_id'])->get()->toArray(),'shop_id');
-
             // echo "<pre>";
             // echo $cat['shop_cat_name'];
-            // print_r($shops_by_categories);
-            
+            // print_r($shops_by_categories);            
             $shop_sales=array();
             for($i=1; $i<=12; $i++)
             {

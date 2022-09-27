@@ -60,6 +60,19 @@
                                                         <div class="count-data">
                                                             <h4 class="count">AED {{ $admin_recieve[0]['admin_earn'] }} </h4>
                                                             <p class="count-title">Total Amount Received from
+                                                                Parent</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-6">
+                                                    <div class="count-box">
+                                                        <div
+                                                            class="icon-box gradient  blue-gradient d-flex justify-content-center align-items-center">
+                                                            <img src="{{ asset('assets/dist/images/icon/amount-received.png') }}">
+                                                        </div>
+                                                        <div class="count-data">
+                                                            <h4 class="count">AED {{ $admin_recieve[0]['admin_earn'] }} </h4>
+                                                            <p class="count-title">Total Amount Paid To
                                                                 Shops</p>
                                                         </div>
                                                     </div>
