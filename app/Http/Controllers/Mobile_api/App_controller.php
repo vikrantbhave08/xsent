@@ -1013,8 +1013,9 @@ class App_controller extends Controller
         for($i=1; $i<=$month; $i++)
         {           
                        
-        $money_requests=Amount_requests_model::select('amount_requests.*','users.first_name','users.last_name')
+        $money_requests=Amount_requests_model::select('amount_requests.*','users.first_name','users.last_name','payment_history.pay_txn_id')
                                                 ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
+                                                ->leftjoin('payment_history', 'amount_requests.amt_request_id', '=', 'payment_history.amt_request_id') 
                                                 ->where(function ($query) use ($request,$logged_user,$childrens) {
                                                     if ( $logged_user['user_role']==2 || ($logged_user['user_role']==3 && $request['user_id']=="") || $logged_user['user_role']==4 ) $query->where('amount_requests.by_user',$logged_user['user_id']);  //parent,child,owner request self history
                                                     if (!empty($request['user_id'])) $query->where('amount_requests.by_user',$request['user_id']);     // user (child) history
@@ -1034,7 +1035,7 @@ class App_controller extends Controller
                 }
 
             if ( empty($request['limit']) )
-            {
+            { 
                     if(!empty($money_requests))
                     {
                         $users_requests[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
