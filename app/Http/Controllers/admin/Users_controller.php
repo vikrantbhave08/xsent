@@ -63,7 +63,7 @@ class Users_controller extends Controller
     public function register_user_details(Request $request)
     {
         $user_id=base64_decode($request['uid']);
-
+       
         $user_details=User_model::where('users.user_id',$user_id)->first()->toArray();  
 
         $result['shop_user_details'] = $result['parent_user_details'] = $user_details;
@@ -85,27 +85,46 @@ class Users_controller extends Controller
             {
                 for($i=0; $i<2; $i++) // for two status  bank transfer to user  & user transfer to bank account
                 {
+
+                    $trans=Payment_history_model::from('payment_history as ph')->select('ph.*')                                                
+                                            ->where(function ($query) use ($request,$i,$user_role,$user_id) {                                                    
+                                                                                    
+                                                if($i==0) $query->where('ph.from_user', 0);         //bank transfer to user
+                                                if($i==0) $query->where('ph.to_user',$user_id);     //bank transfer to user
+                                                // if($i==0) $query->where('wt.from_user', 8);         //bank transfer to user
+                                                // if($i==0) $query->where('wt.user_id',23);     //bank transfer to user
+                                                if($i==0) $query->where('ph.to_role',$user_role);     //for user role 
+                                                
+                                                if($i==1) $query->where('ph.from_user', $user_id);         //user transfer to bank account
+                                                if($i==1) $query->where('ph.from_role',$user_role);     //for user role 
+                                                if($i==1) $query->where('ph.to_user', 0);     //user transfer to bank account
+                                                // if($i==1) $query->where('wt.from_user', 6);         //user transfer to bank account
+                                                // if($i==1) $query->where('wt.user_id', 8);     //user transfer to bank account
+                                                                                                        
+                                            })
+                                            ->whereMonth('ph.created_at',"=",$month) 
+                                            ->get()->toArray();
                     
-        $trans=Wallet_transaction_model::from('wallet_transaction as wt')->select('wt.*')
-                                                        ->leftjoin('wallet', 'wt.user_id', '=', 'wallet.user_id')
-                                                        ->leftjoin('users', 'wt.user_id', '=', 'users.user_id')                                                   
-                                                        ->where(function ($query) use ($request,$i,$user_role,$user_id) {                                                    
+        // $trans=Wallet_transaction_model::from('wallet_transaction as wt')->select('wt.*')
+        //                                                 ->leftjoin('wallet', 'wt.user_id', '=', 'wallet.user_id')
+        //                                                 ->leftjoin('users', 'wt.user_id', '=', 'users.user_id')                                                   
+        //                                                 ->where(function ($query) use ($request,$i,$user_role,$user_id) {                                                    
                                                                                                 
-                                                            if($i==0) $query->where('wt.from_user', 0);         //bank transfer to user
-                                                            if($i==0) $query->where('wt.user_id',$user_id);     //bank transfer to user
-                                                            // if($i==0) $query->where('wt.from_user', 8);         //bank transfer to user
-                                                            // if($i==0) $query->where('wt.user_id',23);     //bank transfer to user
-                                                            if($i==0) $query->where('wt.to_role',$user_role);     //for user role 
+        //                                                     if($i==0) $query->where('wt.from_user', 0);         //bank transfer to user
+        //                                                     if($i==0) $query->where('wt.user_id',$user_id);     //bank transfer to user
+        //                                                     // if($i==0) $query->where('wt.from_user', 8);         //bank transfer to user
+        //                                                     // if($i==0) $query->where('wt.user_id',23);     //bank transfer to user
+        //                                                     if($i==0) $query->where('wt.to_role',$user_role);     //for user role 
                                                             
-                                                            if($i==1) $query->where('wt.from_user', $user_id);         //user transfer to bank account
-                                                            if($i==1) $query->where('wt.user_id', 0);     //user transfer to bank account
-                                                            // if($i==1) $query->where('wt.from_user', 6);         //user transfer to bank account
-                                                            // if($i==1) $query->where('wt.user_id', 8);     //user transfer to bank account
-                                                            if($i==1) $query->where('wt.from_role',$user_role);     //for user role 
+        //                                                     if($i==1) $query->where('wt.from_user', $user_id);         //user transfer to bank account
+        //                                                     if($i==1) $query->where('wt.user_id', 0);     //user transfer to bank account
+        //                                                     // if($i==1) $query->where('wt.from_user', 6);         //user transfer to bank account
+        //                                                     // if($i==1) $query->where('wt.user_id', 8);     //user transfer to bank account
+        //                                                     if($i==1) $query->where('wt.from_role',$user_role);     //for user role 
                                                                                                                       
-                                                        })
-                                                        ->whereMonth('wt.created_at',"=",$month) 
-                                                        ->get()->toArray();
+        //                                                 })
+        //                                                 ->whereMonth('wt.created_at',"=",$month) 
+        //                                                 ->get()->toArray();
 
                                                         // echo "<pre>";
                                                         // print_r($trans);
@@ -117,7 +136,7 @@ class Users_controller extends Controller
                                         if(!empty($transactions[date('F', mktime(0,0,0,$month, 1, date('Y')))]))
                                         {
                                             $transactions[date('F', mktime(0,0,0,$month, 1, date('Y')))] = array_merge($transactions[date('F', mktime(0,0,0,$month, 1, date('Y')))], $trans);                
-                                        }else{
+                                        } else {
                                             $transactions[date('F', mktime(0,0,0,$month, 1, date('Y')))] = $trans ;                
                                         }
                                     //   $transactions = array_merge($transactions, $trans);                

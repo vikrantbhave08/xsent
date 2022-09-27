@@ -29,7 +29,7 @@ class Requests_controller extends Controller
 
     public function index()
     {
-        $result['requests']=Amount_requests_model::select('users.first_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance')
+        $result['requests']=Amount_requests_model::select('users.email','users.first_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance')
                                                 ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
                                                 ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
                                                 ->leftjoin('shops', 'amount_requests.by_user', '=', 'shops.owner_id') 
@@ -103,6 +103,21 @@ class Requests_controller extends Controller
                     {
                         $users_request->status=1;
                         $users_request->save();
+
+                        Wallet_transaction_model::create([          
+                            'txn_id'=>"txn".md5(date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999)),
+                            'from_user' => 0,
+                            'from_role' => 1,
+                            'user_id' => $users_request->by_user,
+                            'to_role' => $users_request->by_role,
+                            'wallet_id' => 0,
+                            'credit' => $users_request->request_amount,
+                            'debit' => '',
+                            'payment_gate_id' => $payment_added,
+                            'status_msg' => 'Added money from parent to student',
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s')
+                            ])->wallet_id;    
 
                         $result=array('status'=>true,'msg'=>'Payment added successfully');
                     }else{

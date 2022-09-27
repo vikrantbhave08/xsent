@@ -39,6 +39,7 @@
                                                             <th></th>
                                                             <th>Sr. No</th>
                                                             <th>Request From</th>
+                                                            <th>Email</th>
                                                             <th>Request Amount</th>
                                                             <th>User Type</th>
                                                             <th>Wallet Balance</th>
@@ -57,6 +58,7 @@
                                                                 @else 
                                                                 {{ $val['first_name']." ".$val['last_name'] }}                                                             
                                                                 @endif</td>
+                                                            <td>{{ $val['email'] }}</td>
                                                             <td>{{ 'AED'.' '.$val['request_amount'] }}</td>
                                                             <td>{{ $val['by_role']==2 ? "Owner" : "Parent" }}</td>
                                                             <td>{{ 'AED'.' '.$val['balance'] }}</td>

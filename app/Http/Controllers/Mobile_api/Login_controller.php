@@ -353,7 +353,6 @@ class Login_controller extends Controller
                                 'created_at' =>  date('Y-m-d H:i:s'),
                                 'updated_at' =>  date('Y-m-d H:i:s')
                             ])->auth_id;
-
                         }
 
                         $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,
