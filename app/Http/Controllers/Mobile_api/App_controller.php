@@ -542,11 +542,14 @@ class App_controller extends Controller
                                         $request_data->save();
                                     }
 
+                                    $txn_id="txn".md5(date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999));
+
                                     if(!empty($request['shop_gen_id']))
                                     {
                                         $shop_detail=Shops_model::where('shop_gen_id',$request['shop_gen_id'])->first();
 
                                         Shop_transaction_model::create([ 
+                                            'txn_id'=>$txn_id,
                                             'by_user' => $logged_user['user_id'],
                                             'shop_id' => $shop_detail->shop_id,
                                             'amount' => $request['amount'],
@@ -558,7 +561,7 @@ class App_controller extends Controller
                                     }
 
                                     Wallet_transaction_model::create([          
-                                        'txn_id'=>"txn".md5(date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999)),
+                                        'txn_id'=>$txn_id,
                                         'from_user' => $logged_user['user_id'],
                                         'from_role' => $logged_user['user_role'],
                                         'user_id' => $request['user_id'],

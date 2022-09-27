@@ -20,6 +20,7 @@ use App\Models\Shops_model;
 use App\Models\Shopkeepers_model;
 use App\Models\Amount_requests_model;
 use App\Models\Shop_cat_model;
+use App\Models\Payment_history_model;
 
 
 class Dashboard_controller extends Controller
@@ -38,12 +39,21 @@ class Dashboard_controller extends Controller
         $this->logged_user;
 
         $result['users']=User_model::get()->whereIn('user_role',array(2,3))->toArray();
+        $result['paid_to_shop']=Payment_history_model::select('payment_history.*',DB::raw('ifnull(SUM(payment_history.amount),0) as shops_earn'))
+                                                       ->where('payment_history.to_role',2)->get()->toArray();
+        $result['recieved_from_parent']=Payment_history_model::select('payment_history.*',DB::raw('ifnull(SUM(payment_history.amount),0) as parent_pays'))
+                                                       ->where('payment_history.from_role',3)->get()->toArray();
         $result['shops']=Shops_model::select('shops.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as shops_earn'))
                                     ->leftjoin('shop_transactions', 'shops.shop_id', '=', 'shop_transactions.shop_id')
                                     ->groupBy('shops.shop_id')->get()->toArray();        
 
         $result['admin_recieve']=Wallet_transaction_model::select(DB::raw('ifnull(SUM(wallet_transaction.credit),0) as admin_earn')) 
-                                                           ->where('user_id',0)->where('from_role',2)->get()->toArray();      
+                                                           ->where('user_id',0)->where('from_role',2)->get()->toArray();    
+                                                           
+                                                           
+                                                           echo "<pre>";
+                                                           print_r($result);
+                                                           exit;
 
         $categories=Shop_cat_model::get()->toArray();
 
