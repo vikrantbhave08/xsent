@@ -58,7 +58,7 @@
                                                             <img src="{{ asset('assets/dist/images/icon/amount-received.png') }}">
                                                         </div>
                                                         <div class="count-data">
-                                                            <h4 class="count">AED {{ $admin_recieve[0]['parent_pays'] }} </h4>
+                                                            <h4 class="count">AED {{ $recieved_from_parent[0]['parent_pays'] }} </h4>
                                                             <p class="count-title">Total Amount Received from
                                                                 Parent</p>
                                                         </div>
@@ -71,7 +71,7 @@
                                                             <img src="{{ asset('assets/dist/images/icon/amount-received.png') }}">
                                                         </div>
                                                         <div class="count-data">
-                                                            <h4 class="count">AED {{ $admin_recieve[0]['shops_earn'] }} </h4>
+                                                            <h4 class="count">AED {{ $paid_to_shop[0]['shops_earn'] }} </h4>
                                                             <p class="count-title">Total Amount Paid To
                                                                 Shops</p>
                                                         </div>

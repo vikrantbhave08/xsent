@@ -48,12 +48,10 @@ class Dashboard_controller extends Controller
                                     ->groupBy('shops.shop_id')->get()->toArray();        
 
         $result['admin_recieve']=Wallet_transaction_model::select(DB::raw('ifnull(SUM(wallet_transaction.credit),0) as admin_earn')) 
-                                                           ->where('user_id',0)->where('from_role',2)->get()->toArray();    
-                                                           
-                                                           
-                                                           echo "<pre>";
-                                                           print_r($result);
-                                                           exit;
+                                                           ->where('user_id',0)->where('from_role',2)->get()->toArray();                                                              
+                                                        //    echo "<pre>";
+                                                        //    print_r($result);
+                                                        //    exit;
 
         $categories=Shop_cat_model::get()->toArray();
 
@@ -85,7 +83,7 @@ class Dashboard_controller extends Controller
                                                        
                                                         $shop_sales[]=array_sum(array_column($shop_sales_per_month, 'total_sale'));                                                                                                      
 
-            }
+            } 
 
                  $cat_sales_by_month[]=[
                   'name'=>$cat['shop_cat_name'],

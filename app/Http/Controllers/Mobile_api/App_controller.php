@@ -58,6 +58,45 @@ class App_controller extends Controller
         { 
           $data=array('status'=>true,'msg'=>'Data found','balance'=>$users_wallet->balance,'dashboard_data'=>$return_data);
         }
+
+        // $categories=Shop_cat_model::get()->toArray();
+
+        // $cat_sales_by_month=array();
+        // foreach($categories as $cat_key=>$cat)
+        // {            
+        //     $shops_by_categories=array_column(Shops_model::select('shop_id')->where('shop_cat_id',$cat['shop_cat_id'])->get()->toArray(),'shop_id');
+        //     // echo "<pre>";
+        //     // echo $cat['shop_cat_name'];
+        //     // print_r($shops_by_categories);            
+        //     $shop_sales=array();
+        //     for($i=1; $i<=12; $i++)
+        //     {
+        //         $shop_sales_per_month=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale'))
+        //                                                 // ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
+        //                                                 // ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
+        //                                                 // ->where(function ($query) use ($request,$logged_user) {
+        //                                                 // if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id',$request['shop_gen_id']);  
+        //                                                 // if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
+        //                                                 // if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
+        //                                                 // if ($logged_user['user_role']==5) $query->wheredate('shop_transactions.created_at',date('Y-m-d'));  //for shopkeeper
+        //                                                 // }) 
+        //                                                 ->whereIn('shop_transactions.shop_id', $shops_by_categories)
+        //                                                 ->whereYear('shop_transactions.created_at', '=', date('Y'))
+        //                                                 ->whereMonth('shop_transactions.created_at',"=",$i)
+        //                                                 ->groupBy('shop_transactions.shop_id') 
+        //                                                 ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
+
+                                                       
+        //                                                 $shop_sales[]=array_sum(array_column($shop_sales_per_month, 'total_sale'));                                                                                                      
+
+        //     }
+
+        //          $cat_sales_by_month[]=[
+        //           'name'=>$cat['shop_cat_name'],
+        //           'data'=>$shop_sales
+        //           ];
+                
+        // }
        
         echo json_encode($data);
     }
