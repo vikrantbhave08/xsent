@@ -619,7 +619,7 @@ class App_controller extends Controller
                                             $body="Your parent has sent you ".$request['amount']." AED amount to your xsent wallet";
                                             $dev_ids=array($beneficiary_user->fcm_token);
                                         }
-                                        
+
                                         if($logged_user['user_role']==3 && $for_user_role==2)
                                         {
                                             $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
@@ -632,8 +632,7 @@ class App_controller extends Controller
 
                                             $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
                                             $title='Payment Recieved';
-                                            $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";
-                                           
+                                            $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";                                           
                                         }
 
 
@@ -654,11 +653,11 @@ class App_controller extends Controller
 
 
                                         $notification_body=array(
-                                            'title'=>$title,
-                                            'msg'=>'',
-                                            'body'=>$body,
-                                            'to'=>$dev_ids, 
-                                        );
+                                                                    'title'=>$title,
+                                                                    'msg'=>'',
+                                                                    'body'=>$body,
+                                                                    'to'=>$dev_ids, 
+                                                                );
                 
                                         Login_controller::send_notification($notification_body);
 

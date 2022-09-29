@@ -71,11 +71,23 @@ class Users_controller extends Controller
        
         $user_details=User_model::where('users.user_id',$user_id)->first()->toArray();  
 
-        $result['shop_user_details'] = $result['parent_user_details'] = $user_details;
+        $multiple_roles = User_model::select('users.*','auth_user.auth_id','auth_user.users_token','auth_user.user_role as role_id')
+                                    ->leftjoin('auth_user', 'users.user_id', '=', 'auth_user.user_id')
+                                    ->where('auth_user.user_id', $user_id)
+                                    ->get()->toArray();
+
+                                    
+                                    
+        // $result['shop_user_details'] = $result['parent_user_details'] = $user_details;
+        $result['shop_user_details'] = in_array(2,array_column($multiple_roles,"role_id")) ? $user_details : array(); 
+        $result['parent_user_details'] = in_array(3,array_column($multiple_roles,"role_id")) ? $user_details : array();
+
+                                
+
          
         
         $as_a_shop=Wallet_model::where('user_id',$user_id)->where('user_role',2)->first();
-        $result['shop_user_details']['wallet_balance'] = !empty($as_a_shop) ? $as_a_shop->balance : 0 ;
+          $result['shop_user_details']['wallet_balance'] = !empty($as_a_shop) ? $as_a_shop->balance : 0 ;
 
         $as_a_parent=Wallet_model::where('user_id',$user_id)->where('user_role',3)->first();
         $result['parent_user_details']['wallet_balance'] = !empty($as_a_parent) ? $as_a_parent->balance : 0 ;
@@ -110,31 +122,7 @@ class Users_controller extends Controller
                                             ->whereMonth('ph.created_at',"=",$month) 
                                             ->get()->toArray();
                     
-        // $trans=Wallet_transaction_model::from('wallet_transaction as wt')->select('wt.*')
-        //                                                 ->leftjoin('wallet', 'wt.user_id', '=', 'wallet.user_id')
-        //                                                 ->leftjoin('users', 'wt.user_id', '=', 'users.user_id')                                                   
-        //                                                 ->where(function ($query) use ($request,$i,$user_role,$user_id) {                                                    
-                                                                                                
-        //                                                     if($i==0) $query->where('wt.from_user', 0);         //bank transfer to user
-        //                                                     if($i==0) $query->where('wt.user_id',$user_id);     //bank transfer to user
-        //                                                     // if($i==0) $query->where('wt.from_user', 8);         //bank transfer to user
-        //                                                     // if($i==0) $query->where('wt.user_id',23);     //bank transfer to user
-        //                                                     if($i==0) $query->where('wt.to_role',$user_role);     //for user role 
-                                                            
-        //                                                     if($i==1) $query->where('wt.from_user', $user_id);         //user transfer to bank account
-        //                                                     if($i==1) $query->where('wt.user_id', 0);     //user transfer to bank account
-        //                                                     // if($i==1) $query->where('wt.from_user', 6);         //user transfer to bank account
-        //                                                     // if($i==1) $query->where('wt.user_id', 8);     //user transfer to bank account
-        //                                                     if($i==1) $query->where('wt.from_role',$user_role);     //for user role 
-                                                                                                                      
-        //                                                 })
-        //                                                 ->whereMonth('wt.created_at',"=",$month) 
-        //                                                 ->get()->toArray();
-
-                                                        // echo "<pre>";
-                                                        // print_r($trans);
-                                                  
-                                                        // [date('F', mktime(0,0,0,$month, 1, date('Y')))]
+       
                                                         
                                    if(!empty($trans))
                                    {
@@ -151,10 +139,7 @@ class Users_controller extends Controller
                   
               }
 
-            //   print_r($transactions);
-            //   exit;
-
-              
+                          
               $all_transactions=array();
               foreach($transactions as $key=>$val)
               {
@@ -163,9 +148,7 @@ class Users_controller extends Controller
                 });
 
                 $all_transactions[$key]=$val;                                
-            }
-
-           
+              }           
 
            
              if($user_role==2) { $transaction['shop'] = $all_transactions ; } 
@@ -173,23 +156,9 @@ class Users_controller extends Controller
         }
 
         $result['transaction']=$transaction;
-
-        // User_model::select('users.*','wallet.balance as wallet_balance','wallet_transaction.credit','user_roles.role_name')
-        //                             ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')
-        //                             ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
-        //                             ->leftjoin('wallet_transaction', 'users.user_id', '=', 'wallet_transaction.user_id')
-        //                             ->where('users.user_id',$user_id)->where('wallet.user_id',$user_id)
-        //                             ->groupBy('wallet_transaction.credit')->first()->toArray();                        
-
-        // if(!empty($user_details))
-        // {
-        //     $user_details->toArray();
-        //     $auth_users=Auth_users::select('auth_user.*')
-        //                             ->leftjoin('users', 'auth_user.user_id', '=', 'users.user_id')
-        //                             ->where('users.user_id',$user_id)
-        //                             ->groupBy('auth_user.user_id')->get()->toArray();
-        // }                        
-                                              
+        // echo "<pre>";
+        // print_r($result);
+        // exit;                              
         return view('admin/register-user-details',$result);
     }
 

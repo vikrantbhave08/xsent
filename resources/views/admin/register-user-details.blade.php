@@ -19,15 +19,23 @@
                                 <div>
                                     <nav>
                                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
+
+                                        @if(!empty($shop_user_details['user_role']))
                                             <a class="nav-link active gradient" id="nav-shop-tab" data-bs-toggle="tab"
                                                 href="#nav-shop" role="tab" aria-controls="nav-shop"
                                                 aria-selected="true">Shop</a>
-                                            <a class="nav-link gradient" id="nav-parent-tab" data-bs-toggle="tab"
+                                                @endif
+
+                                                @if(!empty($parent_user_details['user_role']))
+                                            <a class="nav-link {{ empty($shop_user_details['user_role']) ? 'active' : '' }}  gradient" id="nav-parent-tab" data-bs-toggle="tab"
                                                 href="#nav-parent" role="tab" aria-controls="nav-parent"
                                                 aria-selected="false">Parent</a>
+                                                @endif
 
                                         </div>
                                     </nav>
+
+                                    @if(!empty($shop_user_details['user_role']))
                                     <div class="tab-content" id="nav-tabContent">
                                         <!-- SHOP DETAILS -->
                                         <div class="tab-pane fade show active" id="nav-shop" role="tabpanel"
@@ -147,8 +155,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
+
+                                        @if(!empty($parent_user_details['user_role']))
                                         <!-- PARENT DETAILS -->
-                                        <div class="tab-pane fade" id="nav-parent" role="tabpanel"
+                                        <div class="tab-pane fade {{ empty($shop_user_details['user_role']) ? 'show active' : '' }}" id="nav-parent" role="tabpanel"
                                             aria-labelledby="nav-parent-tab">
                                             <div class="content-wrapper">
                                                 <div class="row">
@@ -263,10 +274,13 @@
                                                         </div>
 
                                                     </div>
-                                                </div>
-                                            </div>
+                                               </div> <!-- Content wrapper transactionnhistory close -->
 
-                                        </div>
+                                           </div> <!-- Transction history mt-3 close  -->
+
+                                        </div> <!-- Parent Details close  -->
+
+                                        @endif
 
                                     </div>
                                 </div>

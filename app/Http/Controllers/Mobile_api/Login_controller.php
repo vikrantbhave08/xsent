@@ -589,6 +589,12 @@ function send_notification_old($data)
 }
 
 
+  function show_pdf()
+  {
+    return view('show_pdf');
+    
+  }
+  
   function send_notification($request)
     {    
         //    $msg = urlencode($request['msg']);

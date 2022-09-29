@@ -149,7 +149,7 @@
 
                         if (res.flag) {
 
-                            $(".login-err").css("color", "green");
+                            $(".login-err").css("color", "#ffcb99");
                             $(".login-err").html(res.msg);
                             setTimeout(function () {
                                 window.location.href = "{{ url('/admin/dashboard') }}";

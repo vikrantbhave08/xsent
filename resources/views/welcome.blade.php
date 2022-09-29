@@ -122,6 +122,8 @@
                         </div>
                     </div>
 
+                    <iframe src="{{ asset('assets/dist/pdf/suraj_doc.pdf') }}" style="width:600px; height:500px;" frameborder="0"></iframe>
+
                     <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
                         Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
                     </div>

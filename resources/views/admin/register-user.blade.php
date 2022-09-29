@@ -58,7 +58,7 @@
                                                             <th>Parent Email</th> -->
                                                             <th>Wallet Balance</th>
                                                             <th>Created At</th>
-                                                            <!-- <th>Status</th> -->
+                                                            <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -76,7 +76,7 @@
                                                             <td>{{ $user['parent_email'] }}</td> -->
                                                             <td>{{ $user['balance']!=null ? 'AED '.$user['balance'] : 'AED 0' }}</td>
                                                             <td>{{ date('Y-m-d',strtotime($user['created_at'])) }}</td>
-                                                            <!-- <td><button class="active-btn">Active</button></td> -->
+                                                            <td><button class="active-btn">Active</button></td>
                                                             <td> 
                                                                 <span class="table-icon"><a
                                                                         href="{{ url('/admin/register-user-details?uid=') }}{{ base64_encode($user['user_id'])}}"><i
