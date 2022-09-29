@@ -607,8 +607,8 @@ function send_notification_old($data)
         );
 
         $headers = array(
-            'Authorization: key=AAAACha3jR8:APA91bHoR_xPvo4eE4mrvIRULBsi8YVGdptkEYFk6Ck2YD1-0cB9V150JBCg7hQsCuJJ8aNoikF-w8AnuhY2dmhjyPWvzbzD4--wA_m3MmlvztNcSMs8tLJ3SqEbviT2Su-SkVAjEgfb',
-            // .env("NOTIFICATION_AUTH_KEY"),
+            'Authorization: key='.env("NOTIFICATION_AUTH_KEY"), 
+            
             'Content-Type: application/json'
         );
 
