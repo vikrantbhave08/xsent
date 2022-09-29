@@ -194,7 +194,6 @@ class App_controller extends Controller
                         'user_role' => $request['user_role']
                     );
 
-
                     $title=$request['user_role']==4 ? 'Your parent added you on xsent.' : 'Shop Owner added you on xsent.';
 
                     $details = [

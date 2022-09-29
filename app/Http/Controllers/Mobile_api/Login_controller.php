@@ -416,6 +416,23 @@ class Login_controller extends Controller
     }
 
   
+    public function sendnotification()
+    {
+       $notify_status= send_notification(
+            array(
+                'title'=>'title 1',
+                'msg'=>'message',
+                'body'=>'body',
+                'to'=>'d8t5Ge8JQXmoCFUtVTn-aI:APA91bHheCEdDU9mMoVO8uU5sbgHO6exGy1MItlTqhN2FjrP1EUGgkX9Mwx2qDWZJYhhIyqL-3b5D'
+            )
+        );
+
+        echo "<pre>";
+        print_r($notify_status);
+        exit;
+        
+    }
+
     public function logout(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found');

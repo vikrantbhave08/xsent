@@ -32,7 +32,7 @@ function send_otp($data)
     return $statusCode;  
 }
 
-function send_notification($data)
+function send_notification_old($data)
 { 
     $endpoint = 'https://fcm.googleapis.com/fcm/send';
     $client = new \GuzzleHttp\Client();
@@ -55,20 +55,20 @@ function send_notification($data)
 }
 
 
-  function send_notification_new($title='title',$msg='message',$body='body',$to='')
+  function send_notification($request)
     {    
-           $msg = urlencode($msg);
+        //    $msg = urlencode($request['msg']);
             $data = array(
-                'title'=>$title,
+                'title'=>$request['title'],
                 'sound' => "default",
-                'msg'=>$msg,
+                'msg'=>urlencode($request['msg']),
                 'data'=>'Data',
-                'body'=>$body,
+                'body'=>$request['body'],
                 'color' => "#79bc64"
             );
        
         $fields = array(           
-            'to'=>$to,
+            'to'=>$request['to'],
             'notification'=>$data,
             "priority" => "high",
         );

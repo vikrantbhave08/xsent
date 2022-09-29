@@ -110,24 +110,23 @@ class Dashboard_controller extends Controller
     }
 
 
-    public function send_notification($title='title',$msg='message',$body='body',$to='')
+    public function send_notification($request)
     {    
-
-           $msg = urlencode($msg);
-            $data = array(
-                'title'=>$title,
-                'sound' => "default",
-                'msg'=>$msg,
-                'data'=>'Data',
-                'body'=>$body,
-                'color' => "#79bc64"
-            );
-       
-        $fields = array(           
-            'to'=>$to,
-            'notification'=>$data,
-            "priority" => "high",
+        //    $msg = urlencode($msg);
+           $data = array(
+            'title'=>$request['title'],
+            'sound' => "default",
+            'msg'=>urlencode($request['msg']),
+            'data'=>'Data',
+            'body'=>$request['body'],
+            'color' => "#79bc64"
         );
+   
+    $fields = array(           
+        'to'=>$request['to'],
+        'notification'=>$data,
+        "priority" => "high",
+    );
 
         $headers = array(
             'Authorization: key='.env("NOTIFICATION_AUTH_KEY"),

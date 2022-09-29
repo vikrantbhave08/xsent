@@ -71,3 +71,5 @@ Route::Post('get-dashboard-data', [App_controller::class, 'get_dashboard_data'])
 Route::get('getall-province', [Login_controller::class, 'getall_province']); 
 Route::Post('getall-cities-by-province', [Login_controller::class, 'getall_cities_by_province']); 
 Route::get('getall-shop-categories', [Login_controller::class, 'getall_shop_categories']); 
+
+Route::get('send-notification', [Login_controller::class, 'sendnotification']); 
