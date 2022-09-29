@@ -31,12 +31,12 @@ class Dashboard_controller extends Controller
     public function __construct()
     {
         $this->middleware('check_user:admin');
-        $this->logged_user=Auth::admin_user();
+        // $this->logged_user=Auth::admin_user();
     }
 
     public function index()
     {
-        $this->logged_user;
+        // $this->logged_user;
 
         $result['users']=User_model::get()->whereIn('user_role',array(2,3))->toArray();
         $result['paid_to_shop']=Payment_history_model::select('payment_history.*',DB::raw('ifnull(SUM(payment_history.amount),0) as shops_earn'))

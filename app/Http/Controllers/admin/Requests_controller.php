@@ -30,8 +30,8 @@ class Requests_controller extends Controller
 
     public function index(Request $request)
     {
-        Dashboard_controller::send_notification(array('name'=>"suraj"));
-        exit;
+        // Dashboard_controller::send_notification(array('name'=>"suraj"));
+        // exit;
 
         $result['search_date']=!empty($request['search_date']) ? $request['search_date'] :'';
         $result['requests']=Amount_requests_model::select('users.email','users.first_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance')
