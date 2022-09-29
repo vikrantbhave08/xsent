@@ -30,9 +30,7 @@ class Requests_controller extends Controller
 
     public function index(Request $request)
     {
-        // Dashboard_controller::send_notification(array('name'=>"suraj"));
-        // exit;
-
+        
         $result['search_date']=!empty($request['search_date']) ? $request['search_date'] :'';
         $result['requests']=Amount_requests_model::select('users.email','users.first_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance')
                                                 ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
@@ -112,20 +110,35 @@ class Requests_controller extends Controller
                         $users_request->status=1;
                         $users_request->save();
 
-                        Wallet_transaction_model::create([          
-                            'txn_id'=>"txn".md5(date('smdHyi').$logged_user['user_id'].mt_rand(1111,9999)),
-                            'from_user' => 0,
-                            'from_role' => 1,
-                            'user_id' => $users_request->by_user,
-                            'to_role' => $users_request->by_role,
-                            'wallet_id' => 0,
-                            'credit' => $users_request->request_amount,
-                            'debit' => '',
-                            'payment_gate_id' => $payment_added,
-                            'status_msg' => 'Added money from parent to student',
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'updated_at' => date('Y-m-d H:i:s')
-                            ])->wallet_id;    
+                        $beneficiery_user = User_model::select('users.*','auth_user.auth_id','auth_user.users_token')
+                        ->leftjoin('auth_user', 'users.user_id', '=', 'auth_user.user_id')
+                        ->where('auth_user.user_id', $users_request->by_user)
+                        ->where('auth_user.user_role', $users_request->by_role)
+                        ->first();
+
+                        $notification_body=array(
+                            'title'=>'Payment Recieved',
+                            'msg'=>'',
+                            'body'=>'Xsent has transfered '.$users_request->request_amount.' AED amount to your bank',
+                            'to'=>$beneficiery_user->fcm_token, 
+                        );
+
+                        Dashboard_controller::send_notification($notification_body);
+                        
+                        // Wallet_transaction_model::create([          
+                        //     'txn_id'=>"txn".md5(date('smdHyi').$users_request->by_user.mt_rand(1111,9999)),
+                        //     'from_user' => 0,
+                        //     'from_role' => 1,
+                        //     'user_id' => $users_request->by_user,
+                        //     'to_role' => $users_request->by_role,
+                        //     'wallet_id' => 0,
+                        //     'credit' => $users_request->request_amount,
+                        //     'debit' => '',
+                        //     'payment_gate_id' => $payment_added,
+                        //     'status_msg' => 'Added money from parent to student',
+                        //     'created_at' => date('Y-m-d H:i:s'),
+                        //     'updated_at' => date('Y-m-d H:i:s')
+                        //     ])->wallet_id;    
 
                         $result=array('status'=>true,'msg'=>'Payment added successfully');
                     }else{

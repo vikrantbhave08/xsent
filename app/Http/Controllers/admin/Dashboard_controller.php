@@ -111,7 +111,7 @@ class Dashboard_controller extends Controller
 
 
     public function send_notification($request)
-    {    
+    {  
         //    $msg = urlencode($msg);
            $data = array(
             'title'=>$request['title'],
@@ -122,11 +122,11 @@ class Dashboard_controller extends Controller
             'color' => "#79bc64"
         );
    
-    $fields = array(           
-        'to'=>$request['to'],
-        'notification'=>$data,
-        "priority" => "high",
-    );
+        $fields = array(           
+            'to'=>$request['to'],
+            'notification'=>$data,
+            "priority" => "high",
+        );
 
         $headers = array(
             'Authorization: key='.env("NOTIFICATION_AUTH_KEY"),

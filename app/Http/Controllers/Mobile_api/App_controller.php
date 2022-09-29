@@ -472,8 +472,13 @@ class App_controller extends Controller
 
         if($request['user_id'] && $request['amount'])
         {  
-            $beneficiary_user=User_model::where('user_id', $request['user_id'])->first();
-            $for_user_role=$beneficiary_user->user_role==3 ? 2 : $beneficiary_user->user_role;
+            // $beneficiary_user=User_model::where('user_id', $request['user_id'])->first();
+            $beneficiary_user = User_model::select('users.*','auth_user.auth_id','auth_user.users_token','auth_user.fcm_token')
+                                ->leftjoin('auth_user', 'users.user_id', '=', 'auth_user.user_id')
+                                ->where('auth_user.user_id', $request['user_id'])
+                                ->first();
+
+            $for_user_role=$beneficiary_user->user_role==3 ? 2 : $beneficiary_user->user_role; //noone transfer virtual money to parent , when register as only parent then switch to owner
             
             $users_wallet_exists=Wallet_model::where('user_id',$request['user_id'])->first();
 
@@ -483,15 +488,7 @@ class App_controller extends Controller
             {
                
                 for($i=0; $i<2; $i++)
-                {
-                    // $wallet_transaction=Wallet_transaction_model::select('wallet_transaction.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
-                    //                                 ->where(function ($query) use ($request,$logged_user,$i) { 
-                    //                                     if($i==0) $query->WhereDate('wallet_transaction.created_at', Carbon::today()); //only for children day limit                   
-                    //                                     if($i==1) $query->whereMonth('wallet_transaction.created_at',"=",date('m')); //only for children  by month                  
-                    //                                 })    
-                    //                                 ->groupBy('wallet_transaction.user_id') 
-                    //                                 ->get()->toArray(); 
-
+                {                   
                                                   
                     $from_wallet=Wallet_model::select('wallet.*',DB::raw('ifnull(SUM(wallet_transaction.credit),0) as max_transaction'))
                                                 ->leftjoin('wallet_transaction', 'wallet.user_id', '=', 'wallet_transaction.from_user')
@@ -503,7 +500,6 @@ class App_controller extends Controller
                                                 })                                 
                                                 ->groupBy('wallet.user_id')                                                                         
                                                 ->first(); 
-
                                                 // echo "<pre>loop : ".$i;
                                                 // print_r($from_wallet);                    
                    
@@ -616,6 +612,39 @@ class App_controller extends Controller
                                         $remaining_balance=$from_wallet->balance - $request['amount'];
                                         $from_wallet->balance=$remaining_balance;
                                         $from_wallet->save();
+
+                                        if($logged_user['user_role']==3 && $for_user_role==4)
+                                        {   
+                                            $title='Amount Recieved';
+                                            $body="Your parent has sent you 100 AED amount to your xsent wallet";
+                                            $dev_ids=array($beneficiary_user->fcm_token);
+                                        }
+                                        if($logged_user['user_role']==3 && $for_user_role==2)
+                                        {
+                                            $shopkeepers=Parent_child_model::select('auth_users.fcm_token')
+                                                                             ->leftjoin('auth_users', 'parent_child.child_id', '=', 'auth_users.user_id')
+                                                                             ->where('parent_child.parent_id',$beneficiary_user->user_id)
+                                                                             ->get()->toArray();
+
+                                            $title='Payment Recieved';
+                                            $body="Suraj Shinde has sent you 100 AED amount to your xsent wallet";
+                                            $dev_ids=array('Device ID 1', 'Device ID 2');
+                                        }
+                                        if($logged_user['user_role']==4 && $for_user_role==2)
+                                        {
+                                            $title='Payment Recieved';
+                                            $body="Suraj Shinde has sent you 100 AED amount to your xsent wallet";
+                                            $dev_ids=array('Device ID 1', 'Device ID 2');
+                                        }
+
+                                        $notification_body=array(
+                                            'title'=>$title,
+                                            'msg'=>'',
+                                            'body'=>$body,
+                                            'to'=>$dev_ids, 
+                                        );
+                
+                                        Login_controller::send_notification($notification_body);
 
                                     $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
                                 }else{

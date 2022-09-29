@@ -40,7 +40,7 @@ class Users_controller extends Controller
                             if (!empty($request['password'])) $query->where('users.password',sha1($request['password'].'appcart systemts pvt ltd'));
                             if (!empty($request['search_date'])) $query->whereDate('users.created_at',$request['search_date']);
                         })
-                        ->get()->toArray();
+                        ->groupBy('users.user_id')->get()->toArray();
                         // ->where('users.user_role',"!=",1)->get()->toArray();
 
         foreach($result['users'] as $ukey=>$user)

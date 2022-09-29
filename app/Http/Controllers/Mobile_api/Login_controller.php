@@ -15,6 +15,7 @@ use App\Models\Shopkeepers_model;
 use App\Models\Cities_model;
 use App\Models\Province_model;
 use App\Models\Shop_cat_model;
+use App\Models\Parent_child_model;
 
 class Login_controller extends Controller
 {
@@ -419,17 +420,28 @@ class Login_controller extends Controller
     public function sendnotification()
     {
 
-       $notify_msg= $this->send_notification(
-            array(
-                'title'=>'title',
-                'msg'=>'message',
-                'body'=>'body',
-                'to'=>'d8t5Ge8JQXmoCFUtVTn-aI:APA91bHheCEdDU9mMoVO8uU5sbgHO6exGy1MItlTqhN2FjrP1EUGgkX9Mwx2qDWZJYhhIyqL-3b5D7YetOZ_lAUpp5t1h6vQ-qVSCQO-yDyuL9ARGieJ566C471WpPMjckNNIpjYgWqe'
-            )
-        );
+        $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
+                                         ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
+                                         ->where('parent_child.parent_id',2)
+                                         ->get()->toArray();
 
+        $shop_owner=Auth_user::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',2)->where('user_role',2)->first();
+        // !empty($shop_owner) ? $shopkeepers[]['user_id']=$shop_owner->uer_id;
+
+    //    $notify_msg= $this->send_notification(
+    //         array(
+    //             'title'=>'title',
+    //             'msg'=>'message',
+    //             'body'=>'body',
+    //             'to'=>'d8t5Ge8JQXmoCFUtVTn-aI:APA91bHheCEdDU9mMoVO8uU5sbgHO6exGy1MItlTqhN2FjrP1EUGgkX9Mwx2qDWZJYhhIyqL-3b5D7YetOZ_lAUpp5t1h6vQ-qVSCQO-yDyuL9ARGieJ566C471WpPMjckNNIpjYgWqe'
+    //         )
+    //     );
+
+    $shopkeepers[]['user_id']='';
+    $shopkeepers[]['user_id']='123';
+    $shopkeepers[]['user_id']=0;
         echo "<pre>";
-        print_r($notify_msg);
+        print_r(array_filter(array_column($shopkeepers,'user_id')));
         exit;
       
     }
@@ -608,7 +620,6 @@ function send_notification_old($data)
 
         $headers = array(
             'Authorization: key='.env("NOTIFICATION_AUTH_KEY"), 
-            
             'Content-Type: application/json'
         );
 
