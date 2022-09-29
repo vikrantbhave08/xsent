@@ -418,9 +418,10 @@ class Login_controller extends Controller
   
     public function sendnotification()
     {
-       $notify_status= send_notification(
+
+       $notify_msg= $this->send_notification(
             array(
-                'title'=>'title 1',
+                'title'=>'title',
                 'msg'=>'message',
                 'body'=>'body',
                 'to'=>'d8t5Ge8JQXmoCFUtVTn-aI:APA91bHheCEdDU9mMoVO8uU5sbgHO6exGy1MItlTqhN2FjrP1EUGgkX9Mwx2qDWZJYhhIyqL-3b5D'
@@ -428,9 +429,9 @@ class Login_controller extends Controller
         );
 
         echo "<pre>";
-        print_r($notify_status);
+        print_r($notify_msg);
         exit;
-        
+      
     }
 
     public function logout(Request $request)
@@ -470,7 +471,7 @@ class Login_controller extends Controller
             
             $data=array('contact_no'=>'+971'.$request['contact_no'],'msg'=>$gen_otp.' is your Xsent verification code.');
 
-             $response=send_otp($data); 
+             $response=$this->send_otp($data); 
 
             $data=array('status'=>true,'msg'=>'Otp sent successfully','otp'=>$gen_otp,'response'=>$response);
         }
@@ -539,5 +540,87 @@ class Login_controller extends Controller
      
         echo json_encode($data); 
     }   
+
+
+    
+function send_otp($data)
+{ 
+    $endpoint = 'https://api.smsglobal.com/http-api.php';
+    $client = new \GuzzleHttp\Client();
+   
+    $response = $client->request('GET', $endpoint, ['query' => [
+        'action' => 'sendsms', 
+        'user' => env("SEND_OTP_USER"), 
+        'from' => 'ibdaa', 
+        'to' => $data['contact_no'], 
+        'text' => $data['msg'],
+        'password' => env("SEND_OTP_PASS"),
+    ]]);
+
+    // url will be: http://my.domain.com/test.php?key1=5&key2=ABC;
+
+    $statusCode = $response->getStatusCode();
+    $content = $response->getBody();
+    
+    return $statusCode;  
+}
+
+function send_notification_old($data)
+{ 
+    $endpoint = 'https://fcm.googleapis.com/fcm/send';
+    $client = new \GuzzleHttp\Client();
+   
+    $response = $client->request('GET', $endpoint, ['query' => [
+        'action' => 'sendsms', 
+        'user' => env("SEND_OTP_USER"), 
+        'from' => 'ibdaa', 
+        'to' => $data['contact_no'], 
+        'text' => $data['msg'],
+        'password' => env("SEND_OTP_PASS"),
+    ]]);
+
+    // url will be: http://my.domain.com/test.php?key1=5&key2=ABC;
+
+    $statusCode = $response->getStatusCode();
+    $content = $response->getBody();
+    
+    return $statusCode;  
+}
+
+
+  function send_notification($request)
+    {    
+        //    $msg = urlencode($request['msg']);
+            $data = array(
+                'title'=>$request['title'],
+                'sound' => "default",
+                'msg'=>urlencode($request['msg']),
+                'data'=>'Data',
+                'body'=>$request['body'],
+                'color' => "#79bc64"
+            );
+       
+        $fields = array(           
+            'to'=>$request['to'],
+            'notification'=>$data,
+            "priority" => "high",
+        );
+
+        $headers = array(
+            'Authorization: key='.env("NOTIFICATION_AUTH_KEY"),
+            'Content-Type: application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result = curl_exec($ch);
+        curl_close( $ch );
+        return json_decode($result);      
+    }
     
 }
