@@ -418,15 +418,7 @@ class Login_controller extends Controller
 
   
     public function sendnotification()
-    {
-
-        $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
-                                         ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
-                                         ->where('parent_child.parent_id',2)
-                                         ->get()->toArray();
-
-        $shop_owner=Auth_user::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',2)->where('user_role',2)->first();
-        // !empty($shop_owner) ? $shopkeepers[]['user_id']=$shop_owner->uer_id;
+    {       
 
     //    $notify_msg= $this->send_notification(
     //         array(
@@ -437,12 +429,9 @@ class Login_controller extends Controller
     //         )
     //     );
 
-    $shopkeepers[]['user_id']='';
-    $shopkeepers[]['user_id']='123';
-    $shopkeepers[]['user_id']=0;
-        echo "<pre>";
-        print_r(array_filter(array_column($shopkeepers,'user_id')));
-        exit;
+        // echo "<pre>";
+        // print_r(array_filter(array_column($shopkeepers,'fcm_token')));
+        // exit;
       
     }
 

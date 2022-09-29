@@ -616,26 +616,42 @@ class App_controller extends Controller
                                         if($logged_user['user_role']==3 && $for_user_role==4)
                                         {   
                                             $title='Amount Recieved';
-                                            $body="Your parent has sent you 100 AED amount to your xsent wallet";
+                                            $body="Your parent has sent you ".$request['amount']." AED amount to your xsent wallet";
                                             $dev_ids=array($beneficiary_user->fcm_token);
                                         }
+                                        
                                         if($logged_user['user_role']==3 && $for_user_role==2)
                                         {
-                                            $shopkeepers=Parent_child_model::select('auth_users.fcm_token')
-                                                                             ->leftjoin('auth_users', 'parent_child.child_id', '=', 'auth_users.user_id')
-                                                                             ->where('parent_child.parent_id',$beneficiary_user->user_id)
-                                                                             ->get()->toArray();
+                                            $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
+                                                        ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
+                                                        ->where('parent_child.parent_id',23)
+                                                        ->get()->toArray();
 
+                                            $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
+                                            $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+
+                                            $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
                                             $title='Payment Recieved';
-                                            $body="Suraj Shinde has sent you 100 AED amount to your xsent wallet";
-                                            $dev_ids=array('Device ID 1', 'Device ID 2');
+                                            $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";
+                                           
                                         }
+
+
                                         if($logged_user['user_role']==4 && $for_user_role==2)
                                         {
+                                            $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
+                                            ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
+                                            ->where('parent_child.parent_id',23)
+                                            ->get()->toArray();
+
+                                            $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
+                                            $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+
+                                            $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
                                             $title='Payment Recieved';
-                                            $body="Suraj Shinde has sent you 100 AED amount to your xsent wallet";
-                                            $dev_ids=array('Device ID 1', 'Device ID 2');
+                                            $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";                                          
                                         }
+
 
                                         $notification_body=array(
                                             'title'=>$title,
