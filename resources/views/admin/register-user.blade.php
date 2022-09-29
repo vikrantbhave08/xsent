@@ -15,8 +15,7 @@
                                     <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
                                         <h4 class="page-title">Registered Users</h4>
                                     </div>
-                                    <!-- <form id="payment-form" action="{{url('/admin/payment')}}"  method="POST">
-                                      
+                                    <!-- <form id="payment-form" action="{{url('/admin/payment')}}"  method="POST">                                      
                                         @csrf
                                         <button type="submit" id="checkout-button">Checkout</button>
                                     </form> -->
@@ -36,6 +35,7 @@
                                         <div class="calender-view">
                                             <input type=" text" class="form-control calender" id="date_from"
                                                 placeholder="Select date">
+                                            <span onclick="clear_date()" class="close-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
                                         </div>
 
                                     </div>
@@ -58,7 +58,7 @@
                                                             <th>Parent Email</th> -->
                                                             <th>Wallet Balance</th>
                                                             <th>Created At</th>
-                                                            <th>Status</th>
+                                                            <!-- <th>Status</th> -->
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -66,8 +66,8 @@
 
                                                     @foreach($users as $usr_no => $user)   
                                                        <tr>
-                                                            <td><input type="checkbox"></td>
-                                                            <td>{{ $usr_no+1 }}</td>
+                                                            <td><input type="checkbox"></td> 
+                                                            <td>{{ $usr_no+1 }}</td> 
                                                             <!-- <td>541023</td> -->
                                                             <td>{{ $user['first_name'].' '.$user['last_name'] }}</td>
                                                             <td>{{ $user['email'] }}</td>
@@ -76,13 +76,12 @@
                                                             <td>{{ $user['parent_email'] }}</td> -->
                                                             <td>{{ $user['balance']!=null ? 'AED '.$user['balance'] : 'AED 0' }}</td>
                                                             <td>{{ date('Y-m-d',strtotime($user['created_at'])) }}</td>
-                                                            <td><button class="active-btn">Active</button></td>
-                                                            <td>
+                                                            <!-- <td><button class="active-btn">Active</button></td> -->
+                                                            <td> 
                                                                 <span class="table-icon"><a
                                                                         href="{{ url('/admin/register-user-details?uid=') }}{{ base64_encode($user['user_id'])}}"><i
                                                                             class="ri-eye-line"></i></a></span>
-                                                                <span class="table-icon"><i
-                                                                        class="ri-delete-bin-line"></i></span>
+                                                                <!-- <span class="table-icon"><i class="ri-delete-bin-line"></i></span>  -->
                                                             </td>
                                                         </tr>
                                                     @endforeach 
@@ -136,14 +135,21 @@
         flatpickr("#date_from", {
 
             dateFormat: 'Y-m-d',
-
+            defaultDate: "{{ !empty($search_date) ? $search_date : 'null' }}",
             onChange: function (selectedDates, dateStr, instance) {
 
-                get_data_by_date();
+                window.location.href = "{{url('/admin/register-users')}}?search_date="+dateStr;
 
             },
 
         });
+
+        function clear_date()
+       {       
+        // $flatpickr.clear();
+        window.location.href = "{{url('/admin/register-users')}}";
+       }
+
         function resizeData() {
             var winWidth = $(window).width();
             var winHeight = $(window).height();

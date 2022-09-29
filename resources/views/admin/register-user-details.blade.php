@@ -89,13 +89,14 @@
                                                     <div class="col-sm-6">
                                                         <h4 class="page-title">Transaction History</h4>
                                                     </div>
-                                                    <div class="col-sm-2 ms-auto">
+
+                                                    <!-- <div class="col-sm-2 ms-auto">
                                                         <div class="calender-view">
                                                             <input type=" text" class="form-control calender"
                                                                 id="date_from" placeholder="Select date">
                                                         </div>
+                                                    </div> -->
 
-                                                    </div>
                                                 </div>
                                                 <div class="content-wrapper transaction-history">
                                                     <div class="table-design">
@@ -206,13 +207,14 @@
                                                     <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
                                                         <h4 class="page-title">Transaction History</h4>
                                                     </div>
-                                                    <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
+
+                                                    <!-- <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                                         <div class="calender-view">
                                                             <input type=" text" class="form-control calender"
                                                                 id="date_from" placeholder="Select date">
                                                         </div>
+                                                    </div> -->
 
-                                                    </div>
                                                 </div>
                                                 <div class="content-wrapper transaction-history">
                                                     <div class="table-design">
@@ -303,17 +305,18 @@
 $('.register_uesrs').addClass('active');
 
         // SELECT DATE
-        flatpickr("#date_from", {
+        // flatpickr("#date_from", {
 
-            dateFormat: 'Y-m-d',
+        //     dateFormat: 'Y-m-d',
 
-            onChange: function (selectedDates, dateStr, instance) {
+        //     onChange: function (selectedDates, dateStr, instance) {
 
-                get_data_by_date();
+        //         get_data_by_date();
 
-            },
+        //     },
 
-        });
+        // });
+
         function resizeData() {
             var winWidth = $(window).width();
             var winHeight = $(window).height();

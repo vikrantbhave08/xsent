@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Helper;
+namespace App\Http\Helpers\User_help;
 
 namespace Illuminate\Support\Facades;
 
@@ -11,7 +11,7 @@ Use Session;
 use App\Models\User_model;
 use App\Models\Auth_users;
 
-class Helper
+class User_help
 {
 
    public function getInformation()

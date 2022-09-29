@@ -18,13 +18,18 @@
                                     <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
                                         <h4 class="page-title">Requests</h4>
                                     </div>
+                                                                  
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                         <div class="calender-view">
                                             <input type=" text" class="form-control calender" id="date_from"
                                                 placeholder="Select date">
+                                                <!-- <a class="input-button" title="clear" data-clear>sdfs;f
+                                                    <i class="icon-close"></i>
+                                                </a> -->
+                                                <span onclick="clear_date()" class="close-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
                                         </div>
-
                                     </div>
+
                                 </div>
 
                                 @csrf
@@ -177,6 +182,22 @@
                                         <label class="data-label wallet_balance"></label>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                   <div class="col-sm-6 mb-3">
+                                        <label class="form-label">Bank Name</label><br />
+                                        <label class="data-label bank_name">bank name</label>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <label class="form-label">Account No</label><br />
+                                        <label class="data-label account_no">acc no</label>
+                                    </div>
+                                   <div class="col-sm-6 mb-3">
+                                        <label class="form-label">IBAN No</label><br />
+                                        <label class="data-label iban_no">iban no</label>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label class="form-label">Transfered By</label>
@@ -241,18 +262,27 @@
         
         $('.requests').addClass('active');
 
+
         // SELECT DATE
-        flatpickr("#date_from", {
+        const $flatpickr = flatpickr("#date_from", {
 
             dateFormat: 'Y-m-d',
-
+            defaultDate: "{{ !empty($search_date) ? $search_date : 'null' }}",
             onChange: function (selectedDates, dateStr, instance) {
-
-                get_data_by_date();
-
+                // get_data_by_date();
+                // alert();
+                window.location.href = "{{url('/admin/requests')}}?search_date="+dateStr;
             },
 
         });
+
+       function clear_date()
+       {       
+        // $flatpickr.clear();
+        window.location.href = "{{url('/admin/requests')}}";
+       }
+                       
+          
 
         function resizeData() {
             setTimeout(function () {
@@ -284,6 +314,8 @@
             resizeData();
         })
         $(document).ready(function () {
+          
+
             $("#transfer_by").select2({
                 placeholder: "Select transfer by",
                 minimumResultsForSearch: Infinity,
@@ -329,22 +361,24 @@
 
                         if (res.status) {
 
-                            var res= res.pay_details;
+                                var res= res.pay_details;
 
-                            if(res.bank_detail_id==null)
-                            {
-                                $(".payment-err").css("color", "red");
-                                $(".payment-err").html("Bank details not added.");
-                            }
+                                if(res.bank_detail_id==null)
+                                {
+                                    $(".payment-err").css("color", "red");
+                                    $(".payment-err").html("Bank details not added.");
+                                }
 
                                 $(".req_from").html(res.first_name+" "+res.last_name);
                                 $(".user_type").html(res.role_name);
                                 $(".req_amt").html("AED "+res.request_amount);
                                 $(".wallet_balance").html("AED "+res.balance);
+                                $(".bank_name").html("AED "+res.bank_name);
+                                $(".account_no").html("AED "+res.account_no);
+                                $(".iban_no").html("AED "+res.iban_no);
                                 $("#amt_request_id").val(res.amt_request_id);
-                                $("#bank_detail_id").val(res.bank_detail_id);                                        
-
-                          
+                                $("#bank_detail_id").val(res.bank_detail_id);  
+                                
                             }
 
 

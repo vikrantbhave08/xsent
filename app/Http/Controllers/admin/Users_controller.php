@@ -26,16 +26,21 @@ class Users_controller extends Controller
 
     public function index(Request $request)
     {
+
+        $result['search_date']=!empty($request['search_date']) ? $request['search_date'] :'';
+       
         $result['users']=User_model::select('users.*','auth_user.auth_id','user_roles.role_name','wallet.balance')
                         ->leftjoin('user_roles', 'users.user_role', '=', 'user_roles.role_id')
                         ->leftjoin('auth_user', 'users.user_id', '=', 'auth_user.user_id')
                         ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id')
+                        ->whereIn('users.user_role',array(2,3))
                         ->where(function ($query) use ($request) {
                             if (!empty($request['email'])) $query->where('users.username', $request['email']);
                             if (!empty($request['user_role'])) $query->where('auth_user.user_role',$request['user_role']);
                             if (!empty($request['password'])) $query->where('users.password',sha1($request['password'].'appcart systemts pvt ltd'));
+                            if (!empty($request['search_date'])) $query->whereDate('users.created_at',$request['search_date']);
                         })
-                        ->whereIn('users.user_role',array(2,3))->get()->toArray();
+                        ->get()->toArray();
                         // ->where('users.user_role',"!=",1)->get()->toArray();
 
         foreach($result['users'] as $ukey=>$user)

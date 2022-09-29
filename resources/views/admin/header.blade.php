@@ -63,7 +63,7 @@
                 <div class="container-fluid">
 
                     <div class="row d-flex align-items-center">
-                        <div class="col-lg-10 col-md-9 col-9 d-flex align-items-center">
+                        <div class="col-lg-9 col-md-9 col-9 d-flex align-items-center">
                             <div class="float-start">
                                 <a href="#" class="navbar-brand">
                                     <img src="{{ asset('assets/dist/images/web-logo.png') }}" />
@@ -76,23 +76,23 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-3 col-3">
+                        <div class="col-lg-3 col-md-3 col-3">
                             <div class="dropdown  float-end">
                                 <button class="btn btn-secondary dropdown-toggle d-flex align-items-center"
                                     type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                     <div class="user-info">
-                                        <span class="user-name">Shafqat Tariq</span>
+                                        <span class="user-name">Mohammed Obaid</span>
                                     </div>
                                     <div class="user-pic d-flex justify-content-center align-items-center">
-                                        <p>ST</p>
+                                        <p>MO</p>
                                     </div>
                                     <i class="ri-arrow-drop-down-line"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">Action</a>
+                                    <!-- <a class="dropdown-item" href="#">Action</a>
                                     <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <a class="dropdown-item" href="#">Something else here</a> -->
                                     <a class="dropdown-item" href="{{ url('/admin/logout') }}">Logout</a>
                                 </div>
                             </div>
@@ -100,3 +100,29 @@
                     </div>
                 </div>
             </div>
+
+          
+                <script type="module">
+                // Import the functions you need from the SDKs you need
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+                import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+                // TODO: Add SDKs for Firebase products that you want to use
+                // https://firebase.google.com/docs/web/setup#available-libraries
+
+                // Your web app's Firebase configuration
+                // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+                const firebaseConfig = {
+                    apiKey: "AIzaSyB3C_aKpbVKTt_8ff_WqoVPsGXAlEUZBIU",
+                    authDomain: "xsent-57c7a.firebaseapp.com",
+                    projectId: "xsent-57c7a",
+                    storageBucket: "xsent-57c7a.appspot.com",
+                    messagingSenderId: "43330800927",
+                    appId: "1:43330800927:web:5e287dcd71779cf1b2742a",
+                    measurementId: "G-NGTG8LQYEY"
+                };
+
+                // Initialize Firebase
+                const app = initializeApp(firebaseConfig);
+                const analytics = getAnalytics(app);
+                </script>
+           

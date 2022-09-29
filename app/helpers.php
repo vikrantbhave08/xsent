@@ -55,6 +55,42 @@ function send_notification($data)
 }
 
 
+  function send_notification_new($title='title',$msg='message',$body='body',$to='')
+    {    
+           $msg = urlencode($msg);
+            $data = array(
+                'title'=>$title,
+                'sound' => "default",
+                'msg'=>$msg,
+                'data'=>'Data',
+                'body'=>$body,
+                'color' => "#79bc64"
+            );
+       
+        $fields = array(           
+            'to'=>$to,
+            'notification'=>$data,
+            "priority" => "high",
+        );
+
+        $headers = array(
+            'Authorization: key='.env("NOTIFICATION_AUTH_KEY"),
+            'Content-Type: application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result = curl_exec($ch);
+        curl_close( $ch );
+        return json_decode($result);      
+    }
+
+
 function admin_user1()
 {    
     // echo session('admin_token');

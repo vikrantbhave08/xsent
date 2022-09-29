@@ -11,10 +11,10 @@
                                         <h4 class="page-title">Dashboard</h4>
                                     </div>
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
-                                        <div class="calender-view ">
+                                        <!-- <div class="calender-view ">
                                             <input type="text" class="form-control calender" id="date_from"
                                                 placeholder="Select date">
-                                        </div>
+                                        </div> -->
                                         <!-- <div class="calender-view d-flex justify-content-around align-items-center">
                                             <span>View</span>
                                             <input type=" text" class="form-control calender" id="date_from"

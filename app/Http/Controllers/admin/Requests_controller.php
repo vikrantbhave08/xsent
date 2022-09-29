@@ -8,6 +8,7 @@ use DB;
 use Carbon\Carbon;
 use Validator;
 
+
 use App\Models\User_model;
 use App\Models\Auth_users;
 use App\Models\Parent_child_model; 
@@ -27,13 +28,20 @@ class Requests_controller extends Controller
         $this->middleware('check_user:admin');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        Dashboard_controller::send_notification(array('name'=>"suraj"));
+        exit;
+
+        $result['search_date']=!empty($request['search_date']) ? $request['search_date'] :'';
         $result['requests']=Amount_requests_model::select('users.email','users.first_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance')
                                                 ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
                                                 ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
                                                 ->leftjoin('shops', 'amount_requests.by_user', '=', 'shops.owner_id') 
                                                 ->whereIn('wallet.user_role',array(2,3))
+                                                ->where(function ($query) use ($request) {
+                                                    if (!empty($request['search_date'])) $query->whereDate('amount_requests.created_at',$request['search_date']);
+                                                 })                                                 
                                                 // ->whereIn('amount_requests.by_role',array(2,3))
                                                 // ->whereYear('amount_requests.created_at', '=', date('Y'))
                                                 // ->whereMonth('amount_requests.created_at',"=",$i)
@@ -142,17 +150,17 @@ class Requests_controller extends Controller
 
         if($request['request_id'])
         {
-
             $payment_details=array();
             // $result['requests']=Amount_requests_model::select('*')->get()->toArray();
-            $payment_details=Amount_requests_model::select('users.first_name','user_roles.role_name','users.last_name','amount_requests.*','shops.shop_name','wallet.balance','bank_details.bank_detail_id')
-                                    ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
-                                    ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
-                                    ->leftjoin('shops', 'amount_requests.by_user', '=', 'shops.owner_id') 
-                                    ->leftjoin('bank_details', 'amount_requests.by_user', '=', 'bank_details.user_id') 
-                                    ->leftjoin('user_roles', 'amount_requests.by_role', '=', 'user_roles.role_id') 
-                                    ->where('amount_requests.amt_request_id',$request['request_id'])         
-                                    ->first();
+            $payment_details=Amount_requests_model::select('users.first_name','user_roles.role_name','users.last_name','bank_details.account_no','bank_details.bank_name','bank_details.iban_no',
+                                                            'amount_requests.*','shops.shop_name','wallet.balance','bank_details.bank_detail_id','bank_details.bank_detail_id')
+                                                            ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
+                                                            ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
+                                                            ->leftjoin('shops', 'amount_requests.by_user', '=', 'shops.owner_id') 
+                                                            ->leftjoin('bank_details', 'amount_requests.by_user', '=', 'bank_details.user_id') 
+                                                            ->leftjoin('user_roles', 'amount_requests.by_role', '=', 'user_roles.role_id') 
+                                                            ->where('amount_requests.amt_request_id',$request['request_id'])         
+                                                            ->first();
 
             $result=array('status'=>true,'msg'=>'Data found','pay_details'=>!empty($payment_details) ? $payment_details->toArray() : array() );
         }
