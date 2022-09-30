@@ -73,4 +73,4 @@ Route::Post('getall-cities-by-province', [Login_controller::class, 'getall_citie
 Route::get('getall-shop-categories', [Login_controller::class, 'getall_shop_categories']); 
 
 Route::get('send-notification', [Login_controller::class, 'sendnotification']); 
-Route::get('show-pdf', [Login_controller::class, 'show_pdf']); 
+Route::get('pdf-page', [Login_controller::class, 'pdf_page']);  

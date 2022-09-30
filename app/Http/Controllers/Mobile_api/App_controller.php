@@ -624,7 +624,7 @@ class App_controller extends Controller
                                         {
                                             $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
                                                         ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
-                                                        ->where('parent_child.parent_id',23)
+                                                        ->where('parent_child.parent_id',$request['user_id'])
                                                         ->get()->toArray();
 
                                             $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
@@ -640,7 +640,7 @@ class App_controller extends Controller
                                         {
                                             $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
                                             ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
-                                            ->where('parent_child.parent_id',23)
+                                            ->where('parent_child.parent_id',$request['user_id'])
                                             ->get()->toArray();
 
                                             $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
@@ -718,6 +718,54 @@ class App_controller extends Controller
                                         $remaining_balance=$from_wallet->balance - $request['amount'];
                                         $from_wallet->balance=$remaining_balance;
                                         $from_wallet->save();
+
+                                        if($logged_user['user_role']==3 && $for_user_role==4)
+                                        {   
+                                            $title='Amount Recieved';
+                                            $body="Your parent has sent you ".$request['amount']." AED amount to your xsent wallet";
+                                            $dev_ids=array($beneficiary_user->fcm_token);
+                                        }
+
+                                        if($logged_user['user_role']==3 && $for_user_role==2)
+                                        {
+                                            $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
+                                                        ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
+                                                        ->where('parent_child.parent_id',$request['user_id'])
+                                                        ->get()->toArray();
+
+                                            $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
+                                            $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+
+                                            $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
+                                            $title='Payment Recieved';
+                                            $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";                                           
+                                        }
+
+
+                                        if($logged_user['user_role']==4 && $for_user_role==2)
+                                        {
+                                            $shopkeepers=Parent_child_model::select('auth_user.fcm_token','auth_user.user_id')
+                                            ->leftjoin('auth_user', 'parent_child.child_id', '=', 'auth_user.user_id')
+                                            ->where('parent_child.parent_id',$request['user_id'])
+                                            ->get()->toArray();
+
+                                            $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
+                                            $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+
+                                            $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
+                                            $title='Payment Recieved';
+                                            $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";                                          
+                                        }
+
+
+                                        $notification_body=array(
+                                                                    'title'=>$title,
+                                                                    'msg'=>'',
+                                                                    'body'=>$body,
+                                                                    'to'=>$dev_ids, 
+                                                                );
+                
+                                        Login_controller::send_notification($notification_body);
 
                                     $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
                                 } else {
@@ -1006,10 +1054,18 @@ class App_controller extends Controller
        
             if($request_flag)
             {
+                if($logged_user['user_role']==4)
+                {
+                    $parent_data=Parent_child_model::select('parent_child.parent_id','auth_user.fcm_token')
+                                                    //  ->leftjoin('users', 'parent_child.by_user', '=', 'users.user_id') 
+                                                     ->leftjoin('auth_user', 'parent_child.parent_id', '=', 'auth_user.user_id') 
+                                                     ->where('child_id',$logged_user['user_id'])->first();
+                }
+
             $amt_request=Amount_requests_model::create([                        
                 'by_user' => $logged_user['user_id'],
                 'by_role' => $logged_user['user_role'],
-                'to_user' => $logged_user['user_role']==4 ? Parent_child_model::where('child_id',$logged_user['user_id'])->first()->parent_id : 0,
+                'to_user' => $logged_user['user_role']==4 ? $parent_data->parent_id : 0,
                 'request_amount' => $request['amount'],                   
                 'reason' => $request['reason'] ? $request['reason'] : "",                   
                 'date_of_expenditure' => $request['date_of_expenditure'] ? $request['date_of_expenditure'] : "",                   
@@ -1023,6 +1079,21 @@ class App_controller extends Controller
                     {
                         $wallet->balance = ($wallet->balance)-$request['amount'];
                         $wallet->save();
+                    } elseif($logged_user['user_role']==4)
+                    {
+                         
+                                            $title='Amount Request';
+                                            $body="Your child ".$logged_user['first_name']." ".$logged_user['last_name']." has requested you to send ".$request['amount']." AED amount into wallet";
+                                            $dev_ids=array($parent_data->fcm_token);
+                                      
+                                        $notification_body=array(
+                                                                    'title'=>$title,
+                                                                    'msg'=>'',
+                                                                    'body'=>$body,
+                                                                    'to'=>$dev_ids, 
+                                                                );
+                
+                                        Login_controller::send_notification($notification_body);
                     }
                     $data=array('status'=>true,'msg'=>'Requests added successfully');                   
                 }

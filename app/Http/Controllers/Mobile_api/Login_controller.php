@@ -589,11 +589,11 @@ function send_notification_old($data)
 }
 
 
-  function show_pdf()
-  {
-    return view('show_pdf');
-    
+  function pdf_page()
+  {  
+    return view('pdf_page');
   }
+
   
   function send_notification($request)
     {    

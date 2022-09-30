@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!-- <html> -->
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,9 +20,18 @@
             }
         </style>
     </head>
-    <body class="antialiased">      
-<h1>Hello</h1>
-                    <!-- <iframe src="{{ asset('assets/dist/pdf/suraj_doc.pdf') }}" style="width:100%; height:800px;" frameborder="0"></iframe> -->
+    <body class="antialiased">  
+
+    <div style="width: 100%; height: 100%">
+    <iframe id="myDiv" src="http://docs.google.com/gview?url=https://www.spcollegepune.ac.in/pdf/syllabus/economics/TYBA%20Economic%20Syllabus%202022-2023.pdf&embedded=true" style="width:100%; height:800px;" frameborder="0" frameborder="0"></iframe>
+   
+        </div>
+
+ <script>
+    </script>
+
+
+                   
 
                    
     </body>
