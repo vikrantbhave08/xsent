@@ -589,9 +589,10 @@ function send_notification_old($data)
 }
 
 
-  function pdf_page()
+  function pdf_page(Request $request)
   {  
-    return view('pdf_page');
+    $result['pdf_url']=$request['pdf_url'];
+    return view('pdf_page',$result);
   }
 
   
