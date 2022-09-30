@@ -23,7 +23,7 @@
     <body class="antialiased">  
 
     <div style="width: 100%; height: 100%">
-    <iframe id="myDiv" src="http://docs.google.com/gview?url=https://www.spcollegepune.ac.in/pdf/syllabus/economics/TYBA%20Economic%20Syllabus%202022-2023.pdf&embedded=true" style="width:100%; height:800px;" frameborder="0" frameborder="0"></iframe>
+    <iframe id="myDiv" src="https://docs.google.com/gview?url=https://www.spcollegepune.ac.in/pdf/syllabus/economics/TYBA%20Economic%20Syllabus%202022-2023.pdf&embedded=true" style="width:100%; height:800px;" frameborder="0" frameborder="0"></iframe>
    
         </div>
 
