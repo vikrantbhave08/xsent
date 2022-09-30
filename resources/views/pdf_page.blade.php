@@ -28,7 +28,7 @@
 
       <iframe src="https://docs.google.com/gview?url={{ $pdf_url }}&embedded=true"   width="100%" height="800px" frameborder="0"></iframe>
 
-      <div style="width: 50px; height: 50px; position: absolute;right: 12px; top: 12px;background:#fff"> </div>
+      <div style="width: 50px; height: 50px; position: absolute;right: 12px; top: 12px; background:#fff"> </div>
 </div>
 
     
