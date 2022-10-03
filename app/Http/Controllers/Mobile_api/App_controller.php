@@ -406,7 +406,7 @@ class App_controller extends Controller
 
     public function get_users_wallet(Request $request)  
     {
-        $data=array('status'=>false,'msg'=>'Data not found');
+        $data=array('status'=>false,'msg'=>'Data not found','wallet_data'=>array());
 
         $logged_user=Auth::mobile_app_user($request['token']);
 
