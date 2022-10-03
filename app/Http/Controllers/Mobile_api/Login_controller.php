@@ -548,7 +548,8 @@ function send_otp($data)
 { 
     $endpoint = 'https://api.smsglobal.com/http-api.php';
     $client = new \GuzzleHttp\Client();
-   
+    
+       
     $response = $client->request('GET', $endpoint, ['query' => [
         'action' => 'sendsms', 
         'user' => env("SEND_OTP_USER"), 

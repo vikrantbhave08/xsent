@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mobile_api\Parent_controller;
 use App\Http\Controllers\Mobile_api\Login_controller;
 use App\Http\Controllers\Mobile_api\App_controller;
-use App\Http\Controllers\Mobile_api\Payment_controller;
+use App\Http\Controllers\Mobile_api\Pay_controller;
 use App\Http\Controllers\Home_controller;
 /*
 |--------------------------------------------------------------------------
@@ -76,4 +76,4 @@ Route::get('getall-shop-categories', [Login_controller::class, 'getall_shop_cate
 Route::get('send-notification', [Login_controller::class, 'sendnotification']); 
 Route::get('pdf-page', [Login_controller::class, 'pdf_page']);  
 
-Route::Post('prebuild-checkout', [Payment_controller::class, 'prebuild_checkout']);  
+Route::Post('payment-intent', [Pay_controller::class, 'payment_intent']);  
