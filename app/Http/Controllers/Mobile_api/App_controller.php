@@ -32,9 +32,7 @@ class App_controller extends Controller
 
     public function __construct(Request $request)
     {               
-        $this->middleware('CheckApiToken:app');     
-        
-        // $this->logged_user=Auth::mobile_app_user($request['token']);  
+        $this->middleware('CheckApiToken:app');          
     }
 
 
