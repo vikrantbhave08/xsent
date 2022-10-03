@@ -613,7 +613,7 @@ function send_notification_old($data)
             'notification'=>$data,
             "priority" => "high",
         );
-
+        
         $headers = array(
             'Authorization: key='.env("NOTIFICATION_AUTH_KEY"), 
             'Content-Type: application/json'

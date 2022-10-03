@@ -410,15 +410,21 @@ class App_controller extends Controller
     {
         $data=array('status'=>false,'msg'=>'Data not found');
 
-        if($request['user_id'])
-        {  
-           $users_wallet=Wallet_model::select('wallet.wallet_id','wallet.max_limit_per_day','wallet.max_limit_per_month','wallet.low_balance_alert')->where('user_id',$request['user_id'])->first();
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+       
+           $users_wallet=Wallet_model::select('wallet.wallet_id','wallet.max_limit_per_day','wallet.max_limit_per_month','wallet.low_balance_alert')
+                                        ->where(function ($query) use ($request,$logged_user) {  
+                                            if (!empty($request['user_id'])) $query->where('user_id',$request['user_id']);
+                                            if (empty($request['user_id'])) $query->where('user_id',$logged_user['user_id']);
+                                            })                            
+                                        ->first();
 
            if(!empty($users_wallet)) 
            { 
             $data=array('status'=>true,'msg'=>'Data found','wallet_data'=>$users_wallet->toArray());
            }
-        } 
+        
 
         echo json_encode($data);
     }
