@@ -46,11 +46,11 @@ class Pay_controller extends Controller
             {
                 $request['amount']=$request['amount']*100;
 
-                \Stripe\Stripe::setApiKey(env("FOLOOSI_SECRETE"));
+                \Stripe\Stripe::setApiKey(env("STRIPE_SECRETE"));
 
                 header('Content-Type: application/json');
         
-                $stripe = new \Stripe\StripeClient(env("FOLOOSI_SECRETE"));
+                $stripe = new \Stripe\StripeClient(env("STRIPE_SECRETE"));
                 
                 $payment_intent=$stripe->paymentIntents->create([
                     'amount' => $request['amount'],
