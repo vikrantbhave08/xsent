@@ -25,6 +25,7 @@ use App\Models\Notifications_model;
 use App\Models\Cities_model;
 use App\Models\Province_model;
 use App\Models\Bank_details_model;
+use App\Models\Payment_history_model;
 
 class App_controller extends Controller
 {

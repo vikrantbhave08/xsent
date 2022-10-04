@@ -77,4 +77,5 @@ Route::get('send-notification', [Login_controller::class, 'sendnotification']);
 Route::get('pdf-page', [Login_controller::class, 'pdf_page']);  
 
 Route::Post('payment-intent', [Pay_controller::class, 'payment_intent']);  
+Route::Post('payment-details', [Pay_controller::class, 'payment_details']);  
 Route::Post('webhook', [Pay_controller::class, 'webhook']);  
