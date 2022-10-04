@@ -412,7 +412,7 @@ class App_controller extends Controller
         $logged_user=Auth::mobile_app_user($request['token']);
 
        
-           $users_wallet=Wallet_model::select('wallet.wallet_id','wallet.max_limit_per_day','wallet.max_limit_per_month','wallet.low_balance_alert')
+           $users_wallet=Wallet_model::select('wallet.wallet_id','wallet.max_limit_per_day','wallet.max_limit_per_month','wallet.low_balance_alert','wallet.balance')
                                         ->where(function ($query) use ($request,$logged_user) {  
                                             if (!empty($request['user_id'])) $query->where('user_id',$request['user_id']);
                                             if (empty($request['user_id'])) $query->where('user_id',$logged_user['user_id']);
