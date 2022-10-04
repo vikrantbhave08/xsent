@@ -37,6 +37,11 @@ class Pay_controller extends Controller
         $this->middleware('CheckApiToken:app');          
     }
     
+    public function webhook(Request $request)
+    {
+        file_put_contents('assets/myfile.json', json_encode($request->all()));
+    }
+
     public function payment_intent(Request $request)
     {     
 
