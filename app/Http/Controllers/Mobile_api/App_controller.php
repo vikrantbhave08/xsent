@@ -421,7 +421,7 @@ class App_controller extends Controller
 
            if(!empty($users_wallet)) 
            { 
-            $data=array('status'=>true,'msg'=>'Data found','wallet_data'=>$users_wallet->toArray(),'remaining_balance'=>$users_wallet->balance);
+            $data=array('status'=>true,'msg'=>'Data found','wallet_data'=>$users_wallet->toArray(),'remaining_balance'=>(int)$users_wallet->balance);
            }
         
 
