@@ -407,7 +407,7 @@ class App_controller extends Controller
 
     public function get_users_wallet(Request $request)  
     {
-        $data=array('status'=>false,'msg'=>'Data not found','wallet_data'=>array());
+        $data=array('status'=>false,'msg'=>'Data not found','wallet_data'=>array(),'remaining_balance'=>0);
 
         $logged_user=Auth::mobile_app_user($request['token']);
 
@@ -421,7 +421,7 @@ class App_controller extends Controller
 
            if(!empty($users_wallet)) 
            { 
-            $data=array('status'=>true,'msg'=>'Data found','wallet_data'=>$users_wallet->toArray());
+            $data=array('status'=>true,'msg'=>'Data found','wallet_data'=>$users_wallet->toArray(),'remaining_balance'=>$users_wallet->balance);
            }
         
 
