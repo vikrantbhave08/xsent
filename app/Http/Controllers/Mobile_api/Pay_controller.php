@@ -75,14 +75,14 @@ class Pay_controller extends Controller
 
             $to_admin=array(
                                 'pay_txn_id'=>$request['payment_intent'],
-                                'from_user'=>'',
-                                'from_role'=>'',
+                                'from_user'=>$logged_user['user_id'],
+                                'from_role'=>$logged_user['user_role'],
                                 'to_user'=>0,
                                 'to_role'=>0,
                                 'amount'=>$request['amount'],
                                 'created_at'=>date('Y-m-d H:i:s'),
                                 'updated_at'=>date('Y-m-d H:i:s')
-            );
+                           );
                             
             $payment_id=Payment_history_model::create($to_admin)->payment_id;
 

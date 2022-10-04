@@ -373,9 +373,9 @@
                                 $(".user_type").html(res.role_name);
                                 $(".req_amt").html("AED "+res.request_amount);
                                 $(".wallet_balance").html("AED "+res.balance);
-                                $(".bank_name").html("AED "+res.bank_name);
-                                $(".account_no").html("AED "+res.account_no);
-                                $(".iban_no").html("AED "+res.iban_no);
+                                $(".bank_name").html(res.bank_name);
+                                $(".account_no").html(res.account_no);
+                                $(".iban_no").html(res.iban_no);
                                 $("#amt_request_id").val(res.amt_request_id);
                                 $("#bank_detail_id").val(res.bank_detail_id);  
                                 
