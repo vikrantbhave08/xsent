@@ -48,7 +48,7 @@ class App_controller extends Controller
 
         $logged_user=Auth::mobile_app_user($request['token']);
 
-        if($logged_user['user_role']==3)
+        if($logged_user['user_role']==3 && empty($request['billing_history']))
         {
             
             $request['categories']=array_column(Parent_child_model::select('child_id')->where('parent_id',$logged_user['user_id'])->get()->toArray(),'child_id');
@@ -69,7 +69,7 @@ class App_controller extends Controller
         
 
 
-        $request['spend_for']=$logged_user['user_role']==3 ? 'children' : 'category';
+        $request['spend_for']=($logged_user['user_role']==3 && empty($request['billing_history'])) ? 'children' : 'category';
 
         $spend_analysis=array();
         
@@ -120,9 +120,9 @@ class App_controller extends Controller
         {
             $shop_sales_per_month=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale')) 
                                                     ->where(function ($query) use ($request,$logged_user) {                                                   
-                                                    if ($logged_user['user_role']==2) $query->whereIn('shop_transactions.shop_id', $request['shops']);  //shops related transaction
-                                                    if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data                                                    
-                                                    if ($logged_user['user_role']==5) $query->where('shop_transactions.by_user', $logged_user['user_id']);  //shops related transaction
+                                                    if ($logged_user['user_role']==2) $query->whereIn('shop_transactions.shop_id', $request['shops']);  //shops related transaction for owners earn
+                                                    if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing                                                   
+                                                    if ($logged_user['user_role']==5) $query->where('shop_transactions.by_user', $logged_user['user_id']);  //shops related transaction when child accessing the report
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
                                                     })                                                    
                                                     ->whereMonth('shop_transactions.created_at',"=",$i)
@@ -137,6 +137,43 @@ class App_controller extends Controller
         }
 
         return $spend_or_earn_by_month;
+    }
+
+    public function billing_history(Request $request)
+    {
+
+        $data=array('status'=>false,'msg'=>'Data not found','balance'=>0,'monthly_report'=>array(),'spend_analysis'=>array());
+
+        if($request['year'])
+        {        
+
+        $return_data=array();
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        $users_wallet=Wallet_model::select('wallet.*')
+                                   ->where('user_id',$logged_user['user_id'])->first();
+
+            
+            $getall_shops=Shops_model::select('shop_id')
+                                        ->where(function ($query) use ($request,$logged_user) {
+                                            if ($logged_user['user_role']==2) $query->where('shops.owner_id',$logged_user['user_id']);  
+                                        }) 
+                                        ->get()->toArray();
+            
+            $request['shops']=array_column($getall_shops,'shop_id');
+      
+             $request['billing_history']=1;
+
+             $monthly_report=$this->monthly_report($request);                         
+
+             $spend_analysis=$this->spend_analysis($request);
+
+             $data=array('status'=>true,'msg'=>'Billing History','balance'=>!empty($users_wallet) ? $users_wallet->balance : 0,'monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
+           
+        }
+       
+        echo json_encode($data);
 
     }
 
