@@ -156,11 +156,6 @@ class App_controller extends Controller
         $users_wallet=Wallet_model::select('wallet.*')
                                    ->where('user_id',$logged_user['user_id'])->first();
 
-            if(!empty($users_wallet)) 
-            { 
-            $data=array('status'=>true,'msg'=>'Data found','balance'=>$users_wallet->balance,'dashboard_data'=>$return_data);
-            }
-
             
             $getall_shops=Shops_model::select('shop_id')
                                         ->where(function ($query) use ($request,$logged_user) {
@@ -175,7 +170,7 @@ class App_controller extends Controller
 
              $spend_analysis=$this->spend_analysis($request);
 
-             $data=array('status'=>true,'msg'=>'Dashbaord data','monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
+             $data=array('status'=>true,'msg'=>'Dashbaord data','balance'=>!empty($users_wallet) ? $users_wallet->balance : 0,'monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
            
     }
        
