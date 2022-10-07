@@ -26,6 +26,7 @@ use App\Models\Cities_model;
 use App\Models\Province_model;
 use App\Models\Bank_details_model;
 use App\Models\Payment_history_model;
+use App\Models\Shop_cat_model;
 
 class App_controller extends Controller
 {
@@ -42,9 +43,111 @@ class App_controller extends Controller
         return Wallet_model::where('user_id',$request['user_id'])->first();
     }
     
+    public function spend_analysis($request)
+    {
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+        if($logged_user['user_role']==3)
+        {
+            
+            $request['categories']=array_column(Parent_child_model::select('child_id')->where('parent_id',$logged_user['user_id'])->get()->toArray(),'child_id');
+
+        } else {
+
+            $getall_categories=Shops_model::select('shop_categories.*')          // get all shop categories by owner if not then get all .
+                            ->leftjoin('shop_categories', 'shops.shop_cat_id', '=', 'shop_categories.shop_cat_id')    
+                            ->where(function ($query) use ($request,$logged_user) {
+                                if ($logged_user['user_role']==2) $query->where('shops.owner_id',$logged_user['user_id']);  
+                            }) 
+                            ->groupBy('shop_categories.shop_cat_id') 
+                            ->get()->toArray();
+
+            $request['categories']=array_column($getall_categories,'shop_cat_id');
+
+        }
+        
+
+
+        $request['spend_for']=$logged_user['user_role']==3 ? 'children' : 'category';
+
+        $spend_analysis=array();
+        
+        foreach($request['categories'] as $key=>$cat)
+        {
+
+            $spend_category=$request['spend_for']=='category' ? Shop_cat_model::select('*')->where('shop_cat_id',$cat)->first() : User_model::select('*')->where('user_id',$cat)->first() ;
+
+            $spend_analysis[$key]['spend_key']=$request['spend_for']=='category' ? $spend_category->shop_cat_name : $spend_category->first_name." ".$spend_category->last_name ;
+
+            $getall_shops=Shop_cat_model::select('*','shops.shop_id')
+                                          ->leftjoin('shops', 'shop_categories.shop_cat_id', '=', 'shops.shop_cat_id') 
+                                          ->where(function ($query) use ($request,$logged_user,$cat) { 
+                                            if ($request['spend_for']=='category') $query->whereIn('shop_categories.shop_cat_id', array($cat));  //shops related transaction
+                                           })
+                                          ->groupBy('shops.shop_id')->get()->toArray();
+                                          
+                                          $shops=array_column($getall_shops,'shop_id');
+
+            $spend_analysys_by_cat=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale'))
+                                                    ->where(function ($query) use ($request,$logged_user,$cat) {                                                   
+                                                    // $query->whereIn('shop_transactions.shop_id', $shops);  //shops related transaction
+                                                    if ($request['spend_for']=='children') $query->where('shop_transactions.by_user', $cat);  //user related transaction
+                                                    if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
+                                                    })
+                                                    ->groupBy('shop_transactions.shop_id') 
+                                                    ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
+                                                   
+                                                   
+                                                   
+            $spend_analysis[$key]['spend_value']=array_sum(array_column($spend_analysys_by_cat, 'total_sale')) ? array_sum(array_column($spend_analysys_by_cat, 'total_sale')) : 0 ;                                                    
+                                                   
+
+        }
+
+        return $spend_analysis;
+
+    }
+
+    public function monthly_report($request)
+    {
+        $logged_user=Auth::mobile_app_user($request['token']);
+      
+        $spend_or_earn_by_month=array();
+        
+        $j=0;
+        for($i=1; $i<=12; $i++)
+        {
+            $shop_sales_per_month=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale')) 
+                                                    ->where(function ($query) use ($request,$logged_user) {                                                   
+                                                    if ($logged_user['user_role']==2) $query->whereIn('shop_transactions.shop_id', $request['shops']);  //shops related transaction
+                                                    if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data                                                    
+                                                    if ($logged_user['user_role']==5) $query->where('shop_transactions.by_user', $logged_user['user_id']);  //shops related transaction
+                                                    if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
+                                                    })                                                    
+                                                    ->whereMonth('shop_transactions.created_at',"=",$i)
+                                                    ->groupBy('shop_transactions.shop_id') 
+                                                    ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
+                                                   
+                                                   
+                                                    $spend_or_earn_by_month[$j]['spend_month']=date('M', mktime(0,0,0,$i, 1, $request['year'])); 
+                                                    $spend_or_earn_by_month[$j]['spend_amount']=array_sum(array_column($shop_sales_per_month, 'total_sale')) ? array_sum(array_column($shop_sales_per_month, 'total_sale')) : 0 ;                                                    
+                                                   
+                                                    $j++;
+        }
+
+        return $spend_or_earn_by_month;
+
+    }
+
     public function get_dashboard_data(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found','balance'=>0,'dashboard_data'=>array());
+
+        if($request['year'])
+        {
+
+        
 
         $return_data=array();
 
@@ -53,49 +156,28 @@ class App_controller extends Controller
         $users_wallet=Wallet_model::select('wallet.*')
                                    ->where('user_id',$logged_user['user_id'])->first();
 
-        if(!empty($users_wallet)) 
-        { 
-          $data=array('status'=>true,'msg'=>'Data found','balance'=>$users_wallet->balance,'dashboard_data'=>$return_data);
-        }
+            if(!empty($users_wallet)) 
+            { 
+            $data=array('status'=>true,'msg'=>'Data found','balance'=>$users_wallet->balance,'dashboard_data'=>$return_data);
+            }
 
-        // $categories=Shop_cat_model::get()->toArray();
+            
+            $getall_shops=Shops_model::select('shop_id')
+                                        ->where(function ($query) use ($request,$logged_user) {
+                                            if ($logged_user['user_role']==2) $query->where('shops.owner_id',$logged_user['user_id']);  
+                                        }) 
+                                        ->get()->toArray();
+            
+            $request['shops']=array_column($getall_shops,'shop_id');
+      
 
-        // $cat_sales_by_month=array();
-        // foreach($categories as $cat_key=>$cat)
-        // {            
-        //     $shops_by_categories=array_column(Shops_model::select('shop_id')->where('shop_cat_id',$cat['shop_cat_id'])->get()->toArray(),'shop_id');
-        //     // echo "<pre>";
-        //     // echo $cat['shop_cat_name'];
-        //     // print_r($shops_by_categories);            
-        //     $shop_sales=array();
-        //     for($i=1; $i<=12; $i++)
-        //     {
-        //         $shop_sales_per_month=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale'))
-        //                                                 // ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
-        //                                                 // ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
-        //                                                 // ->where(function ($query) use ($request,$logged_user) {
-        //                                                 // if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id',$request['shop_gen_id']);  
-        //                                                 // if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
-        //                                                 // if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
-        //                                                 // if ($logged_user['user_role']==5) $query->wheredate('shop_transactions.created_at',date('Y-m-d'));  //for shopkeeper
-        //                                                 // }) 
-        //                                                 ->whereIn('shop_transactions.shop_id', $shops_by_categories)
-        //                                                 ->whereYear('shop_transactions.created_at', '=', date('Y'))
-        //                                                 ->whereMonth('shop_transactions.created_at',"=",$i)
-        //                                                 ->groupBy('shop_transactions.shop_id') 
-        //                                                 ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
+             $monthly_report=$this->monthly_report($request);                         
 
-                                                       
-        //                                                 $shop_sales[]=array_sum(array_column($shop_sales_per_month, 'total_sale'));                                                                                                      
+             $spend_analysis=$this->spend_analysis($request);
 
-        //     }
-
-        //          $cat_sales_by_month[]=[
-        //           'name'=>$cat['shop_cat_name'],
-        //           'data'=>$shop_sales
-        //           ];
-                
-        // }
+             $data=array('status'=>true,'msg'=>'Dashbaord data','monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
+           
+    }
        
         echo json_encode($data);
     }
