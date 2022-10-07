@@ -142,7 +142,7 @@ class App_controller extends Controller
 
     public function get_dashboard_data(Request $request)
     {
-        $data=array('status'=>false,'msg'=>'Data not found','balance'=>0,'dashboard_data'=>array());
+        $data=array('status'=>false,'msg'=>'Data not found','balance'=>0,'monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
 
         if($request['year'])
         {
