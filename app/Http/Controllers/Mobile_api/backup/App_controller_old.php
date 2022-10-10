@@ -13,7 +13,7 @@ use App\Models\Parent_child_model;
 use App\Models\Wallet_model;
 use App\Models\Wallet_transaction_model;
 
-class App_controller extends Controller
+class Auth_controller extends Controller
 {
     
     public function __construct()

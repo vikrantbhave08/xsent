@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Mobile_api\Auth_controller;
 use App\Http\Controllers\Mobile_api\Parent_controller;
 use App\Http\Controllers\Mobile_api\Login_controller;
 use App\Http\Controllers\Mobile_api\App_controller;

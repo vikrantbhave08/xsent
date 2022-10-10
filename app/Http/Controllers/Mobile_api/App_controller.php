@@ -90,7 +90,8 @@ class App_controller extends Controller
             $spend_analysys_by_cat=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale'))
                                                     ->where(function ($query) use ($request,$logged_user,$cat,$shops) {                                                   
                                                     $query->whereIn('shop_transactions.shop_id', $shops);  //shops related transaction
-                                                    if ($request['spend_for']=='children') $query->where('shop_transactions.by_user', $cat);  //user related transaction
+                                                    if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing                                                   
+                                                    if ($request['spend_for']=='children' && empty($request['user_id'])) $query->where('shop_transactions.by_user', $cat);  //user related transaction
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
                                                     })
                                                     ->groupBy('shop_transactions.shop_id') 
