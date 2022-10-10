@@ -191,7 +191,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label class="form-label">Account No</label><br />
                                         <label class="data-label account_no">acc no</label>
-                                    </div>
+                                    </div>  
                                    <div class="col-sm-6 mb-3">
                                         <label class="form-label">IBAN No</label><br />
                                         <label class="data-label iban_no">iban no</label>
@@ -201,7 +201,7 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label class="form-label">Transfered By</label>
-                                        <div class="custom-dropdown">
+                                        <div class="custom-dropdown mb-3">
                                             <select name="transfered_by" id="transfer_by">
                                                 <!-- <option value=""></option> -->
                                                 <option value="Net Banking">Net Banking</option>
