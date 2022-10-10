@@ -64,10 +64,8 @@ class App_controller extends Controller
                             ->get()->toArray();
 
             $request['categories']=array_column($getall_categories,'shop_cat_id');
-
         }
         
-
 
         $request['spend_for']=($logged_user['user_role']==3 && empty($request['billing_history'])) ? 'children' : 'category';
 
