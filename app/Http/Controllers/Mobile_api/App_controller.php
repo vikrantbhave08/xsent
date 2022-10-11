@@ -400,6 +400,8 @@ class App_controller extends Controller
                      
             $update_user=User_model::where('user_id',$request['user_id'])->first();
 
+            $fullname=!empty($request['name']) ? explode(" ",$request['name']) : '';
+
             count(explode(" ",$request['name']))>=1 ? $update_user->first_name=$fullname[0] : "";
             count(explode(" ",$request['name']))>1 ? $update_user->last_name=$fullname[1] : "";
             $request['email'] ? $update_user->email=$request['email'] : "";
