@@ -384,6 +384,8 @@ class App_controller extends Controller
                  $data=array('status'=>false,'msg'=>"You don't have permission");
              }
          }
+
+         echo json_encode($data); 
     }
 
     public function update_user(Request $request)
