@@ -397,7 +397,7 @@ class App_controller extends Controller
         if($request['user_id'])
          {
 
-                     
+            $request['is_active']=isset($request['is_active']) ? $request['is_active'] : '';
             $update_user=User_model::where('user_id',$request['user_id'])->first();
 
             $fullname=!empty($request['name']) ? explode(" ",$request['name']) : '';
