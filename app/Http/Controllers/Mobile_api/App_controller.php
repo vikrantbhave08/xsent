@@ -402,15 +402,15 @@ class App_controller extends Controller
 
             $fullname=!empty($request['name']) ? explode(" ",$request['name']) : '';
 
-            count(explode(" ",$request['name']))>=1 ? $update_user->first_name=$fullname[0] : "";
-            count(explode(" ",$request['name']))>1 ? $update_user->last_name=$fullname[1] : "";
-            $request['email'] ? $update_user->email=$request['email'] : "";
-            $request['email'] ? $update_user->username=$request['email'] : "";
-            $request['contact_no'] ? $update_user->contact_no=$request['contact_no'] : "";
-            $request['country'] ? $update_user->country=$request['country'] : "";
-            $request['province'] ? $update_user->province=$request['province'] : "";
-            $request['birth_date'] ? $update_user->birth_date=$request['birth_date'] : "";
-            $request['university'] ? $update_user->university=$request['university'] : "";
+            !empty($fullname[0]) ? $update_user->first_name=$fullname[0] : ""; 
+            !empty($fullname[1]) ? $update_user->last_name=$fullname[1] : "";
+            !empty($request['email']) ? $update_user->email=$request['email'] : "";
+            !empty($request['email']) ? $update_user->username=$request['email'] : "";
+            !empty($request['contact_no']) ? $update_user->contact_no=$request['contact_no'] : "";
+            !empty($request['country']) ? $update_user->country=$request['country'] : "";
+            !empty($request['province']) ? $update_user->province=$request['province'] : "";
+            !empty($request['birth_date']) ? $update_user->birth_date=$request['birth_date'] : "";
+            !empty($request['university']) ? $update_user->university=$request['university'] : "";
             $request['is_active']==0 ? $update_user->is_active=$request['is_active'] : "";
             $request['is_active']==1 ? $update_user->is_active=$request['is_active'] : "";
             $request['is_active']==2 ? $update_user->is_active=$request['is_active'] : "";
