@@ -185,30 +185,30 @@ class App_controller extends Controller
 
         
 
-        $return_data=array();
+            $return_data=array();
 
-        $logged_user=Auth::mobile_app_user($request['token']);
+            $logged_user=Auth::mobile_app_user($request['token']);
 
-        $users_wallet=Wallet_model::select('wallet.*')
-                                   ->where('user_id',$logged_user['user_id'])->first();
+            $users_wallet=Wallet_model::select('wallet.*')
+                                    ->where('user_id',$logged_user['user_id'])->first();
 
+                
+                $getall_shops=Shops_model::select('shop_id')
+                                            ->where(function ($query) use ($request,$logged_user) {
+                                                if ($logged_user['user_role']==2) $query->where('shops.owner_id',$logged_user['user_id']);  
+                                            }) 
+                                            ->get()->toArray();
+                
+                $request['shops']=array_column($getall_shops,'shop_id');
+        
+
+                $monthly_report=$this->monthly_report($request);                         
+
+                $spend_analysis= $logged_user['user_role']!=2 ? $this->spend_analysis($request) : array() ;          
+
+                $data=array('status'=>true,'msg'=>'Dashbaord data','balance'=>!empty($users_wallet) ? $users_wallet->balance : 0,'monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
             
-            $getall_shops=Shops_model::select('shop_id')
-                                        ->where(function ($query) use ($request,$logged_user) {
-                                            if ($logged_user['user_role']==2) $query->where('shops.owner_id',$logged_user['user_id']);  
-                                        }) 
-                                        ->get()->toArray();
-            
-            $request['shops']=array_column($getall_shops,'shop_id');
-      
-
-             $monthly_report=$this->monthly_report($request);                         
-
-             $spend_analysis=$this->spend_analysis($request);
-
-             $data=array('status'=>true,'msg'=>'Dashbaord data','balance'=>!empty($users_wallet) ? $users_wallet->balance : 0,'monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
-           
-    }
+        }
        
         echo json_encode($data);
     }
@@ -409,6 +409,7 @@ class App_controller extends Controller
             $request['university'] ? $update_user->university=$request['university'] : "";
             $request['is_active']==0 ? $update_user->is_active=$request['is_active'] : "";
             $request['is_active']==1 ? $update_user->is_active=$request['is_active'] : "";
+            $request['is_active']==2 ? $update_user->is_active=$request['is_active'] : "";
             $update_user->updated_at=date('Y-m-d H:i:s');
 
             $is_update=$update_user->save();

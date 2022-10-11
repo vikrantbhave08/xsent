@@ -330,57 +330,63 @@ class Login_controller extends Controller
 
                         $auth_user=Auth_users::where('user_id',$user_validate['user_data']['user_id'])->where('user_role',$user_validate['user_data']['user_role'])->first();
                     
-                        if($valid_app)
-                        {                
-
-                        if(!empty($auth_user))
+                    if($valid_app)
+                    { 
+                        if($user_validate['user_data']['is_active']==1)    
                         {
-                            // $user_role=$auth_user->user_role;
-                            $user_role=$user_validate['user_data']['user_role'];
-                                                
-                            $auth_user->users_token=$gen_token;
-                            $auth_user->fcm_token=$request['fcm_token'];                        
-                            $auth_user->updated_at= date('Y-m-d H:i:s');
-                            $auth_user->save();                    
-                            
-                        } else {
-                            $user_role=$user_validate['user_data']['user_role'];
+                       
+                                if(!empty($auth_user))
+                                {
+                                    // $user_role=$auth_user->user_role;
+                                    $user_role=$user_validate['user_data']['user_role'];
+                                                        
+                                    $auth_user->users_token=$gen_token;
+                                    $auth_user->fcm_token=$request['fcm_token'];                        
+                                    $auth_user->updated_at= date('Y-m-d H:i:s');
+                                    $auth_user->save();                    
+                                    
+                                } else {
+                                    $user_role=$user_validate['user_data']['user_role'];
 
-                            $create_auth_user = Auth_users::create([
-                                'user_id' => $user_validate['user_data']['user_id'],
-                                'user_role' => $user_validate['user_data']['user_role'],
-                                'fcm_token' => $request['fcm_token'],
-                                'users_token' => $gen_token,
-                                'created_at' =>  date('Y-m-d H:i:s'),
-                                'updated_at' =>  date('Y-m-d H:i:s')
-                            ])->auth_id;
-                        }
+                                    $create_auth_user = Auth_users::create([
+                                        'user_id' => $user_validate['user_data']['user_id'],
+                                        'user_role' => $user_validate['user_data']['user_role'],
+                                        'fcm_token' => $request['fcm_token'],
+                                        'users_token' => $gen_token,
+                                        'created_at' =>  date('Y-m-d H:i:s'),
+                                        'updated_at' =>  date('Y-m-d H:i:s')
+                                    ])->auth_id;
+                                }
 
-                        $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,
-                                    'first_name'=>$user_validate['user_data']['first_name'],
-                                    'last_name'=>$user_validate['user_data']['last_name'],
-                                    'user_role'=> $user_role,
-                                    'shop_details'=>array());
+                                $data=array('status'=>true,'msg'=>'Login successful','token'=>$gen_token,
+                                            'first_name'=>$user_validate['user_data']['first_name'],
+                                            'last_name'=>$user_validate['user_data']['last_name'],
+                                            'user_role'=> $user_role,
+                                            'shop_details'=>array());
 
-                        if($user_role==2 || $user_role==5)
-                        {
-                            if($user_role==2)
-                            {
-                                $data['shop_details'][]=Shops_model::select('shops.*','users.first_name','users.last_name')
-                                                        ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
-                                                        ->where('owner_id',$user_validate['user_data']['user_id'])
-                                                        ->first()->toArray();
-                            } 
+                                if($user_role==2 || $user_role==5)
+                                {
+                                    if($user_role==2)
+                                    {
+                                        $data['shop_details'][]=Shops_model::select('shops.*','users.first_name','users.last_name')
+                                                                ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
+                                                                ->where('owner_id',$user_validate['user_data']['user_id'])
+                                                                ->first()->toArray();
+                                    } 
 
-                            if($user_role==5)
-                            {
-                                $data['shop_details'][]=Shopkeepers_model::select('shops.*','users.first_name','users.last_name')
-                                                        ->leftjoin('shops', 'shopkeepers.owner_id', '=', 'shops.owner_id')
-                                                        ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
-                                                        ->where('shopkeepers.salesperson_id',$user_validate['user_data']['user_id'])
-                                                        ->first()->toArray();
+                                    if($user_role==5)
+                                    {
+                                        $data['shop_details'][]=Shopkeepers_model::select('shops.*','users.first_name','users.last_name')
+                                                                ->leftjoin('shops', 'shopkeepers.owner_id', '=', 'shops.owner_id')
+                                                                ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id')
+                                                                ->where('shopkeepers.salesperson_id',$user_validate['user_data']['user_id'])
+                                                                ->first()->toArray();
+                                    }
+                                }
+                            } else {
+
+                                $data=array('status'=>false,'msg'=>'User is deactive','first_name'=>'','last_name'=>'','shop_details'=>array());
                             }
-                        }
                     } else {
 
                         $data=array('status'=>false,'msg'=>'Invalid credentials','first_name'=>'','last_name'=>'','shop_details'=>array());
