@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mobile_api;
 
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
@@ -28,6 +29,15 @@ use App\Models\Bank_details_model;
 use App\Models\Payment_history_model;
 use App\Models\Shop_cat_model;
 
+
+/**
+     * @OA\Get(
+     *     path="/xsent/api/getall-province",
+     *     @OA\Response(response="200", description="An example resource")
+     * )
+     */
+
+
 class App_controller extends Controller
 {
     private $logged_user;
@@ -37,11 +47,38 @@ class App_controller extends Controller
         $this->middleware('CheckApiToken:app');          
     }
 
-
     public function parent_balance($request)
     {
         return Wallet_model::where('user_id',$request['user_id'])->first();
     }
+
+    
+     /**
+ * @OA\Post(
+ * path="/xsent/api/login",
+ * summary="Sign in",
+ * description="Login by email, password",
+ * operationId="authLogin",
+ * tags={"Authentication"},
+ * @OA\RequestBody(
+ *    required=true,
+ *    description="Pass user credentials",
+ *    @OA\JsonContent(
+ *       required={"email","password"},
+ *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+ *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+ *       @OA\Property(property="app_type", type="boolean", example="true"),
+ *    ),
+ * ),
+ * @OA\Response(
+ *    response=422,
+ *    description="Wrong credentials response",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+ *        )
+ *     )
+ * )
+ */
     
     public function spend_analysis($request)
     {

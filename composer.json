@@ -17,7 +17,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "simplesoftwareio/simple-qrcode": "~1",
-        "stripe/stripe-php": "^9.5"
+        "stripe/stripe-php": "^9.5",
+        "zircote/swagger-php": "^4.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -32,10 +33,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-            "app/helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
