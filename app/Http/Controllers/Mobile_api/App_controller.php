@@ -183,7 +183,6 @@ class App_controller extends Controller
         if($request['year'])
         {
 
-        
 
             $return_data=array();
 
@@ -494,8 +493,8 @@ class App_controller extends Controller
                                                         if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
                                                         if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
                                                         if ($logged_user['user_role']==5) $query->wheredate('shop_transactions.created_at',date('Y-m-d'));  //for shopkeeper
+                                                        if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at',$request['year']);  
                                                         }) 
-                                                       ->whereYear('shop_transactions.created_at', '=', date('Y'))
                                                        ->whereMonth('shop_transactions.created_at',"=",$i)
                                                        ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
 
@@ -509,10 +508,11 @@ class App_controller extends Controller
 
             if(!empty($monthly_transactions))
             {               
-                $shop_transactions[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
+                $shop_transactions[$j]['month']=date('F Y', mktime(0,0,0,$i, 1, date('Y'))); 
                 $shop_transactions[$j]['data']=$monthly_transactions; 
                 $j++;
             }
+          
         }
 
         if(!empty($shop_transactions))
@@ -741,6 +741,7 @@ class App_controller extends Controller
                                             $title='Amount Recieved';
                                             $body="Your parent has sent you ".$request['amount']." AED amount to your xsent wallet";
                                             $dev_ids=array($beneficiary_user->fcm_token);
+                                            $to_notifications[]=$beneficiary_user->user_id;
                                         }
 
                                         if($logged_user['user_role']==3 && $for_user_role==2)
@@ -752,8 +753,11 @@ class App_controller extends Controller
 
                                             $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
                                             $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+                                            $shopkeepers[]['user_id']= !empty($shop_owner) ? $shop_owner->user_id : 0;
 
                                             $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
+                                            $to_notifications=array_filter(array_column($shopkeepers,'user_id'));
+                                            
                                             $title='Payment Recieved';
                                             $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";                                           
                                         }
@@ -768,8 +772,11 @@ class App_controller extends Controller
 
                                             $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
                                             $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+                                            $shopkeepers[]['user_id']= !empty($shop_owner) ? $shop_owner->user_id : 0;
 
                                             $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
+
+                                            $to_notifications=array_filter(array_column($shopkeepers,'user_id'));
                                             $title='Payment Recieved';
                                             $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";                                          
                                         }
@@ -783,6 +790,21 @@ class App_controller extends Controller
                                                                 );
                 
                                         Login_controller::send_notification($notification_body);
+
+                                        foreach($to_notifications as $to_note)
+                                        {
+                                             Notifications_model::create([   
+                                                    'to_user' => $to_note,
+                                                    'notify_of' => $logged_user['user_id'],
+                                                    'status' => 0,
+                                                    'title' => $title,
+                                                    'notification_msg' => $body,
+                                                    'created_at' => date('Y-m-d H:i:s'),
+                                                    'updated_at' => date('Y-m-d H:i:s')
+                                                    ])->notification_id;
+                                        }
+
+                                       
 
                                     $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
                                 }else{
@@ -847,6 +869,8 @@ class App_controller extends Controller
                                             $title='Amount Recieved';
                                             $body="Your parent has sent you ".$request['amount']." AED amount to your xsent wallet";
                                             $dev_ids=array($beneficiary_user->fcm_token);
+
+                                            $to_notifications[]=$beneficiary_user->user_id;
                                         }
 
                                         if($logged_user['user_role']==3 && $for_user_role==2)
@@ -858,8 +882,10 @@ class App_controller extends Controller
 
                                             $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
                                             $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+                                            $shopkeepers[]['user_id']= !empty($shop_owner) ? $shop_owner->user_id : 0;
 
                                             $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
+                                            $to_notifications=array_filter(array_column($shopkeepers,'user_id'));
                                             $title='Payment Recieved';
                                             $body=$logged_user['first_name']." ".$logged_user['last_name']." has sent you ".$request['amount']." AED amount to your xsent wallet";                                           
                                         }
@@ -874,6 +900,9 @@ class App_controller extends Controller
 
                                             $shop_owner=Auth_users::select('auth_user.fcm_token','auth_user.user_id')->where('user_id',$request['user_id'])->where('user_role',2)->first();
                                             $shopkeepers[]['fcm_token']= !empty($shop_owner) ? $shop_owner->fcm_token : 0;
+                                            $shopkeepers[]['user_id']= !empty($shop_owner) ? $shop_owner->user_id : 0;
+
+                                            $to_notifications=array_filter(array_column($shopkeepers,'user_id'));
 
                                             $dev_ids=array_filter(array_column($shopkeepers,'fcm_token'));
                                             $title='Payment Recieved';
@@ -889,6 +918,19 @@ class App_controller extends Controller
                                                                 );
                 
                                         Login_controller::send_notification($notification_body);
+
+                                        foreach($to_notifications as $to_note)
+                                        {
+                                             Notifications_model::create([   
+                                                    'to_user' => $to_note,
+                                                    'notify_of' => $logged_user['user_id'],
+                                                    'status' => 0,
+                                                    'title' => $title,
+                                                    'notification_msg' => $body,
+                                                    'created_at' => date('Y-m-d H:i:s'),
+                                                    'updated_at' => date('Y-m-d H:i:s')
+                                                    ])->notification_id;
+                                        }
 
                                     $data=array('status'=>true,'msg'=>'Money added into the wallet','remaining_balance'=>$remaining_balance);
                                 } else {
@@ -926,7 +968,7 @@ class App_controller extends Controller
                                                 'notification_msg' => 'You have exceeded the maximum transaction amount per month !',
                                                 'created_at' => date('Y-m-d H:i:s'),
                                                 'updated_at' => date('Y-m-d H:i:s')
-                                                ])->wallet_id;     
+                                                ])->notification_id;     
                             }
                             
                             $data=array('status'=>false,'msg'=>'You have exceeded the maximum transaction amount per month !');
@@ -960,7 +1002,7 @@ class App_controller extends Controller
                                             'notification_msg' => 'You have exceeded the maximum transaction amount per day !',
                                             'created_at' => date('Y-m-d H:i:s'),
                                             'updated_at' => date('Y-m-d H:i:s')
-                                            ])->wallet_id;     
+                                            ])->notification_id;     
                         }
 
                         $data=array('status'=>false,'msg'=>'You have exceeded the maximum transaction amount per day !');
@@ -1217,6 +1259,16 @@ class App_controller extends Controller
                                                                 );
                 
                                         Login_controller::send_notification($notification_body);
+
+                                        Notifications_model::create([   
+                                            'to_user' => $parent_data->parent_id,
+                                            'notify_of' => $logged_user['user_id'],
+                                            'status' => 0,
+                                            'title' => $title,
+                                            'notification_msg' => $body,
+                                            'created_at' => date('Y-m-d H:i:s'),
+                                            'updated_at' => date('Y-m-d H:i:s')
+                                            ])->notification_id;
                     }
                     $data=array('status'=>true,'msg'=>'Requests added successfully');                   
                 }

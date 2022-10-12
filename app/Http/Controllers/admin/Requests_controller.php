@@ -124,6 +124,18 @@ class Requests_controller extends Controller
                         );
 
                         Dashboard_controller::send_notification($notification_body);
+
+                       
+                             Notifications_model::create([   
+                                    'to_user' => $beneficiery_user->user_id,
+                                    'notify_of' => 0,
+                                    'status' => 0,
+                                    'title' => 'Payment Recieved',
+                                    'notification_msg' => 'Xsent has transfered '.$users_request->request_amount.' AED amount to your bank',
+                                    'created_at' => date('Y-m-d H:i:s'),
+                                    'updated_at' => date('Y-m-d H:i:s')
+                                    ])->notification_id;
+                       
                         
                         // Wallet_transaction_model::create([          
                         //     'txn_id'=>"txn".md5(date('smdHyi').$users_request->by_user.mt_rand(1111,9999)),
