@@ -91,6 +91,7 @@ class App_controller extends Controller
                                                     ->where(function ($query) use ($request,$logged_user,$cat,$shops) {                                                   
                                                     $query->whereIn('shop_transactions.shop_id', $shops);  //shops related transaction
                                                     if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing                                                   
+                                                    if ($logged_user['user_role']==4) $query->where('shop_transactions.by_user',$logged_user['user_id']);  //for child data when parent is accessing                                                   
                                                     if ($request['spend_for']=='children' && empty($request['user_id'])) $query->where('shop_transactions.by_user', $cat);  //user related transaction
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
                                                     })
@@ -121,9 +122,9 @@ class App_controller extends Controller
                                                     ->where(function ($query) use ($request,$logged_user) {                                                   
                                                     if ($logged_user['user_role']==2) $query->whereIn('shop_transactions.shop_id', $request['shops']);  //shops related transaction for owners earn
                                                     if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing                                                   
-                                                    if ($logged_user['user_role']==5) $query->where('shop_transactions.by_user', $logged_user['user_id']);  //shops related transaction when child accessing the report
+                                                    if ($logged_user['user_role']==4) $query->where('shop_transactions.by_user', $logged_user['user_id']);  //shops related transaction when child accessing the report
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
-                                                    })                                                    
+                                                    })                                                     
                                                     ->whereMonth('shop_transactions.created_at',"=",$i)
                                                     ->groupBy('shop_transactions.shop_id') 
                                                     ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
