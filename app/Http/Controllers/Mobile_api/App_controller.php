@@ -75,7 +75,6 @@ class App_controller extends Controller
         
         foreach($request['categories'] as $key=>$cat)
         {
-
             $spend_category=$request['spend_for']=='category' ? Shop_cat_model::select('*')->where('shop_cat_id',$cat)->first() : User_model::select('*')->where('user_id',$cat)->first() ;
 
             $spend_analysis[$key]['spend_key']=$request['spend_for']=='category' ? $spend_category->shop_cat_name : $spend_category->first_name." ".$spend_category->last_name ;
@@ -92,7 +91,7 @@ class App_controller extends Controller
             $spend_analysys_by_cat=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale'))
                                                     ->where(function ($query) use ($request,$logged_user,$cat,$shops) {                                                   
                                                     $query->whereIn('shop_transactions.shop_id', $shops);  //shops related transaction
-                                                    if ($logged_user['user_role']==3 && !empty($request['user_id']) && $request['spend_for']=='category') $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing  for category related on billing history page                                               
+                                                    if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing  for category related on billing history page                                               
                                                     if ($logged_user['user_role']==4) $query->where('shop_transactions.by_user',$logged_user['user_id']);  //for child data when self accessing                                                   
                                                     if ($request['spend_for']=='children' && empty($request['user_id'])) $query->where('shop_transactions.by_user', $cat);  //user related transaction
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
