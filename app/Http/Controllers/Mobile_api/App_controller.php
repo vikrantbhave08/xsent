@@ -129,7 +129,7 @@ class App_controller extends Controller
                                                     })                                                     
                                                     ->whereMonth('shop_transactions.created_at',"=",$i)
                                                     ->groupBy('shop_transactions.by_user') 
-                                                    ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
+                                                    ->get()->toArray();
                                                    
                                                    
                                                     $spend_or_earn_by_month[$j]['spend_month']=date('M', mktime(0,0,0,$i, 1, $request['year'])); 
