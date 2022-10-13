@@ -492,6 +492,7 @@ class App_controller extends Controller
         
         for($from_year; $till_year<=$from_year; $from_year--)
         {
+            echo $from_year."<br>";
             for($i=12; $i>=1; $i--)
             {     
                 $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name','shops.shop_gen_id')
