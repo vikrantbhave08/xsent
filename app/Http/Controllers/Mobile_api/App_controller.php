@@ -128,7 +128,7 @@ class App_controller extends Controller
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
                                                     })                                                     
                                                     ->whereMonth('shop_transactions.created_at',"=",$i)
-                                                    // ->groupBy('shop_transactions.by_user') 
+                                                    ->groupBy('shop_transactions.from_user') 
                                                     ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
                                                    
                                                    
