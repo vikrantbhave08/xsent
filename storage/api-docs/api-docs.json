@@ -1,17 +1,40 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "My First API",
-        "version": "0.1"
+        "title": "Integration Swagger in Laravel with Passport Auth Documentation",
+        "description": "Implementation of Swagger with in Laravel",
+        "contact": {
+            "email": "admin@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "",
+            "description": "Demo API Server"
+        }
+    ],
     "paths": {
         "/xsent/api/getall-province": {
             "get": {
+                "tags": [
+                    "Getall-Province"
+                ],
+                "operationId": "460f4ef291021ebedc76d2a532468b5b",
                 "responses": {
                     "200": {
                         "description": "An example resource"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/xsent/api/login": {
@@ -70,6 +93,33 @@
                             }
                         }
                     }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "security": {
+        "passport": {
+            "type": "oauth2",
+            "description": "Laravel passport oauth2 security.",
+            "in": "header",
+            "scheme": "https",
+            "flows": {
+                "password": {
+                    "authorizationUrl": "http://localhost/oauth/authorize",
+                    "tokenUrl": "http://localhost/oauth/token",
+                    "refreshUrl": "http://localhost/token/refresh",
+                    "scopes": []
                 }
             }
         }

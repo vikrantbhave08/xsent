@@ -25,6 +25,7 @@ class Login_controller extends Controller
        
     }
 
+             
     public function send_verification_link(Request $request)
     {        
         
@@ -61,7 +62,7 @@ class Login_controller extends Controller
         
         echo json_encode($data);
     }
-
+    
     public function verify_email(Request $request)
     {     
 

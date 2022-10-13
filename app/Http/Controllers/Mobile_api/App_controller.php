@@ -30,13 +30,6 @@ use App\Models\Payment_history_model;
 use App\Models\Shop_cat_model;
 
 
-/**
-     * @OA\Get(
-     *     path="/xsent/api/getall-province",
-     *     @OA\Response(response="200", description="An example resource")
-     * )
-     */
-
 
 class App_controller extends Controller
 {
@@ -51,34 +44,6 @@ class App_controller extends Controller
     {
         return Wallet_model::where('user_id',$request['user_id'])->first();
     }
-
-    
-     /**
- * @OA\Post(
- * path="/xsent/api/login",
- * summary="Sign in",
- * description="Login by email, password",
- * operationId="authLogin",
- * tags={"Authentication"},
- * @OA\RequestBody(
- *    required=true,
- *    description="Pass user credentials",
- *    @OA\JsonContent(
- *       required={"email","password"},
- *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
- *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
- *       @OA\Property(property="app_type", type="boolean", example="true"),
- *    ),
- * ),
- * @OA\Response(
- *    response=422,
- *    description="Wrong credentials response",
- *    @OA\JsonContent(
- *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
- *        )
- *     )
- * )
- */
     
     public function spend_analysis($request)
     {
@@ -104,7 +69,7 @@ class App_controller extends Controller
         }
         
 
-        $request['spend_for']=($logged_user['user_role']==3 && empty($request['billing_history'])) ? 'children' : 'category';
+        $request['spend_for']=($logged_user['user_role']==3 && empty($request['billing_history'])) ? 'children' : 'category';   //cghildren as a category and category as category
 
         $spend_analysis=array();
         
@@ -127,8 +92,8 @@ class App_controller extends Controller
             $spend_analysys_by_cat=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale'))
                                                     ->where(function ($query) use ($request,$logged_user,$cat,$shops) {                                                   
                                                     $query->whereIn('shop_transactions.shop_id', $shops);  //shops related transaction
-                                                    if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing                                                   
-                                                    if ($logged_user['user_role']==4) $query->where('shop_transactions.by_user',$logged_user['user_id']);  //for child data when parent is accessing                                                   
+                                                    if ($logged_user['user_role']==3 && !empty($request['user_id']) && $request['spend_for']=='category') $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing  for category related on billing history page                                               
+                                                    if ($logged_user['user_role']==4) $query->where('shop_transactions.by_user',$logged_user['user_id']);  //for child data when self accessing                                                   
                                                     if ($request['spend_for']=='children' && empty($request['user_id'])) $query->where('shop_transactions.by_user', $cat);  //user related transaction
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
                                                     })
@@ -158,6 +123,7 @@ class App_controller extends Controller
             $shop_sales_per_month=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale')) 
                                                     ->where(function ($query) use ($request,$logged_user) {                                                   
                                                     if ($logged_user['user_role']==2) $query->whereIn('shop_transactions.shop_id', $request['shops']);  //shops related transaction for owners earn
+                                                    if ($logged_user['user_role']==3 && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']);  //for child data when parent is accessing                                                   
                                                     if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing                                                   
                                                     if ($logged_user['user_role']==4) $query->where('shop_transactions.by_user', $logged_user['user_id']);  //shops related transaction when child accessing the report
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
@@ -520,37 +486,45 @@ class App_controller extends Controller
         $logged_user=Auth::mobile_app_user($request['token']);
 
         $shop_transactions=array();
-        $j=0;
-        for($i=1; $i<=12; $i++)
-        {     
-            $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name','shops.shop_gen_id')
-                                                       ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
-                                                       ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
-                                                       ->where(function ($query) use ($request,$logged_user) {
-                                                        if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id',$request['shop_gen_id']);  
-                                                        if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
-                                                        if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
-                                                        if ($logged_user['user_role']==5) $query->wheredate('shop_transactions.created_at',date('Y-m-d'));  //for shopkeeper
-                                                        if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at',$request['year']);  
-                                                        }) 
-                                                       ->whereMonth('shop_transactions.created_at',"=",$i)
-                                                       ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
+        $j=0; 
+        $from_year=!empty($request['year']) ? $request['year'] : date('Y') ; //here from year is greater than till year, because we are fetching reverse data.(DESC ORDER latest first)
+        $till_year=!empty($request['year']) ? $request['year'] : (($logged_user['user_role']==5) ? date('Y') : 2022) ;
+        
+        for($from_year; $till_year<=$from_year; $from_year--)
+        {
+            for($i=12; $i>=1; $i--)
+            {     
+                $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name','shops.shop_gen_id')
+                                                        ->leftjoin('users', 'shop_transactions.by_user', '=', 'users.user_id')    
+                                                        ->leftjoin('shops', 'shop_transactions.shop_id', '=', 'shops.shop_id') 
+                                                        ->where(function ($query) use ($request,$logged_user) {
+                                                            if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id',$request['shop_gen_id']);  
+                                                            if (($logged_user['user_role']==3 || $logged_user['user_role']==4) && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']); // self data for parent and child 
+                                                            if ($logged_user['user_role']==3 && $request['user_id']) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data
+                                                            if ($logged_user['user_role']==5) $query->wheredate('shop_transactions.created_at',date('Y-m-d'));  //for shopkeeper
+                                                            }) 
+                                                        ->whereYear('shop_transactions.created_at',"=",$from_year)
+                                                        ->whereMonth('shop_transactions.created_at',"=",$i)
+                                                        ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
 
-            $monthly_transactions=array();
-            foreach($transactions as $key=>$res)
-            {
-                $monthly_transactions[$key]=$res;
-                $monthly_transactions[$key]['date']=date('d/m/Y', strtotime($res['created_at']));
-                $monthly_transactions[$key]['time']=date('h:i A', strtotime($res['created_at']));
-            }
+                $monthly_transaction=$multi_year=$monthly_transactions=array();
+                foreach($transactions as $key=>$res)
+                {
+                    $monthly_transactions[$key]=$res;
+                    $monthly_transactions[$key]['date']=date('d/m/Y', strtotime($res['created_at']));
+                    $monthly_transactions[$key]['time']=date('h:i A', strtotime($res['created_at']));
+                
+                }
 
-            if(!empty($monthly_transactions))
-            {               
-                $shop_transactions[$j]['month']=date('F Y', mktime(0,0,0,$i, 1, date('Y'))); 
-                $shop_transactions[$j]['data']=$monthly_transactions; 
-                $j++;
+            
+                if(!empty($monthly_transactions))
+                {               
+                    $shop_transactions[$j]['month']=date('F Y', mktime(0,0,0,$i, 1, $from_year)); 
+                    $shop_transactions[$j]['data']=$monthly_transactions; 
+                    $j++;
+                }
+            
             }
-          
         }
 
         if(!empty($shop_transactions))

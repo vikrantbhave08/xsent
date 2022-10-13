@@ -7,6 +7,7 @@ use App\Http\Controllers\Mobile_api\Parent_controller;
 use App\Http\Controllers\Mobile_api\Login_controller;
 use App\Http\Controllers\Mobile_api\App_controller;
 use App\Http\Controllers\Mobile_api\Pay_controller;
+use App\Http\Controllers\Mobile_api\Swagger_controller;
 use App\Http\Controllers\Home_controller;
 /*
 |--------------------------------------------------------------------------
@@ -81,3 +82,5 @@ Route::get('pdf-page', [Login_controller::class, 'pdf_page']);
 Route::Post('payment-intent', [Pay_controller::class, 'payment_intent']);  
 Route::Post('payment-details', [Pay_controller::class, 'payment_details']);  
 Route::Post('webhook', [Pay_controller::class, 'webhook']);  
+
+Route::get('swagger', [Swagger_controller::class, 'index']);  
