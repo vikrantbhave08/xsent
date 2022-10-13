@@ -489,12 +489,9 @@ class App_controller extends Controller
         $j=0; 
         $from_year=!empty($request['year']) ? $request['year'] : date('Y') ; //here from year is greater than till year, because we are fetching reverse data.(DESC ORDER latest first)
         $till_year=!empty($request['year']) ? $request['year'] : (($logged_user['user_role']==5) ? date('Y') : 2021) ;
-
-        echo $till_year."<br>";
-        
+               
         for($from_year; $till_year<=$from_year; $from_year--)
-        {
-            echo $from_year."<br>";
+        {           
             for($i=12; $i>=1; $i--)
             {     
                 $transactions=Shop_transaction_model::select('shop_transactions.*','users.first_name','users.last_name','shops.shop_name','shops.shop_gen_id')
