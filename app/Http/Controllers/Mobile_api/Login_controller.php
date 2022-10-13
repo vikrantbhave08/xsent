@@ -17,6 +17,7 @@ use App\Models\Cities_model;
 use App\Models\Province_model;
 use App\Models\Shop_cat_model;
 use App\Models\Parent_child_model;
+use App\Models\Complaint_reasons_model;
 
 class Login_controller extends Controller
 {
@@ -638,6 +639,21 @@ function send_notification_old($data)
         $result = curl_exec($ch);
         curl_close( $ch );
         return json_decode($result);      
+    }
+
+    public function get_complaint_reasons(Request $request)
+    {
+            $data=array('status'=>false,'msg'=>'Data not found' ,'complaint_reasons'=>array());
+
+            $complaint_reasons=Complaint_reasons_model::select('complaint_reasons.*')
+                                                        ->where('is_active',1)->get()->toArray();
+          
+            if(!empty($complaint_reasons))
+            {
+                $data=array('status'=>true,'msg'=>'complaint reasons','complaint_reasons'=>$complaint_reasons);
+            }
+     
+        echo json_encode($data); 
     }
     
 }

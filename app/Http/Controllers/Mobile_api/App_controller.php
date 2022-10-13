@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mobile_api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use File;
 use DB;
 use Carbon\Carbon;
 use Validator;
@@ -28,6 +29,7 @@ use App\Models\Province_model;
 use App\Models\Bank_details_model;
 use App\Models\Payment_history_model;
 use App\Models\Shop_cat_model;
+use App\Models\Complaints_model;
 
 
 
@@ -1477,6 +1479,85 @@ class App_controller extends Controller
             $data=array('status'=>true,'msg'=>'Contact verified successfully');
         }
 
+        echo json_encode($data); 
+    }
+
+    public function upload_img(Request $request)
+    {
+
+    }
+
+    public function add_complaint(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found');
+
+        
+        $logged_user=Auth::mobile_app_user($request['token']);
+        $path = public_path('images').'/complaints';
+
+        if (!file_exists($path)) {
+            File::makeDirectory($path, $mode = 0777, true, true);
+        }
+       
+        // echo "<pre>";
+        // print_r($request->all());
+        // exit;
+
+        $imageName = "";
+        if(!empty($request['complaint_img']))
+        {
+            // $request->validate([
+            //     'complaint_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // ]);
+        
+            $imageName = 'complaints_'.date('Y_m_dHis').$logged_user['user_id'].'.'.$request->complaint_img->extension();  
+         
+            $request->complaint_img->move($path, $imageName);
+            /* Store $imageName name in DATABASE from HERE */
+        }
+            
+
+        if($request['reason_id'] && !empty($request['complaint_details']))
+        {
+            $complaint_detail=array();
+            $complaint_detail['by_user']=$logged_user['user_id'];
+            $complaint_detail['by_role']=$logged_user['user_role'];
+            $complaint_detail['reason_id']=$request['reason_id'];
+            $complaint_detail['complaint_details']=$request['complaint_details'];
+            $complaint_detail['complaint_img']=$imageName!=""? '/complaints/'.$imageName : '';
+            $complaint_detail['reason_id']=$request['reason_id'];
+            $complaint_detail['created_at']=date('Y-m-d H:i:s');
+            $complaint_detail['updated_at']=date('Y-m-d H:i:s');
+
+            $complaint=Complaints_model::create($complaint_detail)->complaint_id;  
+
+     
+            if(!empty($complaint))
+            {
+                $data=array('status'=>true,'msg'=>'Complaint successfully sent');
+            }else {
+                $data=array('status'=>false,'msg'=>'Something went wrong');
+            }
+
+        }               
+     
+        echo json_encode($data); 
+    } 
+
+    public function get_complaints(Request $request)
+    {
+        $data=array('status'=>false,'msg'=>'Data not found' ,'complaints'=>array());
+
+        $logged_user=Auth::mobile_app_user($request['token']);
+
+            $complaints=Complaints_model::select('complaints.*',DB::raw("CONCAT('".url('/public/images')."', complaint_img) AS complaint_img"))
+                                          ->where('by_user',$logged_user['user_id'])->where('by_role',$logged_user['user_role'])->get()->toArray();
+          
+            if(!empty($complaints))
+            {
+                $data=array('status'=>true,'msg'=>'Complaints','complaints'=>$complaints);
+            }
+     
         echo json_encode($data); 
     }
 

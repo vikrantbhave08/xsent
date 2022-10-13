@@ -105,21 +105,20 @@
                 "in": "header",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
-            }
-        }
-    },
-    "security": {
-        "passport": {
-            "type": "oauth2",
-            "description": "Laravel passport oauth2 security.",
-            "in": "header",
-            "scheme": "https",
-            "flows": {
-                "password": {
-                    "authorizationUrl": "http://localhost/oauth/authorize",
-                    "tokenUrl": "http://localhost/oauth/token",
-                    "refreshUrl": "http://localhost/token/refresh",
-                    "scopes": []
+            },
+            "passport": {
+                "type": "apiKey",
+                "description": "Laravel passport oauth2 security.",
+                "in": "header",
+                "name": "autherization",
+                "scheme": "https",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost/oauth/authorize",
+                        "tokenUrl": "http://localhost/oauth/token",
+                        "refreshUrl": "http://localhost/token/refresh",
+                        "scopes": []
+                    }
                 }
             }
         }
