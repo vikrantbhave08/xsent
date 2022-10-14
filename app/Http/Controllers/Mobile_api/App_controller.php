@@ -1521,7 +1521,7 @@ class App_controller extends Controller
         {
             $complaint_detail=array();
             $complaint_detail['by_user']=$logged_user['user_id'];
-            $complaint_detail['complaintid']=date('ymdHis'); 
+            $complaint_detail['complaintid']=date('ymdHis').$logged_user['user_id']; 
             $complaint_detail['by_role']=$logged_user['user_role'];
             $complaint_detail['reason_id']=$request['reason_id'];
             $complaint_detail['complaint_details']=$request['complaint_details'];
@@ -1550,13 +1550,51 @@ class App_controller extends Controller
         $data=array('status'=>false,'msg'=>'Data not found' ,'complaints'=>array());
 
         $logged_user=Auth::mobile_app_user($request['token']);
-
-            $complaints=Complaints_model::select('complaints.*',DB::raw("CONCAT('".url('/public/images')."', complaint_img) AS complaint_img"))
-                                          ->where('by_user',$logged_user['user_id'])->where('by_role',$logged_user['user_role'])->get()->toArray();
           
-            if(!empty($complaints))
+            $j=0; 
+           $all_complaints=array();
+           $from_year=!empty($request['year']) ? $request['year'] : date('Y') ; //here from year is greater than till year, because we are fetching reverse data.(DESC ORDER latest first)
+           $till_year=!empty($request['year']) ? $request['year'] : (($logged_user['user_role']==5) ? date('Y') : 2021) ;
+                                                 
+           for($from_year; $till_year<=$from_year; $from_year--)
+           {           
+                    for($i=12; $i>=1; $i--)
+                        {     
+
+                        $complaints=Complaints_model::select('complaints.*',DB::raw("CONCAT('".url('/public/images')."', complaint_img) AS complaint_img"))
+                                                    ->where(function ($query) use ($request,$logged_user) {
+                                                    }) 
+                                                   ->where('by_user',$logged_user['user_id'])
+                                                   ->where('by_role',$logged_user['user_role'])
+                                                   ->whereYear('complaints.created_at',"=",$from_year)
+                                                   ->whereMonth('complaints.created_at',"=",$i)
+                                                   ->orderBy('complaints.created_at', 'DESC')
+                                                   ->get()->toArray();
+
+                                                                           
+                    $monthly_complaints=array();
+                    foreach($complaints as $key=>$res)
+                    {
+                        $monthly_complaints[$key]=$res;
+                        $monthly_complaints[$key]['date']=date('d F Y', strtotime($res['created_at']));
+                        $monthly_complaints[$key]['time']=date('h:i A', strtotime($res['created_at']));                                                                
+                    }
+                                                
+                                                            
+                    if(!empty($monthly_complaints))
+                    {               
+                        $all_complaints[$j]['month']=date('F Y', mktime(0,0,0,$i, 1, $from_year)); 
+                        $all_complaints[$j]['data']=$monthly_complaints; 
+                        $j++;
+                    }
+                                                            
+                    }
+                }
+            
+            
+            if(!empty($all_complaints))
             {
-                $data=array('status'=>true,'msg'=>'Complaints','complaints'=>$complaints);
+                $data=array('status'=>true,'msg'=>'Complaints','complaints'=>$all_complaints);
             }
      
         echo json_encode($data); 
