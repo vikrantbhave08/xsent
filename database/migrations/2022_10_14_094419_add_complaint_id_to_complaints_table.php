@@ -14,7 +14,7 @@ class AddComplaintIdToComplaintsTable extends Migration
     public function up()
     {
         Schema::table('complaints', function (Blueprint $table) {
-            $table->string('complaintid')->default(0)->after('from_user'); 
+         
         });
     }
 
