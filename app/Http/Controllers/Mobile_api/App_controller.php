@@ -1521,6 +1521,7 @@ class App_controller extends Controller
         {
             $complaint_detail=array();
             $complaint_detail['by_user']=$logged_user['user_id'];
+            $complaint_detail['complaintid']=date('ymdHis'); 
             $complaint_detail['by_role']=$logged_user['user_role'];
             $complaint_detail['reason_id']=$request['reason_id'];
             $complaint_detail['complaint_details']=$request['complaint_details'];

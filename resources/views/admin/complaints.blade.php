@@ -44,6 +44,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @foreach($complaints as $complaint)
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>01</td>
@@ -61,6 +62,9 @@
                                                                         class="ri-delete-bin-line"></i></span>
                                                             </td>
                                                         </tr>
+                                                        @endforeach
+                                                      
+
                                                         <tr>
                                                             <td><input type="checkbox"></td>
                                                             <td>02</td>
