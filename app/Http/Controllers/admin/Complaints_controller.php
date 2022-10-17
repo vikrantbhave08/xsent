@@ -45,11 +45,20 @@ class Complaints_controller extends Controller
         // $user_id=6;
         // $complaint->by_user=3;
       
-        $transaction=array();
+            $transaction=array();
        
             $transactions=array();
-            for($month=1; $month<=12; $month++)
-            {              
+
+            $from_year=!empty($request['year']) ? $request['year'] : date('Y') ; //here from year is greater than till year, because we are fetching reverse data.(DESC ORDER latest first)
+            $till_year=!empty($request['year']) ? $request['year'] :  2021 ;
+
+            for($from_year; $till_year<=$from_year; $from_year--)
+            {           
+              for($month=12; $month>=1; $month--)
+              {  
+
+            // for($month=1; $month<=12; $month++)
+            // {              
 
                 if($complaint->by_role==3)
                 {
@@ -68,6 +77,7 @@ class Complaints_controller extends Controller
                                                         if($i==1) $query->where('ph.to_user', 0);     //user transfer to bank account
                                                                                                         
                                                     })
+                                                    ->whereYear('ph.created_at',"=",$from_year)
                                                     ->whereMonth('ph.created_at',"=",$month) 
                                                     ->get()->toArray();
                             
@@ -75,11 +85,11 @@ class Complaints_controller extends Controller
                                                                 
                                         if(!empty($trans))
                                         {
-                                                if(!empty($transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))]))
+                                                if(!empty($transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))]))
                                                 {
-                                                    $transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))] = array_merge($transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))], $trans);                
+                                                    $transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))] = array_merge($transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))], $trans);                
                                                 } else {
-                                                    $transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))] = $trans ;                
+                                                    $transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))] = $trans ;                
                                                 }                                           
                                         }
                                         
@@ -94,17 +104,18 @@ class Complaints_controller extends Controller
                                                             if ($i==0) $query->where('wt.from_user',$user_id);     // child paid to shop                                             
                                                             if ($i==1) $query->where('wt.user_id',$user_id);     // parent pays to child                                             
                                                         })
-                                                        ->whereMonth('wt.created_at',"=",$month) 
+                                                        ->whereYear('wt.created_at',"=",$from_year)
+                                                        ->whereMonth('wt.created_at',"=",$month)
                                                         ->get()->toArray();
 
                                                       
                                             if(!empty($trans))
                                             {
-                                                    if(!empty($transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))]))
+                                                    if(!empty($transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))]))
                                                     {
-                                                        $transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))] = array_merge($transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))], $trans);                
+                                                        $transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))] = array_merge($transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))], $trans);                
                                                     } else {
-                                                        $transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))] = $trans ;                
+                                                        $transactions[date('F Y', mktime(0,0,0,$month, 1, $from_year))] = $trans ;                
                                                     }                                                          
                                             }
                     }
@@ -112,6 +123,7 @@ class Complaints_controller extends Controller
                 }
                   
               }
+            }
 
                           
               $all_transactions=array();

@@ -1304,33 +1304,42 @@ class App_controller extends Controller
 
         $topup_history=array();
         $j=0;
-        for($i=1; $i<=12; $i++)
-        {
-            $topup=Wallet_transaction_model::from('wallet_transaction as wt')
-                                            ->select('wt.credit','wt.created_at')
-                                            ->where(function ($query) use ($request,$logged_user) {                                             
-                                                if (!empty($request['user_id'])) $query->where('wt.user_id',$request['user_id']);     // user (child) topup history                                              
-                                                if (empty($request['user_id'])) $query->where('wt.user_id',$logged_user['user_id']);     // user (child) history                                              
-                                            })                                            
-                                            // ->where('wt.from_user',0)
-                                            ->whereYear('wt.created_at', '=', date('Y'))
-                                            ->whereMonth('wt.created_at',"=",$i) 
-                                            ->orderBy('wt.created_at', 'DESC')->get()->toArray();
 
-            $history=array();
-            foreach($topup as $key=>$res)
-            {
-                $history[$key]=$res;
-                $history[$key]['topup_date']=date('d M Y', strtotime($res['created_at']));          
-                $history[$key]['topup_time']=date('h:i A', strtotime($res['created_at']));          
+        $from_year=!empty($request['year']) ? $request['year'] : date('Y') ; //here from year is greater than till year, because we are fetching reverse data.(DESC ORDER latest first)
+        $till_year=!empty($request['year']) ? $request['year'] : (($logged_user['user_role']==5) ? date('Y') : 2021) ;
+ 
+        for($from_year; $till_year<=$from_year; $from_year--)
+        {           
+          for($i=12; $i>=1; $i--)
+          {  
+            // for($i=1; $i<=12; $i++)
+            // {
+                $topup=Wallet_transaction_model::from('wallet_transaction as wt')
+                                                ->select('wt.credit','wt.created_at')
+                                                ->where(function ($query) use ($request,$logged_user) {                                             
+                                                    if (!empty($request['user_id'])) $query->where('wt.user_id',$request['user_id']);     // user (child) topup history                                              
+                                                    if (empty($request['user_id'])) $query->where('wt.user_id',$logged_user['user_id']);     // user (child) history                                              
+                                                })                                            
+                                                // ->where('wt.from_user',0)
+                                                ->whereYear('wt.created_at', '=', $from_year)
+                                                ->whereMonth('wt.created_at',"=",$i) 
+                                                ->orderBy('wt.created_at', 'DESC')->get()->toArray();
+
+                $history=array();
+                foreach($topup as $key=>$res)
+                {
+                    $history[$key]=$res;
+                    $history[$key]['topup_date']=date('d M Y', strtotime($res['created_at']));          
+                    $history[$key]['topup_time']=date('h:i A', strtotime($res['created_at']));          
+                }
+
+                if(!empty($history))
+                {
+                    $topup_history[$j]['month']=date('F Y', mktime(0,0,0,$i, 1, $from_year)); 
+                    $topup_history[$j]['data']=$history;
+                    $j++;
+                }            
             }
-
-            if(!empty($history))
-            {
-                $topup_history[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
-                $topup_history[$j]['data']=$history;
-                $j++;
-            }            
         }
 
         if(!empty($topup_history))
@@ -1356,8 +1365,16 @@ class App_controller extends Controller
              
 
         $j=0;  $month = empty($request['limit']) ? 12 : 1 ;
-        for($i=1; $i<=$month; $i++)
+
+        $from_year=!empty($request['year']) ? $request['year'] : date('Y') ; //here from year is greater than till year, because we are fetching reverse data.(DESC ORDER latest first)
+        $till_year=!empty($request['year']) ? $request['year'] : (($logged_user['user_role']==5) ? date('Y') : 2021) ;
+ 
+        for($from_year; $till_year<=$from_year; $from_year--)
         {           
+          for($i=12; $i>=1; $i--)
+          {  
+        // for($i=1; $i<=$month; $i++)
+        // {           
                        
         $money_requests=Amount_requests_model::select('amount_requests.*','users.first_name','users.last_name','payment_history.pay_txn_id')
                                                 ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
@@ -1367,8 +1384,8 @@ class App_controller extends Controller
                                                     if (!empty($request['user_id'])) $query->where('amount_requests.by_user',$request['user_id']);     // user (child) history
                                                     if ($logged_user['user_role']==3 && $request['user_id']=='0') $query->whereIn('amount_requests.by_user',$childrens);     // user (child) history
                                                 })
-                                                ->where(function ($query) use ($request,$i) {
-                                                    if ( empty($request['limit']) ) $query->whereYear('amount_requests.created_at', '=', date('Y'));
+                                                ->where(function ($query) use ($request,$i,$from_year) {
+                                                    if ( empty($request['limit']) ) $query->whereYear('amount_requests.created_at', '=', $from_year);
                                                     if ( empty($request['limit']) ) $query->whereMonth('amount_requests.created_at',"=",$i);
                                                 })
                                                 ->orderBy('amount_requests.created_at', 'DESC')                                                
@@ -1384,7 +1401,7 @@ class App_controller extends Controller
             { 
                     if(!empty($money_requests))
                     {
-                        $users_requests[$j]['month']=date('F', mktime(0,0,0,$i, 1, date('Y'))); 
+                        $users_requests[$j]['month']=date('F Y', mktime(0,0,0,$i, 1, $from_year)); 
                         $users_requests[$j]['data']=$money_requests;
                         $j++;
                     }
@@ -1393,6 +1410,7 @@ class App_controller extends Controller
                 $users_requests=array_slice($money_requests, 0, $request['limit']);
             }
 
+            }
         }
 
         if(!empty($users_requests))
@@ -1579,8 +1597,8 @@ class App_controller extends Controller
                     foreach($complaints as $key=>$res)
                     {
                         $monthly_complaints[$key]=$res;
-                        $monthly_complaints[$key]['date']=date('d F Y', strtotime($res['created_at']));
-                        $monthly_complaints[$key]['time']=date('h:i A', strtotime($res['created_at']));                                                                
+                        $monthly_complaints[$key]['date']=date('d F Y', strtotime($res['updated_at'])); 
+                        $monthly_complaints[$key]['time']=date('h:i A', strtotime($res['updated_at']));                                                                 
                     }
                                                 
                                                             
