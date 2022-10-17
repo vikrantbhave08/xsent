@@ -303,6 +303,10 @@ class Login_controller extends Controller
             $request_data=$request->all();
             $user_validate=$this->check_user_and_validate(array('email'=>$request_data['email'],'password'=>$request_data['password']));
            
+            echo "<pre>";
+            print_r($user_validate);
+            exit;
+            
        
                 if($user_validate['status'])
                 {
