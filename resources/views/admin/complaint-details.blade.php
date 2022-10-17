@@ -154,17 +154,8 @@
                                                                         </thead>
 
                                                                         <tbody>
-                                                                        @foreach($month_transaction as $key=>$month_data)  
-                                                                        
-                                                                        <tr>
-                                                                            <td>12/07/2022</td>
-                                                                            <td>Top up from Bank Account </td>
-                                                                            <td class="strongdata">AED 1500.00 <span
-                                                                                    class="ms-2"><i
-                                                                                        class="ri-arrow-left-down-line"></i></span>
-                                                                            </td>
-                                                                        </tr>
-                                                                        
+                                                                        @foreach($month_transaction as $key=>$month_data)                                                                         
+                                                                                                                                               
                                                                             <tr>
                                                                                 <td>{{ date('d/m/Y',strtotime($month_data['created_at']))." | ".date('h:i A',strtotime($month_data['created_at'])) }}</td>
                                                                                 <td>{{ $month_data['from_user']==$complaint_details['by_user'] ? 'Paid to shop' : 'Parent trasfer to child' }} </td>

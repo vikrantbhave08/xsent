@@ -87,7 +87,6 @@ class Complaints_controller extends Controller
 
                     for($i=0; $i<2; $i++) // for two status  bank transfer to user  & user transfer to bank account
                     { 
-
                         $trans=Wallet_transaction_model::from('wallet_transaction as wt')
                                                         ->select('wt.*')
                                                         ->where(function ($query) use ($request,$user_id,$i) {                                              
@@ -107,7 +106,6 @@ class Complaints_controller extends Controller
                                                         $transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))] = $trans ;                
                                                     }                                                          
                                             }
-
                     }
 
                 }
@@ -123,21 +121,14 @@ class Complaints_controller extends Controller
                 });
 
                 $all_transactions[$key]=$val;                                
-              }           
+              } 
 
-           
              if($complaint->by_role==3) { $transaction['parent'] = $all_transactions ; } 
              if($complaint->by_role==4) { $transaction['child'] = $all_transactions ; } 
         
 
-        $result['transaction']=$transaction; 
-
-        echo "<pre>";
-        print_r($result);
-        exit; 
-
-
-                               
-        return view('admin/complaint-details',$result);
+            $result['transaction']=$transaction;  
+                                        
+            return view('admin/complaint-details',$result);
     }
 }
