@@ -149,7 +149,6 @@
                 </div>
             </main>
 
-
             <!--Send Remark Modal -->
             <div class="modal fade" id="transfer_money" tabindex="-1" aria-labelledby="payremarkLabel"
                 aria-hidden="true">

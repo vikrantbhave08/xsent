@@ -1527,6 +1527,7 @@ class App_controller extends Controller
             $complaint_detail['complaint_details']=$request['complaint_details'];
             $complaint_detail['complaint_img']=$imageName!=""? '/complaints/'.$imageName : '';
             $complaint_detail['reason_id']=$request['reason_id'];
+            $complaint_detail['ia_active']=0;
             $complaint_detail['created_at']=date('Y-m-d H:i:s');
             $complaint_detail['updated_at']=date('Y-m-d H:i:s');
 
@@ -1547,11 +1548,11 @@ class App_controller extends Controller
 
     public function get_complaints(Request $request)
     {
-        $data=array('status'=>false,'msg'=>'Data not found' ,'complaints'=>array());
-
+        $data=array('status'=>false,'msg'=>'Data not found' ,'complaints'=>array());          
+       
         $logged_user=Auth::mobile_app_user($request['token']);
           
-            $j=0; 
+           $j=0; 
            $all_complaints=array();
            $from_year=!empty($request['year']) ? $request['year'] : date('Y') ; //here from year is greater than till year, because we are fetching reverse data.(DESC ORDER latest first)
            $till_year=!empty($request['year']) ? $request['year'] : (($logged_user['user_role']==5) ? date('Y') : 2021) ;
@@ -1561,7 +1562,9 @@ class App_controller extends Controller
                     for($i=12; $i>=1; $i--)
                         {     
 
-                        $complaints=Complaints_model::select('complaints.*',DB::raw("CONCAT('".url('/public/images')."', complaint_img) AS complaint_img"))
+                        $complaints=Complaints_model::select('complaints.*',DB::raw("CONCAT('".url('/public/images')."', complaint_img) AS complaint_img"),'users.first_name','users.last_name','complaint_reasons.reason_name')
+                                                    ->leftjoin('users', 'complaints.by_user', '=', 'users.user_id')    
+                                                    ->leftjoin('complaint_reasons', 'complaints.reason_id', '=', 'complaint_reasons.reason_id')
                                                     ->where(function ($query) use ($request,$logged_user) {
                                                     }) 
                                                    ->where('by_user',$logged_user['user_id'])

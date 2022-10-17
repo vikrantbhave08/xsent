@@ -39,100 +39,67 @@
                                                             <th>Complaint From</th>
                                                             <th>Complaint Reason</th>
                                                             <th>Transaction Type</th>
+                                                            <th>Complaint Image</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach($complaints as $complaint)
+                                                        @foreach($complaints as $sr=>$complaint)
                                                         <tr>
                                                             <td><input type="checkbox"></td>
-                                                            <td>01</td>
-                                                            <td>541023</td>
-                                                            <td>12 July 22</td>
-                                                            <td>Amarion Saladin</td>
-                                                            <td>Amount has not received in wallet</td>
-                                                            <td><i class="ri-arrow-left-right-line"></i></td>
-                                                            <td><button class="pending-btn">Pending</button></td>
+                                                            <td>{{ $sr+1 }}</td>
+                                                            <td>{{ $complaint['complaintid'] }}</td>
+                                                            <td>{{ date('d M Y',strtotime($complaint['created_at']))  }}</td>
+                                                            <td>{{ $complaint['first_name'].' '.$complaint['last_name'] }}</td>
+                                                            <td>{{ $complaint['reason_name'] }}</td>
+                                                            <td>
+                                                                @if($complaint['reason_id']==1) 
+                                                                <!-- amount has not recieved in wallet -->
+                                                                <i class="ri-arrow-left-right-line"></i>
+                                                                @elseif($complaint['reason_id']==2)
+                                                                <!-- amount has not recieved in bank account -->
+                                                                <i class="ri-arrow-left-down-line"></i>
+                                                                @elseif($complaint['reason_id']==3)
+                                                                <i class="ri-arrow-right-up-line"></i>
+                                                                <!-- amount has debited twice from wallet -->
+                                                                @endif
+
+
+                                                            </td>
+
+                                                            <td>
+                                                                @if(!empty($complaint['complaint_img']))
+                                                                <img 
+                                                                    class="image_thumb"
+                                                                    style="cursor:pointer"
+                                                                    src="{{ url('/public/images').$complaint['complaint_img'] }}"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#complaint_img"
+                                                                    imgid="#complaint_image"
+                                                                    width="20px" height="100%">
+                                                                    @endif
+                                                                </td>
+
+                                                            <td>
+                                                            @if($complaint['is_active']==0) 
+                                                            <button class="pending-btn">Pending</button>
+                                                            @elseif($complaint['is_active']==1)
+                                                            <button class="resolved-btn">Resolved</button>
+                                                            @endif
+                                                            </td>
+
                                                             <td>
                                                                 <span class="table-icon"><a
-                                                                        href="{{ url('/admin/complaint-details') }}"><i
+                                                                        href="{{ url('/admin/complaint-details') }}?complaint_id={{ base64_encode($complaint['complaint_id']) }}"><i
                                                                             class="ri-eye-line"></i></a></span>
-                                                                <span class="table-icon"><i
-                                                                        class="ri-delete-bin-line"></i></span>
+                                                                <!-- <span class="table-icon"><i
+                                                                        class="ri-delete-bin-line"></i></span> -->
                                                             </td>
                                                         </tr>
                                                         @endforeach
                                                       
 
-                                                        <tr>
-                                                            <td><input type="checkbox"></td>
-                                                            <td>02</td>
-                                                            <td>985327</td>
-                                                            <td>8 july 22</td>
-                                                            <td>Maysa Shahid</td>
-                                                            <td>Amount has not received in bank account</td>
-                                                            <td><i class="ri-arrow-left-down-line"></i></td>
-                                                            <td><button class="pending-btn">Pending</button></td>
-                                                            <td>
-                                                                <span class="table-icon"><a
-                                                                        href="{{ url('/admin/complaint-details') }}"><i
-                                                                            class="ri-eye-line"></i></a></span>
-                                                                <span class="table-icon"><i
-                                                                        class="ri-delete-bin-line"></i></span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><input type="checkbox"></td>
-                                                            <td>03</td>
-                                                            <td>894107</td>
-                                                            <td>5 july 22</td>
-                                                            <td>Anaum Aly</td>
-                                                            <td>Amount has debited twice from wallet</td>
-                                                            <td><i class="ri-arrow-right-up-line"></i></td>
-                                                            <td><button class="resolved-btn">Resolved</button></td>
-                                                            <td>
-                                                                <span class="table-icon"><a
-                                                                        href="{{ url('/admin/complaint-details') }}"><i
-                                                                            class="ri-eye-line"></i></a></span>
-                                                                <span class="table-icon"><i
-                                                                        class="ri-delete-bin-line"></i></span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><input type="checkbox"></td>
-                                                            <td>04</td>
-                                                            <td>325689</td>
-                                                            <td>1 july 22</td>
-                                                            <td>Sued Baluch</td>
-                                                            <td>Amount has not received in wallet</td>
-                                                            <td><i class="ri-arrow-left-right-line"></i></td>
-                                                            <td><button class="pending-btn">Pending</button></td>
-                                                            <td>
-                                                                <span class="table-icon"><a
-                                                                        href="{{ url('/admin/complaint-details') }}"><i
-                                                                            class="ri-eye-line"></i></a></span>
-                                                                <span class="table-icon"><i
-                                                                        class="ri-delete-bin-line"></i></span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><input type="checkbox"></td>
-                                                            <td>05</td>
-                                                            <td>894107</td>
-                                                            <td>30 june 22</td>
-                                                            <td>Aasira Fares</td>
-                                                            <td>Amount has not received in wallet</td>
-                                                            <td><i class="ri-arrow-left-right-line"></i></td>
-                                                            <td><button class="resolved-btn">Resolved</button></td>
-                                                            <td>
-                                                                <span class="table-icon"><a
-                                                                        href="{{ url('/admin/complaint-details') }}"><i
-                                                                            class="ri-eye-line"></i></a></span>
-                                                                <span class="table-icon"><i
-                                                                        class="ri-delete-bin-line"></i></span>
-                                                            </td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -150,6 +117,41 @@
 
         </main>
     </div>
+
+
+      <!--Complaint Image Modal -->
+      <div class="modal fade" id="complaint_img" tabindex="-1" aria-labelledby="payremarkLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header gradient">
+                            <h5 class="modal-title" id="payremarkLabel">Complaint Image</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="payment_form">
+                            @csrf
+                            <input type="hidden" id="amt_request_id"  name="amt_request_id">
+                            <input type="hidden" id="bank_detail_id"  name="bank_detail_id">
+                        <div class="modal-body">
+                                <div class="row">
+                                  
+                                <img 
+                                    style="cursor:pointer"
+                                    src=""
+                                    id="complaint_image"
+                                    width="500px" >
+
+                                </div>                                
+                            </div>                           
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <!-- <button type="submit" class="btn btn-primary">Pay</button> -->
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
 
 
     <!-- page-content" -->
@@ -212,13 +214,18 @@
             resizeData();
         })
         $(document).ready(function () {
+
+            $(".image_thumb").click(function(){                
+                     $($(this).attr("imgid")).attr('src',this.src);                
+            });
+
             $("#reason").select2({
                 placeholder: "Select your reason",
                 minimumResultsForSearch: Infinity,
                 dropdownParent: $('#sendremarkModal')
             });
             $('#complaint').DataTable({
-                scrollY: 200,
+                scrollY: 600,
                 scrollX: true,
                 // "bPaginate": false,
                 "ordering": false,

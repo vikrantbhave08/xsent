@@ -49,9 +49,7 @@ class Login_controller extends Controller
                         'body' => $red_url
                     ];
                    
-                    $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));
-
-                  
+                $email_response=\Mail::to($user->email)->send(new \App\Mail\SendMail($details));                  
 
              
                 $data=array('flag'=>true,'msg'=>'Verification link send successfully');
@@ -525,7 +523,7 @@ class Login_controller extends Controller
            
             $data=array('status'=>true,'msg'=>'Province data','province'=>$province);
      
-        echo json_encode($data); 
+             echo json_encode($data); 
     }
 
     public function getall_shop_categories(Request $request)
@@ -534,7 +532,7 @@ class Login_controller extends Controller
            
             $data=array('status'=>true,'msg'=>'Province data','categories'=>$categories);
      
-        echo json_encode($data); 
+            echo json_encode($data); 
     }
 
     public function getall_cities_by_province(Request $request)
@@ -576,6 +574,7 @@ function send_otp($data)
     return $statusCode;  
 }
 
+       
 function send_notification_old($data)
 { 
     $endpoint = 'https://fcm.googleapis.com/fcm/send';
@@ -594,7 +593,7 @@ function send_notification_old($data)
 
     $statusCode = $response->getStatusCode();
     $content = $response->getBody();
-    
+   
     return $statusCode;  
 }
 

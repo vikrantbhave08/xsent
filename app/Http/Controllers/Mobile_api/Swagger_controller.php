@@ -57,13 +57,10 @@ class Swagger_controller extends Controller
      * )
      * 
     * @OA\SecurityScheme(
-    *      securityScheme="bearerAuth",
-    *      in="header",
-    *      name="bearerAuth",
-    *      type="http",
-    *      scheme="bearer",
-    *      bearerFormat="JWT",
-    * ),
+    * securityScheme="bearerAuth",
+    *  type="http",
+    *  scheme="bearer"
+    * )
     
 
 
