@@ -40,6 +40,10 @@ class Complaints_controller extends Controller
         $result['complaint_details']=!empty($complaint) ? $complaint->toArray() : array();
              
         $user_id=$complaint->by_user;
+
+        echo $complaint->by_user; 
+        exit;
+
         // $user_id=6;
         // $complaint->by_user=3;
       
@@ -87,7 +91,7 @@ class Complaints_controller extends Controller
                     for($i=0; $i<2; $i++) // for two status  bank transfer to user  & user transfer to bank account
                     { 
 
-                    $trans=Wallet_transaction_model::from('wallet_transaction as wt')
+                        $trans=Wallet_transaction_model::from('wallet_transaction as wt')
                                                         ->select('wt.*')
                                                         ->where(function ($query) use ($request,$user_id,$i) {                                              
                                                             if ($i==0) $query->where('wt.from_user',$user_id);     // child paid to shop                                             
@@ -97,7 +101,6 @@ class Complaints_controller extends Controller
                                                         ->get()->toArray();
 
                                                         echo "<pre>";
-
                                                         print_r($trans);
 
 
