@@ -1527,7 +1527,7 @@ class App_controller extends Controller
             $complaint_detail['complaint_details']=$request['complaint_details'];
             $complaint_detail['complaint_img']=$imageName!=""? '/complaints/'.$imageName : '';
             $complaint_detail['reason_id']=$request['reason_id'];
-            $complaint_detail['ia_active']=0;
+            $complaint_detail['is_active']=0;
             $complaint_detail['created_at']=date('Y-m-d H:i:s');
             $complaint_detail['updated_at']=date('Y-m-d H:i:s');
 
