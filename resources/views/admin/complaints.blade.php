@@ -36,6 +36,7 @@
                                                             <th>Sr. No</th>
                                                             <th>Complaint Id</th>
                                                             <th>Complaint From</th>
+                                                            <th>Registered As</th> 
                                                             <th>Complaint Reason</th>
                                                             <th>Transaction Type</th>
                                                             <th>Complaint Image</th>
@@ -46,7 +47,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach($complaints as $sr=>$complaint)
-                                                        <tr>
+                                                        <tr> 
                                                             <td><input type="checkbox"></td>
                                                             <td>{{ $sr+1 }}</td>
                                                             <td>{{ $complaint['complaintid'] }}</td>
