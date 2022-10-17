@@ -20,8 +20,9 @@ class Complaints_controller extends Controller
     public function index()
     {         
         $result['user_role']=1;
-        $result['complaints']=Complaints_model::select('complaints.*','users.first_name','users.last_name','complaint_reasons.reason_name')
+        $result['complaints']=Complaints_model::select('complaints.*','users.first_name','users.last_name','complaint_reasons.reason_name','user_roles.role_name')
                                                 ->leftjoin('users', 'complaints.by_user', '=', 'users.user_id')    
+                                                ->leftjoin('user_roles', 'complaints.by_role', '=', 'user_roles.role_id')    
                                                 ->leftjoin('complaint_reasons', 'complaints.reason_id', '=', 'complaint_reasons.reason_id')    
                                                 ->get()->toArray();
         

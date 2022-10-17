@@ -35,11 +35,11 @@
                                                             <th></th>
                                                             <th>Sr. No</th>
                                                             <th>Complaint Id</th>
-                                                            <th>Date</th>
                                                             <th>Complaint From</th>
                                                             <th>Complaint Reason</th>
                                                             <th>Transaction Type</th>
                                                             <th>Complaint Image</th>
+                                                            <th>Date</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -50,8 +50,8 @@
                                                             <td><input type="checkbox"></td>
                                                             <td>{{ $sr+1 }}</td>
                                                             <td>{{ $complaint['complaintid'] }}</td>
-                                                            <td>{{ date('d M Y',strtotime($complaint['created_at']))  }}</td>
                                                             <td>{{ $complaint['first_name'].' '.$complaint['last_name'] }}</td>
+                                                            <td>{{ $complaint['role_name'] }}</td>
                                                             <td>{{ $complaint['reason_name'] }}</td>
                                                             <td>
                                                                 @if($complaint['reason_id']==1) 
@@ -64,23 +64,24 @@
                                                                 <i class="ri-arrow-right-up-line"></i>
                                                                 <!-- amount has debited twice from wallet -->
                                                                 @endif
-
-
+                                                                
+                                                                
                                                             </td>
 
                                                             <td>
                                                                 @if(!empty($complaint['complaint_img']))
                                                                 <img 
-                                                                    class="image_thumb"
-                                                                    style="cursor:pointer"
-                                                                    src="{{ url('/public/images').$complaint['complaint_img'] }}"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#complaint_img"
-                                                                    imgid="#complaint_image"
-                                                                    width="20px" height="100%">
-                                                                    @endif
-                                                                </td>
-
+                                                                class="image_thumb"
+                                                                style="cursor:pointer"
+                                                                src="{{ url('/public/images').$complaint['complaint_img'] }}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#complaint_img"
+                                                                imgid="#complaint_image"
+                                                                width="20px" height="100%">
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ date('d M Y',strtotime($complaint['created_at']))  }}</td>
+                                                            
                                                             <td>
                                                             @if($complaint['is_active']==0) 
                                                             <button class="pending-btn">Pending</button>
