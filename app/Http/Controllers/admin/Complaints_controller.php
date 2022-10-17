@@ -41,9 +41,6 @@ class Complaints_controller extends Controller
              
         $user_id=$complaint->by_user;
 
-        echo $complaint->by_user; 
-        exit;
-
         // $user_id=6;
         // $complaint->by_user=3;
       
@@ -53,7 +50,7 @@ class Complaints_controller extends Controller
             for($month=1; $month<=12; $month++)
             {              
 
-                if($complaint->by_user==3)
+                if($complaint->by_role==3)
                 {
                         for($i=0; $i<2; $i++) // for two status  bank transfer to user  & user transfer to bank account
                         {
@@ -63,10 +60,10 @@ class Complaints_controller extends Controller
                                                                                             
                                                         if($i==0) $query->where('ph.from_user', 0);         //bank transfer to user
                                                         if($i==0) $query->where('ph.to_user',$user_id);     //bank transfer to user                                               
-                                                        if($i==0) $query->where('ph.to_role',$complaint->by_user);     //for user role 
+                                                        if($i==0) $query->where('ph.to_role',$complaint->by_role);     //for user role 
                                                         
                                                         if($i==1) $query->where('ph.from_user', $user_id);         //user transfer to bank account
-                                                        if($i==1) $query->where('ph.from_role',$complaint->by_user);     //for user role 
+                                                        if($i==1) $query->where('ph.from_role',$complaint->by_role);     //for user role 
                                                         if($i==1) $query->where('ph.to_user', 0);     //user transfer to bank account
                                                                                                         
                                                     })
@@ -86,7 +83,7 @@ class Complaints_controller extends Controller
                                         }
                                         
                          }
-                } else if($complaint->by_user==4) {
+                } else if($complaint->by_role==4) {
 
                     for($i=0; $i<2; $i++) // for two status  bank transfer to user  & user transfer to bank account
                     { 
@@ -100,10 +97,7 @@ class Complaints_controller extends Controller
                                                         ->whereMonth('wt.created_at',"=",$month) 
                                                         ->get()->toArray();
 
-                                                        echo "<pre>";
-                                                        print_r($trans);
-
-
+                                                      
                                             if(!empty($trans))
                                             {
                                                     if(!empty($transactions[date('F Y', mktime(0,0,0,$month, 1, date('Y')))]))
@@ -132,16 +126,11 @@ class Complaints_controller extends Controller
               }           
 
            
-             if($complaint->by_user==3) { $transaction['parent'] = $all_transactions ; } 
-             if($complaint->by_user==4) { $transaction['child'] = $all_transactions ; } 
+             if($complaint->by_role==3) { $transaction['parent'] = $all_transactions ; } 
+             if($complaint->by_role==4) { $transaction['child'] = $all_transactions ; } 
         
 
         $result['transaction']=$transaction; 
-
-        echo "<pre>";
-        print_r($result);
-        exit; 
-
 
                                
         return view('admin/complaint-details',$result);
