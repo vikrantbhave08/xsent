@@ -478,7 +478,7 @@ class App_controller extends Controller
         
         echo json_encode($data);
     }
-    
+      
 
     public function transaction_summary(Request $request)  // 1) for shop owner 
     {  
