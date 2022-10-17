@@ -120,9 +120,9 @@ class App_controller extends Controller
         
         $j=0;
         for($i=1; $i<=12; $i++)
-        {
+        { 
             $shop_sales_per_month=Shop_transaction_model::select('shop_transactions.*',DB::raw('ifnull(SUM(shop_transactions.amount),0) as total_sale')) 
-                                                    ->where(function ($query) use ($request,$logged_user) {                                                   
+                                                    ->where(function ($query) use ($request,$logged_user) {                                                    
                                                     if ($logged_user['user_role']==2) $query->whereIn('shop_transactions.shop_id', $request['shops']);  //shops related transaction for owners earn
                                                     if ($logged_user['user_role']==3 && empty($request['user_id'])) $query->where('shop_transactions.by_user',$logged_user['user_id']);  //for child data when parent is accessing                                                   
                                                     if ($logged_user['user_role']==3 && !empty($request['user_id'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing                                                   

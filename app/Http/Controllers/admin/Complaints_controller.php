@@ -135,7 +135,12 @@ class Complaints_controller extends Controller
 
         $result['transaction']=$transaction; 
 
-                       
+        echo "<pre>";
+        print_r($result);
+        exit; 
+
+
+                               
         return view('admin/complaint-details',$result);
     }
 }
