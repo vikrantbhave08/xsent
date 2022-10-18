@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport; // add this
 
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -26,6 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Passport::routes(); // Add this
+
+        Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
+        Passport::hashClientSecrets();
 
         //
     }
