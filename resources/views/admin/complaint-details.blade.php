@@ -134,7 +134,7 @@
                                                                         <!-- <i class="ri-arrow-left-down-line"></i> -->
                                                                             <tr>
                                                                                 <td>{{ date('d/m/Y',strtotime($month_data['created_at']))." | ".date('h:i A',strtotime($month_data['created_at'])) }}</td>
-                                                                                <td>{{ $month_data['from_user']==0 ? 'Top up from Bank Account' : 'Transfered from wallet to Bank Account' }} </td>
+                                                                                <td>{{ $month_data['from_user']==0 ? 'Admin sent real money to user' : 'Real money sent to admin' }} </td>
                                                                                 <td class="strongdata">AED {{ $month_data['amount'] }} <span
                                                                                         class="ms-2"> <i class="{{ $month_data['from_user']==0 ? 'ri-arrow-left-down-line' : 'ri-arrow-right-up-line' }}"></i></span>
                                                                                 </td>
@@ -208,6 +208,7 @@
                         <div class="modal-body">
                                
                                <div class="row">
+
                                <div class="col-sm-6">
                                         <div>
                                             <label class="form-label">Remark</label>
@@ -215,8 +216,18 @@
 
                                         </div>
                                     </div>
-                                </div>
+                               
+                                <div class="col-sm-6 mb-3">
+                                <label class="form-label">Invalid Complaint</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Is it invalid complaint ? 
+                                    </label>
+                                    </div>
+                                    </div>
 
+                            </div>          
                             </div>          
                             
                             <div style="text-align: center;">
@@ -269,16 +280,15 @@
     </div>
     <!-- page-wrapper -->
     <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
-
     
     <script src="{{ asset('assets/dist/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/dist/js/jquery.validate.js') }}"></script>
     <script src="{{ asset('assets/dist/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/flatpickr.js') }}"></script>
     <script src="{{ asset('assets/dist/js/common-script.js') }}"></script>    
-    <script src="{{ asset('assets/dist/js/moment.min.js') }}"></script>
-    
+    <script src="{{ asset('assets/dist/js/moment.min.js') }}"></script>    
 
     <script>
 

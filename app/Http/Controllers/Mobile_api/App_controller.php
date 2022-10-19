@@ -49,14 +49,11 @@ class App_controller extends Controller
     
     public function spend_analysis($request)
     {
-
         $logged_user=Auth::mobile_app_user($request['token']);
 
         if($logged_user['user_role']==3 && empty($request['billing_history']))
-        {
-            
+        {            
             $request['categories']=array_column(Parent_child_model::select('child_id')->where('parent_id',$logged_user['user_id'])->get()->toArray(),'child_id');
-
         } else {
 
             $getall_categories=Shops_model::select('shop_categories.*')          // get all shop categories by owner if not then get all .
@@ -101,6 +98,10 @@ class App_controller extends Controller
                                                     ->groupBy('shop_transactions.shop_id') 
                                                     ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
                                                    
+                                                    echo "<pre>";
+                                                    print_r($shops);
+                                                    print_r($spend_analysys_by_cat);
+                                                    echo "***********************************<br>";
                                                    
                                                    
             $spend_analysis[$key]['spend_value']=array_sum(array_column($spend_analysys_by_cat, 'total_sale')) ? array_sum(array_column($spend_analysys_by_cat, 'total_sale')) : 0 ;                                                    
