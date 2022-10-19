@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsToComplaintsTable extends Migration
+class AddAdminremarkColumnToComplaintsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddColumnsToComplaintsTable extends Migration
     public function up()
     {
         Schema::table('complaints', function (Blueprint $table) {
-            $table->string('complaintid',50)->default(0)->after('complaint_id'); 
+            $table->string('admin_remark',250)->nullable()->after('complaint_details'); 
         });
     }
 

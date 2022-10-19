@@ -64,14 +64,19 @@
                                                          </li>
                                                     </ul>
                                                 </div>
-                                                <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
                                                     <ul class="list-inline mb-0">
-                                                        <li class="list-inline-item form-label">Transaction Type :</li>
-                                                        <li class="list-inline-item data-label"><span class="me-1"><i
-                                                                    class="ri-arrow-left-right-line"></i></span> Wallet
-                                                            to Wallet</li>
+                                                        <li class="list-inline-item form-label">
+                                                            <button class="btn btn-sm table-btn" type="button"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#admin_remark">Remark
+                                                            </button>                                                           
+                                                        </li>
+                                                        <li class="list-inline-item data-label"><span class="me-1">
+                                                        <button class="btn btn-sm remark-btn">Invalid Complaint</button>
+                                                        </li>
                                                     </ul>
-                                                </div> -->
+                                                </div>
                                             </div>
                                         </div>
 
@@ -188,6 +193,45 @@
     </div>
 
 
+    <!--Complaint Image Modal -->
+    <div class="modal fade" id="admin_remark" tabindex="-1" aria-labelledby="payremarkLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header gradient">
+                            <h5 class="modal-title" id="payremarkLabel">Remark</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="complaint_form">
+                            @csrf
+                           
+                        <div class="modal-body">
+                               
+                               <div class="row">
+                               <div class="col-sm-6">
+                                        <div>
+                                            <label class="form-label">Remark</label>
+                                            <textarea class="form-control" placeholder="Enter remark"></textarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>          
+                            
+                            <div style="text-align: center;">
+                            <span class="complaint-err"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
 
 
      <!--Complaint Image Modal -->
@@ -199,10 +243,7 @@
                             <h5 class="modal-title" id="payremarkLabel">Complaint Image</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="payment_form">
-                            @csrf
-                            <input type="hidden" id="amt_request_id"  name="amt_request_id">
-                            <input type="hidden" id="bank_detail_id"  name="bank_detail_id">
+                        <!-- <form id="complaint_form"> -->
                         <div class="modal-body">
                                 <div class="row">
                                   
@@ -218,7 +259,7 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <!-- <button type="submit" class="btn btn-primary">Pay</button> -->
                             </div>
-                        </form>
+                        <!-- </form> -->
                     </div>
                 </div>
             </div>
@@ -308,6 +349,71 @@
                 }
             });
         });
+
+
+          
+
+
+        $("#complaint_form").validate({
+            rules: {                
+                // bank_name: {
+                //     required: true
+                // },
+                // txn_id: {
+                //     required: true
+                // },
+
+            },
+            messages: {
+                           
+                // bank_name: {
+                //     required: "Enter Bank Name"
+                // },
+                // txn_id: {
+                //     required: "Enter Transaction Id"
+                // },
+            },          
+            submitHandler: function (form, message) {
+             
+                redUrl = "{{url('/admin/admin-remark')}}";             
+                $.ajax({
+                    url: redUrl,
+                    type: 'post',
+                    data: new FormData(form),
+                    dataType: 'json',
+                    contentType: false, // The content type used when sending data to the server.
+                    cache: false, // To unable request pages to be cached
+                    processData: false, // To send DOMDocument or non processed data file it is set to false
+                    success: function (res) {
+
+                        if (res.status) {
+
+                            $(".complaint-err").css("color", "green");
+                            $(".complaint-err").html(res.msg);
+                            setTimeout(function () {
+                              location.reload();
+                            }, 2000);
+
+                        } else {
+
+                            // fp1.close();
+                            $(".complaint-err").css("color", "red");
+                            $(".complaint-err").html(res.msg);
+                            setTimeout(function () {
+                                // location.reload();
+                            }, 3000);
+
+                        }
+
+
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
+                });
+
+            }
+        }); 
 
 
     </script>

@@ -667,6 +667,51 @@ p {
         font-weight: 600;
     }
 
+    // .table-btn {
+    //     background-color: #e1ecfb;
+    //     color: #699fec;
+    //     transition: all 300ms ease-in-out;
+
+    //     &:hover {
+    //         background-color: #699fec;
+    //         color: #ffff;
+    //         transition: all 300ms ease-in-out;
+    //     }
+    // }
+
+    // &.remark-btn {
+    //     background-color: #fed1d1;
+    //     color: #fa1919;
+    // }
+
+    .btn {
+        font-weight: 600;
+        font-size: 12px;
+        max-height: 25px;
+
+        &.table-btn {
+            background-color: #e1ecfb;
+            color: #699fec;
+            transition: all 300ms ease-in-out;
+
+            &:hover {
+                background-color: #699fec;
+                color: #ffff;
+                transition: all 300ms ease-in-out;
+            }
+        }
+
+        &.remark-btn {
+            background-color: #fed1d1;
+            color: #fa1919;
+        }
+
+        &:focus {
+            box-shadow: none;
+            outline: none;
+        }
+    }
+
     .data-label {
         font-size: 12px;
         color: #818193;
