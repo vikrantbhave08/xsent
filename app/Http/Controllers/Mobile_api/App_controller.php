@@ -92,17 +92,13 @@ class App_controller extends Controller
                                                     $query->whereIn('shop_transactions.shop_id', $shops);  //shops related transaction
                                                     if ($logged_user['user_role']==3 && !empty($request['user_id']) && !empty($request['billing_history'])) $query->where('shop_transactions.by_user',$request['user_id']);  //for child data when parent is accessing  for category related on billing history page                                               
                                                     if ($logged_user['user_role']==4) $query->where('shop_transactions.by_user',$logged_user['user_id']);  //for child data when self accessing                                                   
-                                                    if (empty($request['billing_history'])) $query->where('shop_transactions.by_user', $cat);  //user related transaction
+                                                    if (empty($request['billing_history']) && $request['spend_for']!='category') $query->where('shop_transactions.by_user', $cat);  //user related transaction
                                                     if (!empty($request['year'])) $query->whereYear('shop_transactions.created_at', '=', $request['year']);
                                                     })
                                                     ->groupBy('shop_transactions.shop_id') 
                                                     ->orderBy('shop_transactions.created_at', 'DESC')->get()->toArray();
                                                    
-                                                    echo "<pre>";
-                                                    print_r($shops);
-                                                    print_r($spend_analysys_by_cat);
-                                                    echo "***********************************<br>";
-                                                   
+                                                                                                     
                                                    
             $spend_analysis[$key]['spend_value']=array_sum(array_column($spend_analysys_by_cat, 'total_sale')) ? array_sum(array_column($spend_analysys_by_cat, 'total_sale')) : 0 ;                                                    
                                                    
