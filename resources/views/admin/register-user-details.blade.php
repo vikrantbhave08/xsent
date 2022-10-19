@@ -253,7 +253,7 @@
                                                                         <!-- <i class="ri-arrow-left-down-line"></i> -->
                                                                             <tr>
                                                                                 <td>{{ date('d/m/Y',strtotime($month_data['created_at']))." | ".date('h:i A',strtotime($month_data['created_at'])) }}</td>
-                                                                                <td>{{ $month_data['from_user']==0 ? 'Top up from Bank Account' : 'Transfered from wallet to Bank Account' }} </td>
+                                                                                <td>{{ $month_data['from_user']==0 ? 'Admin sent real money to user' : 'Real money sent to admin' }} </td>
                                                                                 <td class="strongdata">AED {{ $month_data['amount'] }} <span
                                                                                         class="ms-2"> <i class="{{ $month_data['from_user']==0 ? 'ri-arrow-left-down-line' : 'ri-arrow-right-up-line' }}"></i></span>
                                                                                 </td>
