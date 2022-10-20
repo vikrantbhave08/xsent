@@ -196,7 +196,7 @@
                 scrollY: 500,
                 scrollX: true,
                 // "bPaginate": false,
-                "ordering": false,
+                "ordering": true,
                 "bLengthChange": false,
                 "bFilter": false,
                 "bInfo": false,
