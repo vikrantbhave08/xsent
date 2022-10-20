@@ -328,6 +328,7 @@ body {
     transition: all 300ms ease-in-out;
 }
 
+
 .sidebar-wrapper .sidebar-menu ul li a span.icon.transactions-icon {
     background-image: url(../images/icon/transactions-icon.png);
 
