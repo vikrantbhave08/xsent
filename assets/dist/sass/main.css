@@ -333,7 +333,7 @@ p {
 }
 .table-design table thead th:last-child,
 .table-design table tbody td:last-child {
-  width: 100px !important;
+  width: 150px !important;
 }
 .table-design table .btn {
   font-weight: 600;

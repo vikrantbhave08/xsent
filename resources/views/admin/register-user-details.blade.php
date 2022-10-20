@@ -20,7 +20,7 @@
                                     <nav>
                                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
 
-                                        @if(!empty($shop_user_details['user_role']))
+                                           @if(!empty($shop_user_details['user_role']))
                                             <a class="nav-link active gradient" id="nav-shop-tab" data-bs-toggle="tab"
                                                 href="#nav-shop" role="tab" aria-controls="nav-shop"
                                                 aria-selected="true">Shop</a>
@@ -36,6 +36,7 @@
                                     </nav>
 
                                     @if(!empty($shop_user_details['user_role']))
+                                  
                                     <div class="tab-content" id="nav-tabContent">
                                         <!-- SHOP DETAILS -->
                                         <div class="tab-pane fade show active" id="nav-shop" role="tabpanel"
@@ -106,7 +107,8 @@
                                                     </div> -->
 
                                                 </div>
-                                                <div class="content-wrapper transaction-history">
+                                                <div class="content-wrapper transaction-history" style="height: calc( 100vh - 250px );
+                                                overflow-y: auto;">
                                                     <div class="table-design">
                                                         <div class="row">
                                                             <div class="col-xl-12 col-lg-12 col-md-12">
@@ -227,18 +229,19 @@
                                                     </div> -->
 
                                                 </div>
-                                                <div class="content-wrapper transaction-history">
+                                                <div class="content-wrapper transaction-history" style="height: calc( 100vh - 250px );
+                                                overflow-y: auto;">
                                                     <div class="table-design">
                                                         <div class="row">
                                                             <div class="col-xl-12 col-lg-12 col-md-12">
                                                                 <div>
+                                                                <table id="shopDetails" class="row-border"
+                                                                        style="width:100%">
+                                                                </table>
                                                                     <table id="parentDetails" class="row-border"
                                                                         style="width:100%">
 
                                                                         @if(!empty($transaction['parent']))
-
-                                                                   
-
                                                                         @foreach($transaction['parent'] as $month=>$month_transaction)
                                                                        
                                                                         <thead>
@@ -258,7 +261,7 @@
                                                                                         class="ms-2"> <i class="{{ $month_data['from_user']==0 ? 'ri-arrow-left-down-line' : 'ri-arrow-right-up-line' }}"></i></span>
                                                                                 </td>
                                                                             </tr>
-                                                                           
+                                                                            
                                                                             @endforeach
 
                                                                         </tbody>
@@ -368,6 +371,8 @@ $('.register_uesrs').addClass('active');
                 // "bPaginate": false,
                 "ordering": false,
                 "bLengthChange": false,
+                scrollY: 500,
+            scrollX: true,
                 "bFilter": false,
                 "bInfo": false,
                 "bAutoWidth": false,
@@ -381,8 +386,11 @@ $('.register_uesrs').addClass('active');
 
         });
         $('#parentDetails').DataTable({
+            "bPaginate": true,
             "ordering": false,
             "bLengthChange": false,
+            scrollY: 500,
+            scrollX: true,
             "bFilter": false,
             "bInfo": false,
             "bAutoWidth": false,

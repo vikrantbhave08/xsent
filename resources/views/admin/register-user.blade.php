@@ -31,6 +31,9 @@
                                     <div id="payment-message" class="hidden"></div>
                                     </form> -->
 
+                                    
+
+
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                         <div class="calender-view">
                                             <input type=" text" class="form-control calender" id="date_from"
@@ -45,6 +48,7 @@
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12">
                                             <div>
+                                            
                                                 <table id="registereUser" class="row-border check" style="width:100%">
                                                     <thead>
                                                         <tr>
@@ -106,6 +110,8 @@
     </div>
 
 
+    <div id="lean-link"></div>
+
     <!-- page-content" -->
     </div>
     <!-- page-wrapper -->
@@ -125,6 +131,8 @@
     <script src="{{ asset('assets/dist/js/jquery.validate.js') }}"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <!-- <script src="{{ asset('assets/dist/js/checkout.js') }}"></script> -->
+
+    <script src="https://cdn.leantech.me/link/sdk/web/latest/Lean.min.js"></script>
 
 
     <script>
@@ -265,6 +273,34 @@
         //     }
         // }); 
 
+        // Lean.connect({
+        //     app_token: "2c9a80897169b1dd01716a0339e30003",
+        //     permissions: ["identity", "accounts", "transactions", "balance", "payments"],
+        //     customer_id: "ef9f235e-96b6-44f1-993b-eed53e4f44da",
+        //     payment_destination_id: "f8d6fe12-5cc3-4df2-82c2-48b4dd6f74a7",
+        //     sandbox: "true",
+        //     });
+
+            // Lean.connect({
+            // app_token: 'c69c9d1f-f7b4-45e4-a349-bb2591652e62',
+            // customer_id: 'ef9f235e-96b6-44f1-993b-eed53e4f44da',
+            // permissions: ["identity","accounts","balance","transactions"],
+            // sandbox: 'true',
+            // })
+
+        //     Lean.connect({
+        // app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+        // permissions: ["identity", "accounts", "transactions", "balance", "payments"],
+        // customer_id: "ef9f235e-96b6-44f1-993b-eed53e4f44da",
+        // payment_destination_id: "aad74016-1a3f-4896-9775-3d955b91c150",
+        // sandbox: "true",
+        // });
+//         Lean.createPaymentSource({
+//   app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+//   customer_id: "ef9f235e-96b6-44f1-993b-eed53e4f44da",
+//   payment_destination_id: "aad74016-1a3f-4896-9775-3d955b91c150",
+//   sandbox: "true",
+// });
     </script>
 </body>
 

@@ -172,7 +172,7 @@ class Requests_controller extends Controller
     public function get_payment_details(Request $request)
     {        
         $result=array('status'=>false,'msg'=>'Data not found');
-
+        
         if($request['request_id'])
         {
             $payment_details=array();
@@ -186,10 +186,59 @@ class Requests_controller extends Controller
                                                             ->leftjoin('user_roles', 'amount_requests.by_role', '=', 'user_roles.role_id') 
                                                             ->where('amount_requests.amt_request_id',$request['request_id'])         
                                                             ->first();
+                                                            
+                                                            $result=array('status'=>true,'msg'=>'Data found','pay_details'=>!empty($payment_details) ? $payment_details->toArray() : array() );
+                                                        }
+                                                        
+                                                        echo json_encode($result);
+      }
 
-            $result=array('status'=>true,'msg'=>'Data found','pay_details'=>!empty($payment_details) ? $payment_details->toArray() : array() );
+        public function getall_transactions(Request $request)
+        {
+
+            $real_transactions=Payment_history_model::from('payment_history as pt')->select('pt.*','pt.to_user as user_id',
+                                                             DB::raw('CONCAT(u1.first_name," ", u1.last_name) AS debited'),
+                                                             DB::raw('CONCAT(u2.first_name," ", u2.last_name) AS credited'),'ur1.role_name as from_role_name','ur2.role_name as to_role_name')
+                                                ->leftjoin('users as u1', 'pt.from_user', '=', 'u1.user_id') 
+                                                ->leftjoin('users as u2', 'pt.to_user', '=', 'u2.user_id') 
+                                                ->leftjoin('user_roles as ur1', 'pt.from_role', '=', 'ur1.role_id') 
+                                                ->leftjoin('user_roles as ur2', 'pt.to_role', '=', 'ur2.role_id') 
+                                                ->where(function ($query) use ($request) {                                            
+                                                    if (!empty($request['search_date'])) $query->where('pt.created_at',$request['search_date']);     // user (child) history                                              
+                                                })                                            
+                                               ->orderBy('pt.created_at', 'DESC')->get()->toArray();
+
+            $virtual_transactions=Wallet_transaction_model::from('wallet_transaction as wt')
+                                                ->select('wt.*','wt.credit as amount',
+                                                 DB::raw('CONCAT(u1.first_name," ", u1.last_name) AS debited'),
+                                                  DB::raw('CONCAT(u2.first_name," ", u2.last_name) AS credited'),'ur1.role_name as from_role_name','ur2.role_name as to_role_name')
+                                                ->leftjoin('users as u1', 'wt.from_user', '=', 'u1.user_id') 
+                                                ->leftjoin('users as u2', 'wt.user_id', '=', 'u2.user_id') 
+                                                ->leftjoin('user_roles as ur1', 'wt.from_role', '=', 'ur1.role_id') 
+                                                ->leftjoin('user_roles as ur2', 'wt.to_role', '=', 'ur2.role_id') 
+                                                ->where(function ($query) use ($request) {                                            
+                                                    if (!empty($request['search_date'])) $query->where('wt.created_at',$request['search_date']);     // user (child) history                                              
+                                                })                                            
+                                               ->orderBy('wt.created_at', 'DESC')->get()->toArray();
+
+
+                                               
+                                               $transactions=array_merge($real_transactions,$virtual_transactions);
+                                            
+
+                             usort($transactions, function($a, $b) {
+                                                return strtotime($b['created_at'])-strtotime($a['created_at']);
+                                            });
+
+                                            // echo "<pre>";
+                                            // print_r($transactions);
+                                            // exit;
+
+                                            $result['transactions']=$transactions;
+
+
+              return view('admin/transactions',$result);                                          
+
         }
-
-        echo json_encode($result);
+                                           
     }
-}
