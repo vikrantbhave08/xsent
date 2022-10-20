@@ -64,7 +64,7 @@
 
                                                             <td>{{  $trans['from_user']==0 ? 'Admin' : $trans['debited']." (".($trans['from_user']==0 ? 'Admin' : $trans['from_role_name']) .")"  }}</td>
                                                             <td>{{  $trans['user_id']==0 ? 'Admin' : $trans['credited']. " (".($trans['user_id']==0 ? 'Admin' : $trans['to_role_name']) .")"  }}</td>
-                                                            <td>{{  'AED '.$trans['amount']  }}</td>
+                                                            <td>   <?php echo isset($trans['pay_txn_id']) ? '<span class="me-2"> <i class="ri-bank-card-fill"></i></span>' : '<span class="me-2"> <i class="ri-hand-coin-fill"></i></span>' ?> {{ 'AED '.$trans['amount']  }}</td>
                                                             <td>{{  isset($trans['pay_txn_id']) ? 'Real Money' : 'Virtual Money'  }}</td>
                                                             <td>{{  $trans['created_at']  }}</td>                                                          
                                                            
@@ -86,99 +86,7 @@
                 </div>
             </main>
 
-            <!--Send Remark Modal -->
-            <div class="modal fade" id="transfer_money" tabindex="-1" aria-labelledby="payremarkLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header gradient">
-                            <h5 class="modal-title" id="payremarkLabel">Transfer Money To Bank Account</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form id="payment_form">
-                            @csrf
-                            <input type="hidden" id="amt_request_id"  name="amt_request_id">
-                            <input type="hidden" id="bank_detail_id"  name="bank_detail_id">
-                        <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Request From</label><br />
-                                        <label class="data-label req_from"></label>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">User Type</label><br />
-                                        <label class="data-label user_type"></label>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Request Amount</label><br />
-                                        <label class="data-label req_amt"></label>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Wallet Balance</label><br />
-                                        <label class="data-label wallet_balance"></label>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                   <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Bank Name</label><br />
-                                        <label class="data-label bank_name">bank name</label>
-                                    </div>
-                                    <div class="col-sm-6 mb-3">
-                                        <label class="form-label">Account No</label><br />
-                                        <label class="data-label account_no">acc no</label>
-                                    </div>  
-                                   <div class="col-sm-6 mb-3">
-                                        <label class="form-label">IBAN No</label><br />
-                                        <label class="data-label iban_no">iban no</label>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Transfered By</label>
-                                        <div class="custom-dropdown mb-3">
-                                            <select name="transfered_by" id="transfer_by">
-                                                <!-- <option value=""></option> -->
-                                                <option value="Net Banking">Net Banking</option>
-                                                <!-- <option value="Cash">Cash</option> -->
-                                                <!-- <option value="Reason3">Reason 3</option> -->
-                                                <option value="Other">Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <!-- <div class="col-sm-6">
-                                        <label class="form-label" for="bank_name">Bank Name</label>
-                                        <input type="text" name="bank_name" class="form-control" id="bank_name" value="">
-                                    </div> -->
-                                    <div class="col-sm-6">
-                                        <label class="form-label" for="txn_id">Transaction Id</label>
-                                        <input type="text" name="txn_id" class="form-control" id="txn_id" value="">
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <div>
-                                            <label class="form-label">Remark</label>
-                                            <textarea class="form-control" placeholder="Enter remark"></textarea>
-                                        </div>
-                                    </div> 
-                                </div>
-                            </div>
-                            <div style="text-align: center;">
-                            <span class="payment-err"></span>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Pay</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-
+           
     <!-- page-content" -->
     </div>
     <!-- page-wrapper -->
@@ -196,7 +104,7 @@
 
     <script>
         
-        $('.requests').addClass('active');
+        $('.getall_transactions').addClass('active');
 
 
         // SELECT DATE
@@ -207,7 +115,7 @@
             onChange: function (selectedDates, dateStr, instance) {
                 // get_data_by_date();
                 // alert();
-                window.location.href = "{{url('/admin/requests')}}?search_date="+dateStr;
+                window.location.href = "{{url('/admin/getall-transactions')}}?search_date="+dateStr;
             },
 
         });
@@ -215,7 +123,7 @@
        function clear_date()
        {       
         // $flatpickr.clear();
-        window.location.href = "{{url('/admin/requests')}}";
+        window.location.href = "{{url('/admin/getall-transactions')}}";
        }
                        
           
@@ -278,115 +186,6 @@
             });
         });
 
-        function get_payment_details(request_id)
-        {
-            $('.payment-err, .error').html("");
-
-            redUrl = "{{url('/admin/get-payment-details')}}";             
-
-                $.ajax({
-                    url: redUrl,
-                    type: 'post',
-                    data: {request_id:request_id,  "_token": "{{ csrf_token() }}"},
-                    dataType: 'json',
-                    // contentType: false, // The content type used when sending data to the server.while using formdata
-                    // cache: false, // To unable request pages to be cached .while using formdata
-                    // processData: false, // To send DOMDocument or non processed data file it is set to false .while using formdata
-                    success: function (res) {
-
-                        console.log(res);
-
-                        if (res.status) {
-
-                                var res= res.pay_details;
-
-                                if(res.bank_detail_id==null)
-                                {
-                                    $(".payment-err").css("color", "red");
-                                    $(".payment-err").html("Bank details not added.");
-                                }
-
-                                $(".req_from").html(res.first_name+" "+res.last_name);
-                                $(".user_type").html(res.role_name);
-                                $(".req_amt").html("AED "+res.request_amount);
-                                $(".wallet_balance").html("AED "+res.balance);
-                                $(".bank_name").html(res.bank_name);
-                                $(".account_no").html(res.account_no);
-                                $(".iban_no").html(res.iban_no);
-                                $("#amt_request_id").val(res.amt_request_id);
-                                $("#bank_detail_id").val(res.bank_detail_id);  
-                                
-                            }
-
-
-                    },
-                    error: function (xhr) {
-                        console.log(xhr);
-                    }
-                });
-
-        }
-
-
-        $("#payment_form").validate({
-            rules: {                
-                // bank_name: {
-                //     required: true
-                // },
-                txn_id: {
-                    required: true
-                },
-
-            },
-            messages: {
-                           
-                // bank_name: {
-                //     required: "Enter Bank Name"
-                // },
-                txn_id: {
-                    required: "Enter Transaction Id"
-                },
-            },          
-            submitHandler: function (form, message) {
-             
-                    redUrl = "{{url('/admin/add-payment')}}";             
-
-                $.ajax({
-                    url: redUrl,
-                    type: 'post',
-                    data: new FormData(form),
-                    dataType: 'json',
-                    contentType: false, // The content type used when sending data to the server.
-                    cache: false, // To unable request pages to be cached
-                    processData: false, // To send DOMDocument or non processed data file it is set to false
-                    success: function (res) {
-
-                        if (res.status) {
-
-                            $(".payment-err").css("color", "green");
-                            $(".payment-err").html(res.msg);
-                            setTimeout(function () {
-                              location.reload();
-                            }, 2000);
-
-                        } else {
-                            // fp1.close();
-                            $(".payment-err").css("color", "red");
-                            $(".payment-err").html(res.msg);
-                            setTimeout(function () {
-                                // location.reload();
-                            }, 3000);
-                        }
-
-
-                    },
-                    error: function (xhr) {
-                        console.log(xhr);
-                    }
-                });
-
-            }
-        }); 
 
 
     </script>

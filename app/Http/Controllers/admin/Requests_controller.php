@@ -204,7 +204,7 @@ class Requests_controller extends Controller
                                                 ->leftjoin('user_roles as ur1', 'pt.from_role', '=', 'ur1.role_id') 
                                                 ->leftjoin('user_roles as ur2', 'pt.to_role', '=', 'ur2.role_id') 
                                                 ->where(function ($query) use ($request) {                                            
-                                                    if (!empty($request['search_date'])) $query->where('pt.created_at',$request['search_date']);     // user (child) history                                              
+                                                    if (!empty($request['search_date'])) $query->whereDate('pt.created_at',$request['search_date']);     // user (child) history                                              
                                                 })                                            
                                                ->orderBy('pt.created_at', 'DESC')->get()->toArray();
 
@@ -217,7 +217,7 @@ class Requests_controller extends Controller
                                                 ->leftjoin('user_roles as ur1', 'wt.from_role', '=', 'ur1.role_id') 
                                                 ->leftjoin('user_roles as ur2', 'wt.to_role', '=', 'ur2.role_id') 
                                                 ->where(function ($query) use ($request) {                                            
-                                                    if (!empty($request['search_date'])) $query->where('wt.created_at',$request['search_date']);     // user (child) history                                              
+                                                    if (!empty($request['search_date'])) $query->whereDate('wt.created_at',$request['search_date']);     // user (child) history                                              
                                                 })                                            
                                                ->orderBy('wt.created_at', 'DESC')->get()->toArray();
 

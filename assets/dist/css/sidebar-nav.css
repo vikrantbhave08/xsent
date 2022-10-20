@@ -328,6 +328,18 @@ body {
     transition: all 300ms ease-in-out;
 }
 
+.sidebar-wrapper .sidebar-menu ul li a span.icon.transactions-icon {
+    background-image: url(../images/icon/transactions-icon.png);
+
+}
+
+.sidebar-wrapper .sidebar-menu ul li a.active span.icon.transactions-icon,
+.sidebar-wrapper .sidebar-menu ul li a:hover span.icon.transactions-icon {
+    background-image: url(../images/icon/transactions-active-icon.png);
+
+    transition: all 300ms ease-in-out;
+}
+
 
 .sidebar-wrapper .sidebar-menu ul li a:hover>i::before {
     display: inline-block;

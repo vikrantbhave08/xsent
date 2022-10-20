@@ -46,6 +46,12 @@
                             </a>
                         </li>
                         <li>
+                            <a class="nav-link getall_transactions" href="{{ url('/admin/getall-transactions') }}">                              
+                                <span class="icon transactions-icon"></span>
+                                <span>Transactions</span>
+                            </a>
+                        </li>
+                        <li>
                             <a class="nav-link complaints" href="{{ url('/admin/complaints') }}">
                                 <span class="icon complaint-icon"></span>
                                 <span>Complaints</span>
