@@ -196,6 +196,8 @@ class Requests_controller extends Controller
         public function getall_transactions(Request $request)
         {
 
+            $result['search_date']=!empty($request['search_date']) ? $request['search_date'] : "";
+            
             $real_transactions=Payment_history_model::from('payment_history as pt')->select('pt.*','pt.to_user as user_id',
                                                              DB::raw('CONCAT(u1.first_name," ", u1.last_name) AS debited'),
                                                              DB::raw('CONCAT(u2.first_name," ", u2.last_name) AS credited'),'ur1.role_name as from_role_name','ur2.role_name as to_role_name')
