@@ -284,7 +284,7 @@
             //     .then(response => console.log(response))
             //     .catch(err => console.error(err));
         }
-        payintent();
+        // payintent();
 
         function paylean(responseObject) {
             console.log(responseObject);
