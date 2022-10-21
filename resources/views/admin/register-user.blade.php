@@ -210,97 +210,100 @@
             });
         });
 
-
-        // $("#payment-form").validate({
-        //     rules: {                
-        //         // username: {
-        //         //     required: true
-        //         // },
-        //         // password: {
-        //         //     required: true
-        //         // },
-
-        //     },
-        //     messages: {
-                           
-        //         // username: {
-        //         //     required: "Enter Username"
-        //         // },
-        //         // password: {
-        //         //     required: "Enter Password"
-        //         // },
-        //     },          
-        //     submitHandler: function (form, message) {
-             
-        //             redUrl = "{{url('/admin/payment')}}";             
-
-        //         $.ajax({
-        //             url: redUrl,
-        //             type: 'post',
-        //             data: new FormData(form),
-        //             dataType: 'json',
-        //             contentType: false, // The content type used when sending data to the server.
-        //             cache: false, // To unable request pages to be cached
-        //             processData: false, // To send DOMDocument or non processed data file it is set to false
-        //             success: function (res) {
-
-        //                 if (res.flag) {
-
-        //                     $(".login-err").css("color", "green");
-        //                     $(".login-err").html(res.msg);
-        //                     setTimeout(function () {
-        //                         window.location.href = "{{ url('/admin/dashboard') }}";
-        //                     }, 3000);
-
-
-
-        //                 } else {
-        //                     // fp1.close();
-        //                     $(".login-err").css("color", "red");
-        //                     $(".login-err").html(res.msg);
-        //                     setTimeout(function () {
-        //                         // location.reload();
-        //                     }, 3000);
-        //                 }
-
-
-        //             },
-        //             error: function (xhr) {
-        //                 console.log(xhr);
-        //             }
-        //         });
-
-        //     }
-        // }); 
+ 
 
         // Lean.connect({
         //     app_token: "2c9a80897169b1dd01716a0339e30003",
         //     permissions: ["identity", "accounts", "transactions", "balance", "payments"],
-        //     customer_id: "ef9f235e-96b6-44f1-993b-eed53e4f44da",
-        //     payment_destination_id: "f8d6fe12-5cc3-4df2-82c2-48b4dd6f74a7",
+        //     customer_id: "6bfffc0a-d6d3-4de4-84f7-0aa21153a41c",
+        //     payment_destination_id: "c2beaf65-c746-45fe-8d81-160ed16053a3",
         //     sandbox: "true",
         //     });
+     
+        function paysource() {
+                // Lean.createPaymentSource({ 
+                // customer_id: "6bfffc0a-d6d3-4de4-84f7-0aa21153a41c",
+                // app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+                // sandbox: "true",
+                // callback: payintent,
+                // })
+                
+                Lean.connect({
+                    app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+                    permissions: ["identity","accounts","balance","transactions","payments"],
+                    customer_id: "6bfffc0a-d6d3-4de4-84f7-0aa21153a41c",
+                    payment_destination_id: "c2beaf65-c746-45fe-8d81-160ed16053a3",
+                    callback: payintent,
+                    sandbox: "true"
+            })
+        }
 
-            // Lean.connect({
-            // app_token: 'c69c9d1f-f7b4-45e4-a349-bb2591652e62',
-            // customer_id: 'ef9f235e-96b6-44f1-993b-eed53e4f44da',
-            // permissions: ["identity","accounts","balance","transactions"],
-            // sandbox: 'true',
-            // })
+        // paysource();
 
-        //     Lean.connect({
-        // app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
-        // permissions: ["identity", "accounts", "transactions", "balance", "payments"],
-        // customer_id: "ef9f235e-96b6-44f1-993b-eed53e4f44da",
-        // payment_destination_id: "aad74016-1a3f-4896-9775-3d955b91c150",
-        // sandbox: "true",
-        // });
-//         Lean.createPaymentSource({
-//   app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
-//   customer_id: "ef9f235e-96b6-44f1-993b-eed53e4f44da",
-//   payment_destination_id: "aad74016-1a3f-4896-9775-3d955b91c150",
-//   sandbox: "true",
-// });
+        function payintent() {
+
+            console.log("requested");
+
+                            var settings = {
+                "url": "https://sandbox.leantech.me/payments/v1/intents",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "lean-app-token": "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+                    "Cookie": "JSESSIONID=8D5A996420A62F34AABEC8219E8F5969"
+                },
+                "data": JSON.stringify({
+                    "amount": 10,
+                    "currency": "AED",
+                    "payment_destination_id": "c2beaf65-c746-45fe-8d81-160ed16053a3",
+                    "customer_id": "6bfffc0a-d6d3-4de4-84f7-0aa21153a41c"
+                }),
+                };
+
+                $.ajax(settings).done(function (response) {
+                console.log(response);
+                paylean(response);
+                });
+          
+            // const options = {
+            //     method: 'POST',
+            //     headers: {
+            //         'accept': 'application/json',
+            //         'content-type': 'application/json',
+            //         'lean-app-token': 'c69c9d1f-f7b4-45e4-a349-bb2591652e62'
+            //     },
+            //     body: JSON.stringify({customer_id: '6bfffc0a-d6d3-4de4-84f7-0aa21153a41c',
+            //                         amount: 120, currency: 'AED',
+            //                         payment_destination_id: "266733cc-6f46-4e87-af7e-9bb46b99601d",
+            //                         })
+            //     };
+
+            //     fetch('https://sandbox.leantech.me/payments/v1/intents/', options)
+            //     .then(response => response.json())
+            //     .then(response => console.log(response))
+            //     .catch(err => console.error(err));
+        }
+        payintent();
+
+        function paylean(responseObject) {
+            console.log(responseObject);
+            // insert actions you want to perform on SDK close
+            Lean.pay({
+                app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+                payment_intent_id: responseObject.payment_intent_id,
+                // payment_intent_id: "cf1fadb1-6c94-4a25-b3ba-2c8e12b2ba42",
+                sandbox: "true",
+                callback: paymentresponse,
+            });
+        }
+        
+        function paymentresponse(responseObject) {
+
+            console.log("responseObject");
+            console.log(responseObject);
+        }
+       
     </script>
 </body>
 
