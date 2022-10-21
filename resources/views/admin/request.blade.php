@@ -65,7 +65,7 @@
                                                                 @endif</td>
                                                             <td>{{ $val['email'] }}</td>
                                                             <td>{{ 'AED'.' '.$val['request_amount'] }}</td>
-                                                            <td>{{ $val['by_role']==2 ? "Owner" : "Parent" }}</td>
+                                                            <td>{{ $val['by_role']==2 ? "Shop Owner" : "Parent" }}</td>
                                                             <td>{{ 'AED'.' '.$val['balance'] }}</td>
                                                             <td>{{ date('Y-m-d',strtotime($val['created_at'])) }}</td>
                                                             <td>
