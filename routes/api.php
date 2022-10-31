@@ -56,6 +56,7 @@ Route::Post('transaction-summary', [App_controller::class, 'transaction_summary'
 
 Route::Post('add-bank-details', [App_controller::class, 'add_bank_details']); 
 Route::Post('get-bank-details', [App_controller::class, 'get_bank_details']); 
+Route::Post('create-customer-id', [App_controller::class, 'create_customer_id']); 
 
 Route::Post('add-money-to-wallet', [App_controller::class, 'add_money_to_wallet']); 
 Route::Post('get-notifications', [App_controller::class, 'get_notifications']); 

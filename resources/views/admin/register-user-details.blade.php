@@ -319,7 +319,7 @@
 
     <script>
 
-$('.register_uesrs').addClass('active');
+        $('.register_uesrs').addClass('active');
 
         // SELECT DATE
         // flatpickr("#date_from", {
@@ -361,6 +361,7 @@ $('.register_uesrs').addClass('active');
         $(window).resize(function () {
             resizeData();
         })
+
         $(document).ready(function () {
             // $("#reason").select2({
             //     placeholder: "Select your reason",
@@ -385,6 +386,7 @@ $('.register_uesrs').addClass('active');
             });
 
         });
+
         $('#parentDetails').DataTable({
             "bPaginate": true,
             "ordering": false,

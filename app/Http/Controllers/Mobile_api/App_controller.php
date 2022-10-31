@@ -1081,6 +1081,24 @@ class App_controller extends Controller
                 $add_bank=Bank_details_model::create($bank_details)->bank_detail_id;                 
                 if($add_bank)
                 {
+
+                    require_once('vendor/autoload.php');
+
+                    // $client = new \GuzzleHttp\Client();
+
+                    // $response = $client->request('POST', 'https://sandbox.leantech.me/customers/v1/', [
+                    // 'body' => '{"app_user_id":"'.$request['app_user_id'].'"}',
+                    // 'headers' => [
+                    //     'accept' => 'application/json',
+                    //     'content-type' => 'application/json',
+                    //     'lean-app-token' => env("LEAN_APP_TOKEN"),
+                    // ],
+                    // ]);
+                    
+
+                    // $contents=json_decode($response->getBody(), true); 
+                    // echo $contents['customer_id'];
+                    
                     $data=array('status'=>true,'msg'=>'Bank details added successfully');
                 } else {
                     $data=array('status'=>false,'msg'=>'Something went wrong');
@@ -1095,6 +1113,7 @@ class App_controller extends Controller
         echo json_encode($data);
     }
 
+    
     public function get_notifications(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found','notifications'=>array());
