@@ -35,7 +35,7 @@
                                                         </div>
                                                         <div class="count-data">
                                                             <h4 class="count">{{ !empty($users) ? count($users)  : 0 }}</h4>
-                                                            <p class="count-title">Total Registred Users</p>
+                                                            <p class="count-title">Registred Users</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -47,7 +47,7 @@
                                                         </div>
                                                         <div class="count-data">
                                                             <h4 class="count">{{ !empty($shops) ? count($shops)  : 0 }}</h4>
-                                                            <p class="count-title">Total Registred Shops</p>
+                                                            <p class="count-title">Registred Shops</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -59,7 +59,7 @@
                                                         </div>
                                                         <div class="count-data">
                                                             <h4 class="count">AED {{ $recieved_from_parent[0]['parent_pays'] }} </h4>
-                                                            <p class="count-title">Total Amount Received from
+                                                            <p class="count-title">Amount Received from
                                                                 Parent</p>
                                                         </div>
                                                     </div>
@@ -72,8 +72,7 @@
                                                         </div>
                                                         <div class="count-data">
                                                             <h4 class="count">AED {{ $paid_to_shop[0]['shops_earn'] }} </h4>
-                                                            <p class="count-title">Total Amount Paid To
-                                                                Shops</p>
+                                                            <p class="count-title">Amount Paid To Shops</p>
                                                         </div>
                                                     </div>
                                                 </div>

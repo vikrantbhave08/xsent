@@ -1044,12 +1044,17 @@ class App_controller extends Controller
         $data=array('status'=>false,'msg'=>'Data not found');
 
         $logged_user=Auth::mobile_app_user($request['token']);
-       
+              
         $rules = [
             'account_no' => 'required',
-            'bank_name' => 'required',
+            'display_name' => 'required',
             'acc_holder_name' => 'required',
             'iban_no' => 'required',
+            'bank_identifier'=>'required',
+            'swift_code'=>'required',
+            'country'=>'required',
+            'city'=>'required',
+            'person_address'=>'required',
         ];    
         $customMessages = [
             'required' => 'The :attribute field is required.'
@@ -1068,8 +1073,11 @@ class App_controller extends Controller
 
         } else {
 
-            $bank_details=$request->all();
-            unset($bank_details['token']);
+            // $bank_details=$request->all();
+            // unset($bank_details['token']);
+
+            // echo $logged_user['user_id'];
+            // exit;
                
             $is_details=Bank_details_model::where('user_id',$logged_user['user_id'])->first();
             if(empty($is_details))
@@ -1083,21 +1091,56 @@ class App_controller extends Controller
                 {
 
                     require_once('vendor/autoload.php');
-
-                    // $client = new \GuzzleHttp\Client();
-
-                    // $response = $client->request('POST', 'https://sandbox.leantech.me/customers/v1/', [
-                    // 'body' => '{"app_user_id":"'.$request['app_user_id'].'"}',
-                    // 'headers' => [
-                    //     'accept' => 'application/json',
-                    //     'content-type' => 'application/json',
-                    //     'lean-app-token' => env("LEAN_APP_TOKEN"),
-                    // ],
-                    // ]);
+                    $client = new \GuzzleHttp\Client();
+                    $response = $client->request('POST', 'https://sandbox.leantech.me/customers/v1/', [
+                    'body' => '{"app_user_id":"'.$logged_user['email'].'"}',
+                    // 'body' => '{"app_user_id":"'.$request['email'].'"}',
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'content-type' => 'application/json',
+                        'lean-app-token' => env("LEAN_APP_TOKEN"),
+                    ],
+                    ]);
                     
 
-                    // $contents=json_decode($response->getBody(), true); 
-                    // echo $contents['customer_id'];
+                    $contents=json_decode($response->getBody(), true);                    
+
+                    if(!empty($contents['customer_id']))
+                    {
+                        Bank_details_model::where('bank_detail_id', $add_bank)
+                                            ->update([
+                                                'customer_id' => $contents['customer_id']
+                                                ]);
+
+                                                $response = $client->request('POST', 'https://sandbox.leantech.me/payments/v1/destinations/', [
+                                                    'body' => '{"iban":"'.$request['iban_no'].'",
+                                                                "name":"'.$request['acc_holder_name'].'",
+                                                                "bank_identifier":"'.$request['bank_identifier'].'",
+                                                                "swift_code":"'.$request['swift_code'].'",
+                                                                "country":"'.$request['country'].'",
+                                                                "city":"'.$request['city'].'",
+                                                                "address":"'.$request['person_address'].'",
+                                                                "display_name":"'.$request['display_name'].'",
+                                                                "customer_id":"'.$contents['customer_id'].'",
+                                                                "account_number":"'.$request['account_no'].'"}',
+                                                                'headers' => [
+                                                                    'accept' => 'application/json',
+                                                                    'content-type' => 'application/json',
+                                                                    'lean-app-token' => env("LEAN_APP_TOKEN"),
+                                                                ],
+                                                    ]);
+                
+                        $contents=json_decode($response->getBody(), true); 
+                        
+                        if(!empty($contents['id']))
+                        {
+                            Bank_details_model::where('bank_detail_id', $add_bank)
+                                                ->update([
+                                                    'payment_destination_id' => $contents['id']
+                                                    ]);
+                        }
+                    }
+
                     
                     $data=array('status'=>true,'msg'=>'Bank details added successfully');
                 } else {
@@ -1114,6 +1157,53 @@ class App_controller extends Controller
     }
 
     
+    public function create_destination(Request $request)
+    {                
+        require_once('vendor/autoload.php');
+
+        $client = new \GuzzleHttp\Client();
+
+        $response = $client->request('POST', 'https://sandbox.leantech.me/customers/v1/', [
+            'body' => '{"app_user_id":"'.$request['email'].'"}',
+            'headers' => [
+                'accept' => 'application/json',
+                'content-type' => 'application/json',
+                'lean-app-token' => env("LEAN_APP_TOKEN"),
+            ],
+            ]);
+            
+
+            $contents=json_decode($response->getBody(), true);  
+            echo $contents['customer_id']."<br>";
+       
+        $response = $client->request('POST', 'https://sandbox.leantech.me/payments/v1/destinations/', [
+                                    'body' => '{"iban":"'.$request['iban_no'].'",
+                                                "name":"'.$request['acc_holder_name'].'",
+                                                "bank_identifier":"'.$request['bank_identifier'].'",
+                                                "swift_code":"'.$request['swift_code'].'",
+                                                "country":"'.$request['country'].'",
+                                                "city":"'.$request['city'].'",
+                                                "address":"'.$request['person_address'].'",
+                                                "display_name":"'.$request['acc_holder_name'].'",
+                                                "account_number":"'.$request['account_no'].'"}',
+                                                'headers' => [
+                                                    'accept' => 'application/json',
+                                                    'content-type' => 'application/json',
+                                                    'lean-app-token' => env("LEAN_APP_TOKEN"),
+                                                ],
+                                    ]);
+
+        $contents=json_decode($response->getBody(), true); 
+
+        // if(!empty($contents['id']))
+        // {
+        //     Bank_details_model::where('bank_detail_id', 4)
+        //                         ->update([
+        //                             'payment_destination_id' => $contents['id']
+        //                             ]);
+        // }       
+    }
+
     public function get_notifications(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found','notifications'=>array());

@@ -43,31 +43,31 @@
                                             aria-labelledby="nav-shop-tab">
                                             <div class="content-wrapper">
                                                 <div class="row">
-                                                    <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">User Id :</li>
                                                             <li class="list-inline-item data-label"> 541023</li>
                                                         </ul>
                                                     </div> -->
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">User Name :</li>
                                                             <li class="list-inline-item data-label">{{ !empty($shop_user_details) ? $shop_user_details['first_name']." ".$shop_user_details['last_name']  : "" }}</li>
                                                         </ul>
                                                     </div>
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Registered As:</li>
                                                             <li class="list-inline-item data-label"> {{ !empty($shop_user_details) ? ( $shop_user_details['user_role']==2 || $shop_user_details['user_role']==3  ? "Shop"  : $shop_user_details['role_name'] ) : ""  }}  </li>
                                                         </ul>
                                                     </div>
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Wallet Balance:</li>
                                                             <li class="list-inline-item data-label">AED {{ !empty($shop_user_details) ? $shop_user_details['wallet_balance']  : "0" }}</li>
                                                         </ul>
                                                     </div>
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Status:</li>
                                                             <li class="list-inline-item data-label"><button
@@ -99,7 +99,7 @@
                                                         <h4 class="page-title">Transaction History</h4>
                                                     </div>
 
-                                                    <!-- <div class="col-sm-2 ms-auto">
+                                                    <!-- <div class="col-sm-3 ms-auto">
                                                         <div class="calender-view">
                                                             <input type=" text" class="form-control calender"
                                                                 id="date_from" placeholder="Select date">
@@ -165,31 +165,31 @@
                                             aria-labelledby="nav-parent-tab">
                                             <div class="content-wrapper">
                                                 <div class="row">
-                                                    <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">User Id :</li>
                                                             <li class="list-inline-item data-label"> 541023</li>
                                                         </ul>
                                                     </div> -->
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">User Name :</li>
                                                             <li class="list-inline-item data-label">{{ !empty($parent_user_details) ? $parent_user_details['first_name']." ".$parent_user_details['last_name']  : "" }}</li>
                                                         </ul>
                                                     </div>
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Registered As:</li>
                                                             <li class="list-inline-item data-label">{{ !empty($parent_user_details) ? ( $parent_user_details['user_role']==2 || $parent_user_details['user_role']==3  ? "Parent"  : $parent_user_details['role_name'] ) : ""  }}</li>
                                                         </ul>
                                                     </div>
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Wallet Balance:</li>
                                                             <li class="list-inline-item data-label"> AED {{ !empty($parent_user_details) ? $parent_user_details['wallet_balance']  : "0" }}</li>
                                                         </ul>
                                                     </div>
-                                                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                         <ul class="list-inline">
                                                             <li class="list-inline-item form-label">Status:</li>
                                                             <li class="list-inline-item data-label"><button
@@ -221,7 +221,7 @@
                                                         <h4 class="page-title">Transaction History</h4>
                                                     </div>
 
-                                                    <!-- <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
+                                                    <!-- <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 ms-auto">
                                                         <div class="calender-view">
                                                             <input type=" text" class="form-control calender"
                                                                 id="date_from" placeholder="Select date">
