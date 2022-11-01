@@ -1115,7 +1115,7 @@ class App_controller extends Controller
                                                 'customer_id' => $contents['customer_id']
                                                 ]);
 
-                              
+                                                $dest_exc=false;
 
                                     try {
 
@@ -1146,6 +1146,8 @@ class App_controller extends Controller
                                                                         'payment_destination_id' => $contents['id']
                                                                         ]);
                                             }
+
+                                            $dest_exc=true;
                                             
                                         // Here the code for successful request
                                     
@@ -1157,6 +1159,7 @@ class App_controller extends Controller
                                         if ($e->hasResponse()){
                                             if ($e->getResponse()->getStatusCode() == '400') {
                                                     // echo "Got response 400";
+                                                    $dest_exc=false;
                                                     $data=array('status'=>false,'msg'=>'Invalid Bank Details');
                                             }
                                         }
@@ -1168,20 +1171,21 @@ class App_controller extends Controller
                                         // There was another exception.
                                     
                                     }
-
-                               
-
                                                                                                           
                         
                     }
-
                     
-                    $data=array('status'=>true,'msg'=>'Bank details added successfully');
+                    if($dest_exc)
+                    {
+                        $data=array('status'=>true,'msg'=>'Bank details added successfully');
+                    }
+
                 } else {
                     $data=array('status'=>false,'msg'=>'Something went wrong');
                 }
             } else {
-                $data=array('status'=>false,'msg'=>'Bank details already added');
+                $data=$this->update_bank_details($request->all());
+                // $data=array('status'=>false,'msg'=>'Bank details already added');
             }
             
         } 
@@ -1191,6 +1195,109 @@ class App_controller extends Controller
     }
 
     
+    public function update_bank_details($request)
+    {
+        $logged_user=Auth::mobile_app_user($request['token']);
+        $is_details=Bank_details_model::where('user_id',$logged_user['user_id'])->first()->toArray();
+      
+
+        require_once('vendor/autoload.php');
+        $client = new \GuzzleHttp\Client();
+
+        
+            $response = $client->request('POST', 'https://sandbox.leantech.me/customers/v1/', [
+                'body' => '{"app_user_id":"'.$logged_user['email'].date('YmdHis').'"}',
+                // 'body' => '{"app_user_id":"'.$request['email'].'"}',
+                'headers' => [
+                    'accept' => 'application/json',
+                    'content-type' => 'application/json',
+                    'lean-app-token' => env("LEAN_APP_TOKEN"),
+                ],
+                ]);
+                
+        
+                $contents=json_decode($response->getBody(), true);                    
+        
+                if(!empty($contents['customer_id']))
+                {
+                    Bank_details_model::where('bank_detail_id', $is_details['bank_detail_id'])
+                                        ->update([
+                                            'customer_id' => $contents['customer_id']
+                                            ]);
+
+                    $is_details['customer_id']=$contents['customer_id'];
+                }
+
+        
+
+        $dest_exc=false;
+
+                        try {
+
+                             $response = $client->request('POST', 'https://sandbox.leantech.me/payments/v1/destinations/', [
+                                        'body' => '{"iban":"'.$request['iban_no'].'",
+                                                    "name":"'.$request['acc_holder_name'].'",
+                                                    "bank_identifier":"'.$request['bank_identifier'].'",
+                                                    "swift_code":"'.$request['swift_code'].'",
+                                                    "country":"'.$request['country'].'",
+                                                    "city":"'.$request['city'].'",
+                                                    "address":"'.$request['person_address'].'",
+                                                    "display_name":"'.$request['display_name'].'",
+                                                    "customer_id":"'.$is_details['customer_id'].'",
+                                                    "account_number":"'.$request['account_no'].'"}',
+                                                    'headers' => [
+                                                        'accept' => 'application/json',
+                                                        'content-type' => 'application/json',
+                                                        'lean-app-token' => env("LEAN_APP_TOKEN"),
+                                                    ],
+                                        ]);
+
+                                $contents=json_decode($response->getBody(), true); 
+            
+                                if(!empty($contents['id']))
+                                {
+                                    Bank_details_model::where('bank_detail_id', $is_details['bank_detail_id'])
+                                                        ->update([
+                                                            'payment_destination_id' => $contents['id']
+                                                            ]);
+                                }
+
+                                $dest_exc=true;
+                                
+                            // Here the code for successful request
+                        
+                        } catch (RequestException $e) {
+                        
+                            // Catch all 4XX errors                             
+                            // To catch exactly error 400 use 
+                            if ($e->hasResponse()){
+                                if ($e->getResponse()->getStatusCode() == '400') {
+                                        // echo "Got response 400";
+
+                                        $dest_exc=false;
+                                        $data=array('status'=>false,'msg'=>'Invalid Bank Details');
+                                }
+                            }
+                        
+                            // You can check for whatever error status code you need 
+                            
+                        } catch (\Exception $e) {
+                        
+                            // There was another exception.
+                        
+                        }
+
+                        if($dest_exc)
+                        {
+                            $data=array('status'=>true,'msg'=>'Bank details added successfully');
+                        }
+
+
+        return $data;                                                                                              
+            
+        
+    }
+
     public function create_destination(Request $request)
     {                
         require_once('vendor/autoload.php');

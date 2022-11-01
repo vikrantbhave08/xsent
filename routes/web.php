@@ -44,6 +44,7 @@ Route::get('admin/complaint-details', [Complaints_controller::class, 'complaint_
 Route::get('admin/requests', [Requests_controller::class, 'index']);
 Route::post('admin/get-payment-details', [Requests_controller::class, 'get_payment_details']);
 Route::post('admin/add-payment', [Requests_controller::class, 'add_payment']);
+Route::post('/admin/add-payment-intent', [Requests_controller::class, 'add_payment_intent']);
 Route::get('admin/getall-transactions', [Requests_controller::class, 'getall_transactions']);
 
 Route::get('admin/register-users', [Users_controller::class, 'index']);

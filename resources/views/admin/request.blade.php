@@ -347,7 +347,7 @@
             });
         });
 
-        var req_lean='';
+        var request_details='';
 
         function get_payment_details(request_id)
         {
@@ -368,29 +368,35 @@
                         // console.log(res);
 
                         if (res.status) {
-                            
-                            req_lean=res;
-                            // paysource(res);
 
+
+                            // const options = {
+                            // method: 'GET',
+                            // headers: {
+                            //     accept: 'application/json',
+                            //     'lean-app-token': 'c69c9d1f-f7b4-45e4-a349-bb2591652e62'
+                            // }
+                            // };
+
+                            // fetch('https://sandbox.leantech.me/payments/v1/intents/fdbe378c-c89c-4dcd-a910-09a6090326dc/', options)
+                            // .then(response => response.json())
+                            // .then(response => console.log(response))
+                            // .catch(err => console.error(err));
+                            
+                            request_details=res;
+                                
                             const options = {
                                 method: 'GET',
                                 headers: {
                                     accept: 'application/json',
-                                    'lean-app-token': req_lean.lean_app_token
+                                    'lean-app-token': res.lean_app_token
                                 }
                                 };
 
-                                paysource_resp=fetch('https://sandbox.leantech.me/customers/v1/'+req_lean.pay_details.customer_id+'/payment-sources/', options)
-                                .then(response => {
-                                    response.json();
-                                })
-                                .then(response => console.log(response))
-                                .catch(err => {
-                                    console.error(err);
-                                });
-
-                                                               
-                                
+                                paysource_resp=fetch('https://sandbox.leantech.me/customers/v1/'+res.pay_details.customer_id+'/payment-sources/', options)
+                                .then(response => response.json())
+                                .then(response => paysource(response))
+                                .catch(err => console.error(err));
 
 
                                 // var res= res.pay_details;
@@ -421,69 +427,7 @@
                 });
 
         }
-
-
-        $("#payment_form").validate({
-            rules: {                
-                // bank_name: {
-                //     required: true
-                // },
-                txn_id: {
-                    required: true
-                },
-
-            },
-            messages: {
-                           
-                // bank_name: {
-                //     required: "Enter Bank Name"
-                // },
-                txn_id: {
-                    required: "Enter Transaction Id"
-                },
-            },          
-            submitHandler: function (form, message) {
-                payintent();             
-                //     redUrl = "{{url('/admin/add-payment')}}";             
-
-                // $.ajax({
-                //     url: redUrl,
-                //     type: 'post',
-                //     data: new FormData(form),
-                //     dataType: 'json',
-                //     contentType: false, // The content type used when sending data to the server.
-                //     cache: false, // To unable request pages to be cached
-                //     processData: false, // To send DOMDocument or non processed data file it is set to false
-                //     success: function (res) {
-
-                //         if (res.status) {
-
-                //             $(".payment-err").css("color", "green");
-                //             $(".payment-err").html(res.msg);
-                //             setTimeout(function () {
-                //               location.reload();
-                //             }, 2000);
-
-                //         } else {                           
-                //             $(".payment-err").css("color", "red");
-                //             $(".payment-err").html(res.msg);
-                //             setTimeout(function () {
-                //                 // location.reload();
-                //             }, 3000);
-                //         }
-
-
-                //     },
-                //     error: function (xhr) {
-                //         console.log(xhr);
-                //     }
-                // });
-
-            }
-        }); 
-
-
-        
+       
         // Lean.connect({
         //     app_token: "2c9a80897169b1dd01716a0339e30003",
         //     permissions: ["identity", "accounts", "transactions", "balance", "payments"],
@@ -493,53 +437,96 @@
         //     });
      
         function paysource(req_lean) {
-                               
-                Lean.connect({
-                    app_token: req_lean.lean_app_token,
-                    permissions: ["identity","accounts","balance","transactions","payments"],
-                    customer_id: req_lean.pay_details.customer_id,
-                    payment_destination_id: req_lean.pay_details.payment_destination_id,
-                    callback: payintent,
-                    sandbox: "true"
-            })
+
+            console.log("req_lean");
+            console.log(req_lean);
+ 
+                    if (typeof req_lean !== 'undefined' && req_lean.length > 0) {
+                                        console.log("pay source created"+req_lean);
+                                        request_details.status="SUCCESS";
+                                        payintent(request_details);
+                                        // the array is defined and has at least one element
+                      } else {
+
+                                   console.log("not created pay source"+request_details);
+                                   console.log(request_details);
+
+                                   Lean.connect({ 
+                                            app_token: request_details.lean_app_token,
+                                            permissions: ["identity","accounts","balance","transactions","payments"],
+                                            customer_id: request_details.pay_details.customer_id,
+                                            payment_destination_id: request_details.pay_details.payment_destination_id,
+                                            callback: payintent,
+                                            sandbox: "true"
+                                    })
+                             
+                             }           
         }
 
         
-        function payintent(req_lean) {
+        function payintent(lean_req) {
 
-            console.log(req_lean.pay_details.customer_id);
+            console.log("create pay intent");
+            console.log(request_details);
 
-                            var settings = {
+            if(request_details.status=="SUCCESS" || lean_req.status=="SUCCESS")
+            {
+              
+                var settings = {
                 "url": "https://sandbox.leantech.me/payments/v1/intents",
                 "method": "POST",
                 "timeout": 0,
                 "headers": {
                     "Content-Type": "application/json",
-                    "lean-app-token": req_lean.lean_app_token,
+                    "lean-app-token": request_details.lean_app_token,
                     "Cookie": "JSESSIONID=8D5A996420A62F34AABEC8219E8F5969"
                 },
                 "data": JSON.stringify({
-                    "amount": req_lean.pay_details.request_amount,
+                    // "amount": request_details.pay_details.request_amount,
+                    "amount": 10,
                     "currency": "AED",
-                    "payment_destination_id": req_lean.pay_details.payment_destination_id,
-                    "customer_id": req_lean.pay_details.customer_id
+                    "payment_destination_id": request_details.pay_details.payment_destination_id,
+                    "customer_id": request_details.pay_details.customer_id
                 }),
                 };
 
                 $.ajax(settings).done(function (response) {
-                    console.log(response);
-                    paylean(response);
+                   
+                    response._token="{{ csrf_token() }}"; 
+                    response.amt_request_id=request_details.pay_details.amt_request_id; 
+                    response.bank_detail_id=request_details.pay_details.bank_detail_id;
+                   
+                    $.ajax({
+                    url: "{{url('/admin/add-payment-intent')}}" ,
+                    type: 'post',
+                    data: response,
+                    dataType: 'json',
+                    success: function (res) {
+
+                        if(res.status)
+                        {
+                            console.log(response);
+                            paylean(response);
+                        } else {
+                            alert("Payment intent not added");
+                        }
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
                 });
-          
+                   
+                });
+
+            }
           
         }
-        // payintent();
 
         function paylean(responseObject) {
-            console.log(responseObject);
+            console.log("paylean "+responseObject);
             // insert actions you want to perform on SDK close
             Lean.pay({
-                app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+                app_token: request_details.lean_app_token,
                 payment_intent_id: responseObject.payment_intent_id,
                 // payment_intent_id: "cf1fadb1-6c94-4a25-b3ba-2c8e12b2ba42",
                 sandbox: "true",
@@ -548,9 +535,48 @@
         }
         
         function paymentresponse(responseObject) {
+                console.log("responseObject");
+                console.log(responseObject);
 
-            console.log("responseObject");
-            console.log(responseObject);
+                 redUrl = "{{url('/admin/add-payment')}}";                  
+            
+                responseObject._token="{{ csrf_token() }}"; 
+                responseObject.amt_request_id=request_details.pay_details.amt_request_id; 
+                responseObject.bank_detail_id=request_details.pay_details.bank_detail_id; 
+
+                $.ajax({
+                    url: redUrl,
+                    type: 'post',
+                    data: responseObject,
+                    dataType: 'json',
+                    // contentType: false, // The content type used when sending data to the server.
+                    // cache: false, // To unable request pages to be cached
+                    // processData: false, // To send DOMDocument or non processed data file it is set to false
+                    success: function (res) {
+
+                        if (res.status) {
+
+                            $(".payment-err").css("color", "green");
+                            $(".payment-err").html(res.msg);
+                            setTimeout(function () {
+                              location.reload();
+                            }, 2000);
+
+                        } else { 
+
+                            $(".payment-err").css("color", "red");
+                            $(".payment-err").html(res.msg);
+                            setTimeout(function () {
+                                // location.reload();
+                            }, 3000);
+                        }
+
+
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
+                });
         }
 
 

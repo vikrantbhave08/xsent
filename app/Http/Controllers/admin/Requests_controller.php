@@ -19,6 +19,7 @@ use App\Models\Shops_model;
 use App\Models\Shopkeepers_model;
 use App\Models\Amount_requests_model;
 use App\Models\Payment_history_model;
+use App\Models\Notifications_model;
 
 class Requests_controller extends Controller
 {
@@ -53,12 +54,41 @@ class Requests_controller extends Controller
         return view('admin/request',$result);
     }
 
+    public function add_payment_intent(Request $request)
+    {  
+        $result=array('status'=>false,'msg'=>'Data not found');
+
+
+        if($request['amt_request_id'] && $request['payment_intent_id'])
+        {
+            $users_request=Amount_requests_model::where('amount_requests.amt_request_id',$request['amt_request_id'])
+                            ->where('amount_requests.status',0)
+                            ->first();
+
+            if(!empty($users_request))
+            {
+                $users_request->payment_intent=$request['payment_intent_id'];
+                $updated=$users_request->save();
+
+                if($updated)
+                {
+                    $result=array('status'=>true,'msg'=>'Payment intent added');
+                } else {
+                    $result=array('status'=>false,'msg'=>'Something went wrong');
+                }
+            }
+        }
+
+        echo json_encode($result);
+    }
+
+
     public function add_payment(Request $request)
     {  
         $result=array('status'=>false,'msg'=>'Data not found');
 
         $rules = [           
-            'txn_id' => 'required',
+            // 'txn_id' => 'required',
             'bank_detail_id' => 'required',
             'amt_request_id' => 'required',
         ];    
@@ -79,7 +109,9 @@ class Requests_controller extends Controller
             $result['errors']=$errors;           
 
         } else {
-           
+
+            if($request['status']=='SUCCESS' && $request['secondary_status']=='ACCEPTED_BY_BANK')
+           {
             $users_request=Amount_requests_model::where('amount_requests.amt_request_id',$request['amt_request_id'])
                                                     ->where('amount_requests.status',0)
                                                     ->first();
@@ -87,6 +119,7 @@ class Requests_controller extends Controller
                                                
             if(!empty($users_request))
             {              
+                $request['txn_id']="txn".md5(date('smdHyi').'1'.mt_rand(1111,9999));
                 $check_transaction=Payment_history_model::where('pay_txn_id',$request['txn_id'])->first();
 
                 if(empty($check_transaction))
@@ -164,6 +197,10 @@ class Requests_controller extends Controller
             } else {
                  $result=array('status'=>false,'msg'=>'Payment already done');
             }
+        } else {
+             $result=array('status'=>false,'msg'=>'Payment not done');
+        }
+
         }
 
         return $result;
