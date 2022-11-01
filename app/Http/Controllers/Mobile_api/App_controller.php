@@ -13,6 +13,9 @@ use Validator;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Mobile_api\Login_controller;
+use Guzzle\Http\Exception\ClientErrorResponseException;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\RequestException;
 
 use App\Models\User_model;
 use App\Models\Auth_users;
@@ -1093,7 +1096,7 @@ class App_controller extends Controller
                     require_once('vendor/autoload.php');
                     $client = new \GuzzleHttp\Client();
                     $response = $client->request('POST', 'https://sandbox.leantech.me/customers/v1/', [
-                    'body' => '{"app_user_id":"'.$logged_user['email'].'"}',
+                    'body' => '{"app_user_id":"'.$logged_user['email'].date('YmdHis').'"}',
                     // 'body' => '{"app_user_id":"'.$request['email'].'"}',
                     'headers' => [
                         'accept' => 'application/json',
@@ -1112,7 +1115,11 @@ class App_controller extends Controller
                                                 'customer_id' => $contents['customer_id']
                                                 ]);
 
-                                                $response = $client->request('POST', 'https://sandbox.leantech.me/payments/v1/destinations/', [
+                              
+
+                                    try {
+
+                                         $response = $client->request('POST', 'https://sandbox.leantech.me/payments/v1/destinations/', [
                                                     'body' => '{"iban":"'.$request['iban_no'].'",
                                                                 "name":"'.$request['acc_holder_name'].'",
                                                                 "bank_identifier":"'.$request['bank_identifier'].'",
@@ -1129,16 +1136,43 @@ class App_controller extends Controller
                                                                     'lean-app-token' => env("LEAN_APP_TOKEN"),
                                                                 ],
                                                     ]);
-                
-                        $contents=json_decode($response->getBody(), true); 
+
+                                            $contents=json_decode($response->getBody(), true); 
                         
-                        if(!empty($contents['id']))
-                        {
-                            Bank_details_model::where('bank_detail_id', $add_bank)
-                                                ->update([
-                                                    'payment_destination_id' => $contents['id']
-                                                    ]);
-                        }
+                                            if(!empty($contents['id']))
+                                            {
+                                                Bank_details_model::where('bank_detail_id', $add_bank)
+                                                                    ->update([
+                                                                        'payment_destination_id' => $contents['id']
+                                                                        ]);
+                                            }
+                                            
+                                        // Here the code for successful request
+                                    
+                                    } catch (RequestException $e) {
+                                    
+                                        // Catch all 4XX errors 
+                                        
+                                        // To catch exactly error 400 use 
+                                        if ($e->hasResponse()){
+                                            if ($e->getResponse()->getStatusCode() == '400') {
+                                                    // echo "Got response 400";
+                                                    $data=array('status'=>false,'msg'=>'Invalid Bank Details');
+                                            }
+                                        }
+                                    
+                                        // You can check for whatever error status code you need 
+                                        
+                                    } catch (\Exception $e) {
+                                    
+                                        // There was another exception.
+                                    
+                                    }
+
+                               
+
+                                                                                                          
+                        
                     }
 
                     
