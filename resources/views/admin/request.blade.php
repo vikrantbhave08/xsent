@@ -71,10 +71,11 @@
                                                             <td>
                                                             @if($val['status']==0)
 
-                                                                <button class="btn btn-sm table-btn"
+                                                                <button class="btn btn-sm table-btn" onclick="get_payment_details({{$val['amt_request_id']}})">Pay</button>
+                                                                <!-- <button class="btn btn-sm table-btn"
                                                                     onclick="get_payment_details({{$val['amt_request_id']}})"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#transfer_money">Pay</button>
+                                                                    data-bs-target="#transfer_money">Pay</button> -->
 
                                                             @else
                                                             
@@ -83,7 +84,7 @@
                                                             @endif
 
                                                                 </td>
-                                                            <!-- <td><button onclick="get_payment_details({{$val['amt_request_id']}})" class="btn btn-sm table-btn">Pay</button></td> -->
+                                                           
                                                         </tr>
                                                         @endforeach
                                                         <!-- <tr>
@@ -346,6 +347,8 @@
             });
         });
 
+        var req_lean='';
+
         function get_payment_details(request_id)
         {
             $('.payment-err, .error').html("");
@@ -362,27 +365,51 @@
                     // processData: false, // To send DOMDocument or non processed data file it is set to false .while using formdata
                     success: function (res) {
 
-                        console.log(res);
+                        // console.log(res);
 
                         if (res.status) {
+                            
+                            req_lean=res;
+                            // paysource(res);
 
-                                var res= res.pay_details;
-
-                                if(res.bank_detail_id==null)
-                                {
-                                    $(".payment-err").css("color", "red");
-                                    $(".payment-err").html("Bank details not added.");
+                            const options = {
+                                method: 'GET',
+                                headers: {
+                                    accept: 'application/json',
+                                    'lean-app-token': req_lean.lean_app_token
                                 }
+                                };
 
-                                $(".req_from").html(res.first_name+" "+res.last_name);
-                                $(".user_type").html(res.role_name);
-                                $(".req_amt").html("AED "+res.request_amount);
-                                $(".wallet_balance").html("AED "+res.balance);
-                                $(".bank_name").html(res.bank_name);
-                                $(".account_no").html(res.account_no);
-                                $(".iban_no").html(res.iban_no);
-                                $("#amt_request_id").val(res.amt_request_id);
-                                $("#bank_detail_id").val(res.bank_detail_id);  
+                                paysource_resp=fetch('https://sandbox.leantech.me/customers/v1/'+req_lean.pay_details.customer_id+'/payment-sources/', options)
+                                .then(response => {
+                                    response.json();
+                                })
+                                .then(response => console.log(response))
+                                .catch(err => {
+                                    console.error(err);
+                                });
+
+                                                               
+                                
+
+
+                                // var res= res.pay_details;
+
+                                // if(res.bank_detail_id==null)
+                                // {
+                                //     $(".payment-err").css("color", "red");
+                                //     $(".payment-err").html("Bank details not added.");
+                                // }
+
+                                // $(".req_from").html(res.first_name+" "+res.last_name);
+                                // $(".user_type").html(res.role_name);
+                                // $(".req_amt").html("AED "+res.request_amount);
+                                // $(".wallet_balance").html("AED "+res.balance);
+                                // $(".bank_name").html(res.bank_name);
+                                // $(".account_no").html(res.account_no);
+                                // $(".iban_no").html(res.iban_no);
+                                // $("#amt_request_id").val(res.amt_request_id);
+                                // $("#bank_detail_id").val(res.bank_detail_id);  
                                 
                             }
 
@@ -416,9 +443,7 @@
                 },
             },          
             submitHandler: function (form, message) {
-
-                payintent();
-             
+                payintent();             
                 //     redUrl = "{{url('/admin/add-payment')}}";             
 
                 // $.ajax({
@@ -467,29 +492,22 @@
         //     sandbox: "true",
         //     });
      
-        function paysource() {
-                // Lean.createPaymentSource({ 
-                // customer_id: "6bfffc0a-d6d3-4de4-84f7-0aa21153a41c",
-                // app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
-                // sandbox: "true",
-                // callback: payintent,
-                // })
-                
+        function paysource(req_lean) {
+                               
                 Lean.connect({
-                    app_token: "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+                    app_token: req_lean.lean_app_token,
                     permissions: ["identity","accounts","balance","transactions","payments"],
-                    customer_id: "6bfffc0a-d6d3-4de4-84f7-0aa21153a41c",
-                    payment_destination_id: "c2beaf65-c746-45fe-8d81-160ed16053a3",
+                    customer_id: req_lean.pay_details.customer_id,
+                    payment_destination_id: req_lean.pay_details.payment_destination_id,
                     callback: payintent,
                     sandbox: "true"
             })
         }
 
-        // paysource();
+        
+        function payintent(req_lean) {
 
-        function payintent() {
-
-            console.log("requested");
+            console.log(req_lean.pay_details.customer_id);
 
                             var settings = {
                 "url": "https://sandbox.leantech.me/payments/v1/intents",
@@ -497,14 +515,14 @@
                 "timeout": 0,
                 "headers": {
                     "Content-Type": "application/json",
-                    "lean-app-token": "c69c9d1f-f7b4-45e4-a349-bb2591652e62",
+                    "lean-app-token": req_lean.lean_app_token,
                     "Cookie": "JSESSIONID=8D5A996420A62F34AABEC8219E8F5969"
                 },
                 "data": JSON.stringify({
-                    "amount": 10,
+                    "amount": req_lean.pay_details.request_amount,
                     "currency": "AED",
-                    "payment_destination_id": "c2beaf65-c746-45fe-8d81-160ed16053a3",
-                    "customer_id": "6bfffc0a-d6d3-4de4-84f7-0aa21153a41c"
+                    "payment_destination_id": req_lean.pay_details.payment_destination_id,
+                    "customer_id": req_lean.pay_details.customer_id
                 }),
                 };
 
@@ -513,23 +531,7 @@
                     paylean(response);
                 });
           
-            // const options = {
-            //     method: 'POST',
-            //     headers: {
-            //         'accept': 'application/json',
-            //         'content-type': 'application/json',
-            //         'lean-app-token': 'c69c9d1f-f7b4-45e4-a349-bb2591652e62'
-            //     },
-            //     body: JSON.stringify({customer_id: '6bfffc0a-d6d3-4de4-84f7-0aa21153a41c',
-            //                         amount: 120, currency: 'AED',
-            //                         payment_destination_id: "266733cc-6f46-4e87-af7e-9bb46b99601d",
-            //                         })
-            //     };
-
-            //     fetch('https://sandbox.leantech.me/payments/v1/intents/', options)
-            //     .then(response => response.json())
-            //     .then(response => console.log(response))
-            //     .catch(err => console.error(err));
+          
         }
         // payintent();
 

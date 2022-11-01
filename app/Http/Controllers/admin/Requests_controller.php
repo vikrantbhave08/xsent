@@ -178,7 +178,8 @@ class Requests_controller extends Controller
             $payment_details=array();
             // $result['requests']=Amount_requests_model::select('*')->get()->toArray();
             $payment_details=Amount_requests_model::select('users.first_name','user_roles.role_name','users.last_name','bank_details.account_no','bank_details.bank_name','bank_details.iban_no',
-                                                            'amount_requests.*','shops.shop_name','wallet.balance','bank_details.bank_detail_id','bank_details.bank_detail_id')
+                                                            'amount_requests.*','shops.shop_name','wallet.balance','bank_details.bank_detail_id',
+                                                            'bank_details.customer_id','bank_details.payment_destination_id')
                                                             ->leftjoin('users', 'amount_requests.by_user', '=', 'users.user_id') 
                                                             ->leftjoin('wallet', 'users.user_id', '=', 'wallet.user_id') 
                                                             ->leftjoin('shops', 'amount_requests.by_user', '=', 'shops.owner_id') 
@@ -187,8 +188,10 @@ class Requests_controller extends Controller
                                                             ->where('amount_requests.amt_request_id',$request['request_id'])         
                                                             ->first();
                                                             
-                                                            $result=array('status'=>true,'msg'=>'Data found','pay_details'=>!empty($payment_details) ? $payment_details->toArray() : array() );
-                                                        }
+            $result=array('status'=>true,'msg'=>'Data found','pay_details'=>!empty($payment_details) ? $payment_details->toArray() : array() );
+
+            $result['lean_app_token']=env("LEAN_APP_TOKEN");
+         }
                                                         
                                                         echo json_encode($result);
       }
