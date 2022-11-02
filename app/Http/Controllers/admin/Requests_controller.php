@@ -91,6 +91,8 @@ class Requests_controller extends Controller
             // 'txn_id' => 'required',
             'bank_detail_id' => 'required',
             'amt_request_id' => 'required',
+            'status' => 'required',
+            'secondary_status' => 'required',
         ];    
         $customMessages = [
             'required' => 'The :attribute field is required.'

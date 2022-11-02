@@ -369,53 +369,38 @@
 
                         if (res.status) {
 
-
-                            // const options = {
-                            // method: 'GET',
-                            // headers: {
-                            //     accept: 'application/json',
-                            //     'lean-app-token': 'c69c9d1f-f7b4-45e4-a349-bb2591652e62'
-                            // }
-                            // };
-
-                            // fetch('https://sandbox.leantech.me/payments/v1/intents/fdbe378c-c89c-4dcd-a910-09a6090326dc/', options)
-                            // .then(response => response.json())
-                            // .then(response => console.log(response))
-                            // .catch(err => console.error(err));
-                            
                             request_details=res;
-                                
-                            const options = {
-                                method: 'GET',
-                                headers: {
-                                    accept: 'application/json',
-                                    'lean-app-token': res.lean_app_token
+
+                            const options1 = {
+                            method: 'GET',
+                            headers: {
+                                accept: 'application/json',
+                                'lean-app-token': res.lean_app_token
+                            }
+                            };
+
+                            // fetch('https://sandbox.leantech.me/payments/v1/intents/ebd8250e-f002-4c25-a8cf-1a3842e64c5c/', options1)
+                            fetch('https://sandbox.leantech.me/payments/v1/intents/'+res.pay_details.payment_intent+'/', options1)
+                            .then(response => response.json())
+                            .then(response => {
+                                console.log(response)
+                                if('payments' in response)
+                                {
+                                    if(response.payments.length>0)
+                                    {                                        
+                                        alert("Already Paid");
+                                        paymentresponse({status:"SUCCESS",secondary_status:"ACCEPTED_BY_BANK"});
+                                        return false;                                        
+                                    } else {
+                                        check_paysource(res);
+                                    }
+                                } else {
+                                    check_paysource(res);
                                 }
-                                };
-
-                                paysource_resp=fetch('https://sandbox.leantech.me/customers/v1/'+res.pay_details.customer_id+'/payment-sources/', options)
-                                .then(response => response.json())
-                                .then(response => paysource(response))
-                                .catch(err => console.error(err));
-
-
-                                // var res= res.pay_details;
-
-                                // if(res.bank_detail_id==null)
-                                // {
-                                //     $(".payment-err").css("color", "red");
-                                //     $(".payment-err").html("Bank details not added.");
-                                // }
-
-                                // $(".req_from").html(res.first_name+" "+res.last_name);
-                                // $(".user_type").html(res.role_name);
-                                // $(".req_amt").html("AED "+res.request_amount);
-                                // $(".wallet_balance").html("AED "+res.balance);
-                                // $(".bank_name").html(res.bank_name);
-                                // $(".account_no").html(res.account_no);
-                                // $(".iban_no").html(res.iban_no);
-                                // $("#amt_request_id").val(res.amt_request_id);
-                                // $("#bank_detail_id").val(res.bank_detail_id);  
+                            })
+                            .catch(err => console.error(err));
+   
+                                
                                 
                             }
 
@@ -436,6 +421,23 @@
         //     sandbox: "true",
         //     });
      
+        function check_paysource(res) {
+
+            const options = {
+                                method: 'GET',
+                                headers: {
+                                    accept: 'application/json',
+                                    'lean-app-token': res.lean_app_token
+                                }
+                                };
+
+                                paysource_resp=fetch('https://sandbox.leantech.me/customers/v1/'+res.pay_details.customer_id+'/payment-sources/', options)
+                                .then(response => response.json())
+                                .then(response => paysource(response))
+                                .catch(err => console.error(err));
+
+        }
+
         function paysource(req_lean) {
 
             console.log("req_lean");
@@ -482,8 +484,8 @@
                     "Cookie": "JSESSIONID=8D5A996420A62F34AABEC8219E8F5969"
                 },
                 "data": JSON.stringify({
-                    // "amount": request_details.pay_details.request_amount,
-                    "amount": 10,
+                    "amount": request_details.pay_details.request_amount,
+                    // "amount": 10,
                     "currency": "AED",
                     "payment_destination_id": request_details.pay_details.payment_destination_id,
                     "customer_id": request_details.pay_details.customer_id
@@ -560,7 +562,7 @@
                             $(".payment-err").html(res.msg);
                             setTimeout(function () {
                               location.reload();
-                            }, 2000);
+                            }, 1000);
 
                         } else { 
 
