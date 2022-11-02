@@ -423,9 +423,8 @@
      
         function check_paysource(res) {
 
-            alert(res.pay_details.customer_id);
-
-            if(res.pay_details.customer_id!=='undefined' && res.pay_details.customer_id!="")
+         
+            if(res.pay_details.customer_id!=='undefined' && res.pay_details.customer_id!="" && res.pay_details.customer_id!==null)
             {
                 const options = {
                                 method: 'GET',
