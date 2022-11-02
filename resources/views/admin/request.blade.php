@@ -423,7 +423,9 @@
      
         function check_paysource(res) {
 
-            const options = {
+            if(res.pay_details.customer_id!=='undefined' && res.pay_details.customer_id!="")
+            {
+                const options = {
                                 method: 'GET',
                                 headers: {
                                     accept: 'application/json',
@@ -435,7 +437,10 @@
                                 .then(response => response.json())
                                 .then(response => paysource(response))
                                 .catch(err => console.error(err));
-
+            } else {
+                alert("Update beneficiery bank details");
+            }
+           
         }
 
         function paysource(req_lean) {
