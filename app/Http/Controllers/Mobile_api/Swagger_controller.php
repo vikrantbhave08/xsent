@@ -36,6 +36,8 @@ class Swagger_controller extends Controller
        
     }
 
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
        
     /**
      * @OA\Info(

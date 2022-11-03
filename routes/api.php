@@ -26,10 +26,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => ['api']], function () {
-    // Route::get('admin1', [Login_controller::class, 'index']);
-    // your routes here
+
+Route::group([
+    // 'prefix' => 'v1',
+    // 'as' => 'api.',
+    'middleware' => ['auth:api']
+], function () {
+    //lists all users
+    Route::get('allusers', [Login_controller::class, 'all_users']);   
 });
+
 Route::post('register', [Login_controller::class, 'register']);
 Route::post('login', [Login_controller::class, 'login']);
 Route::post('logout', [Login_controller::class, 'logout']);

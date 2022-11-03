@@ -1058,7 +1058,7 @@ class App_controller extends Controller
             
                                 if(!empty($contents['id']))
                                 {
-                                    $data=array('status'=>true,'msg'=>'Data found','bank_details'=>$contents);
+                                    $data=array('status'=>true,'msg'=>'Data found','bank_details'=>array($contents));
                                 }
 
                      $dest_exc=true;
