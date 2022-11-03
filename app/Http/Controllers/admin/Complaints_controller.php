@@ -43,7 +43,7 @@ class Complaints_controller extends Controller
                 $complaint->is_active=!empty($request['is_invalid']) ? 2 : 1;
                 $complaint->save();
 
-                $result=array('status'=>true,'msg'=>'Complaint added');
+                $result=array('status'=>true,'msg'=>'Added remark');
             }
         }
 
