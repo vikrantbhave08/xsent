@@ -157,7 +157,7 @@
                     <div class="modal-content">
                         <div class="modal-header gradient">
                             <h5 class="modal-title" id="payremarkLabel">Transfer Money To Bank Account</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form id="payment_form">
                             @csrf

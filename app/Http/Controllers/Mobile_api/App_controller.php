@@ -1037,7 +1037,59 @@ class App_controller extends Controller
 
         $bank_details=Bank_details_model::where('user_id',$logged_user['user_id'])->where('is_active',1)->first();
 
-        $data=!empty($bank_details) ? array('status'=>true,'msg'=>'Data found','bank_details'=>array($bank_details->toArray())) : array('status'=>false,'msg'=>'Data not found','bank_details'=>array()) ;
+        if(!empty($bank_details))
+        {
+           
+                    require_once('vendor/autoload.php');
+
+                    $client = new \GuzzleHttp\Client();
+
+                    try {
+
+                    $response = $client->request('GET', 'https://sandbox.leantech.me/payments/v1/destinations/'.$bank_details->payment_destination_id.'/', [                    
+                                                'headers' => [
+                                                    'accept' => 'application/json',
+                                                    'lean-app-token' => env("LEAN_APP_TOKEN"),
+                                                ],
+                                            ]);
+
+                 
+                                $contents=json_decode($response->getBody(), true); 
+            
+                                if(!empty($contents['id']))
+                                {
+                                    $data=array('status'=>true,'msg'=>'Data found','bank_details'=>$contents);
+                                }
+
+                     $dest_exc=true;
+
+                        } catch (RequestException $e) {
+                        
+                                            // Catch all 4XX errors                             
+                                            // To catch exactly error 400 use 
+                                            if ($e->hasResponse()){
+                                                if ($e->getResponse()->getStatusCode() == '400') {
+                                                        // echo "Got response 400";
+                
+                                                $dest_exc=false;
+                                                $data=array('status'=>false,'msg'=>'Data not found','bank_details'=>array());
+                                                
+                                                }
+                                            }
+                                        
+                                            // You can check for whatever error status code you need 
+                                            
+                      } catch (\Exception $e) {
+                                        
+                                            // There was another exception.
+                                        
+                      }
+
+                  
+
+        }
+
+       
 
         echo json_encode($data); 
     }
@@ -1755,7 +1807,6 @@ class App_controller extends Controller
     public function add_complaint(Request $request)
     {
         $data=array('status'=>false,'msg'=>'Data not found');
-
         
         $logged_user=Auth::mobile_app_user($request['token']);
         $path = public_path('images').'/complaints';
@@ -1802,7 +1853,7 @@ class App_controller extends Controller
             if(!empty($complaint))
             {
                 $data=array('status'=>true,'msg'=>'Complaint successfully sent');
-            }else {
+            } else {
                 $data=array('status'=>false,'msg'=>'Something went wrong');
             }
 

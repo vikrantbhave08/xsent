@@ -200,7 +200,7 @@
                     <div class="modal-content">
                         <div class="modal-header gradient">
                             <h5 class="modal-title" id="payremarkLabel">Remark</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form id="complaint_form">
                             @csrf
@@ -252,7 +252,7 @@
                     <div class="modal-content">
                         <div class="modal-header gradient">
                             <h5 class="modal-title" id="payremarkLabel">Complaint Image</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <!-- <form id="complaint_form"> -->
                         <div class="modal-body">
