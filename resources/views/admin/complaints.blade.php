@@ -88,6 +88,8 @@
                                                             <button class="pending-btn">Pending</button>
                                                             @elseif($complaint['is_active']==1)
                                                             <button class="resolved-btn">Resolved</button>
+                                                            @elseif($complaint['is_active']==2)
+                                                            <button class="invalid-btn">Invalid</button>
                                                             @endif
                                                             </td>
 

@@ -40,6 +40,7 @@ Route::post('admin/loginme', [Login_controller::class, 'loginme']);
 Route::get('admin/dashboard', [Dashboard_controller::class, 'index']);
 Route::get('admin/complaints', [Complaints_controller::class, 'index']);
 Route::get('admin/complaint-details', [Complaints_controller::class, 'complaint_details']);
+Route::post('admin/admin-remark', [Complaints_controller::class, 'admin_remark']);
 
 Route::get('admin/requests', [Requests_controller::class, 'index']);
 Route::post('admin/get-payment-details', [Requests_controller::class, 'get_payment_details']);

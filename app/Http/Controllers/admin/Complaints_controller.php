@@ -29,6 +29,28 @@ class Complaints_controller extends Controller
         return view('admin/complaints',$result);
     }
 
+    public function admin_remark(Request $request)
+    {
+        $result=array('status'=>false,'msg'=>'Data not found');
+
+        if($request['complaint_id'])
+        {
+            $complaint=Complaints_model::where('complaint_id',$request['complaint_id'])->first();
+
+            if(!empty($complaint))
+            {
+                $complaint->admin_remark=$request['remark'];
+                $complaint->is_active=!empty($request['is_invalid']) ? 2 : 1;
+                $complaint->save();
+
+                $result=array('status'=>true,'msg'=>'Complaint added');
+            }
+        }
+
+      echo json_encode($result);
+
+    }
+
     public function complaint_details(Request $request)
     {
         $result['user_role']=1;

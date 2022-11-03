@@ -4,6 +4,16 @@
     <link rel="stylesheet" href="{{ asset('assets/dist/css/jquery.dataTables.min.css') }}">
     <link href="{{ asset('assets/dist/sass/main.css') }}" rel="stylesheet">
 
+    <style>
+        .badge{
+            font-size:14px;
+        }
+
+        .error{
+             color:red
+              }
+</style>
+
 
             <main class="content-holder">
                 <div class="container-fluid">
@@ -67,14 +77,21 @@
                                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
                                                     <ul class="list-inline mb-0">
                                                         <li class="list-inline-item form-label">
-                                                            <button class="btn btn-sm table-btn" type="button"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#admin_remark">Remark
-                                                            </button>                                                           
+                                                            @if($complaint_details['is_active']==0)
+                                                                <button class="btn btn-sm table-btn" type="button"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#admin_remark">Remark
+                                                                </button> 
+                                                             @elseif($complaint_details['is_active']==1)
+                                                             <label class="badge bg-success">Resolved</label>
+                                                             @else
+                                                             <label class="badge bg-danger">Invalid Complaint</label>
+                                                             @endif
+                                                                                                                    
                                                         </li>
-                                                        <li class="list-inline-item data-label"><span class="me-1">
+                                                        <!-- <li class="list-inline-item data-label"><span class="me-1">
                                                         <button class="btn btn-sm remark-btn">Invalid Complaint</button>
-                                                        </li>
+                                                        </li> -->
                                                     </ul>
                                                 </div>
                                             </div>
@@ -202,8 +219,10 @@
                             <h5 class="modal-title" id="payremarkLabel">Remark</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="complaint_form">
+                        <form id="complaint_form" name="complaint_form">
                             @csrf
+
+                            <input type="hidden" name="complaint_id" id="complaint_id" value="{{ $complaint_details['complaint_id'] }}">
                            
                         <div class="modal-body">
                                
@@ -212,20 +231,19 @@
                                <div class="col-sm-6">
                                         <div>
                                             <label class="form-label">Remark</label>
-                                            <textarea class="form-control" placeholder="Enter remark"></textarea>
-
+                                            <textarea class="form-control" name="remark" placeholder="Enter remark"></textarea>
                                         </div>
                                     </div>
                                
                                 <div class="col-sm-6 mb-3">
                                 <label class="form-label">Invalid Complaint</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Is it invalid complaint ? 
-                                    </label>
+                                    <input class="form-check-input" name="is_invalid" type="checkbox" id="flexCheckDefault">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Is it invalid complaint ? 
+                                        </label>
                                     </div>
-                                    </div>
+                                </div>
 
                             </div>          
                             </div>          
@@ -366,9 +384,9 @@
 
         $("#complaint_form").validate({
             rules: {                
-                // bank_name: {
-                //     required: true
-                // },
+                remark: {
+                    required: true
+                },
                 // txn_id: {
                 //     required: true
                 // },
@@ -376,9 +394,9 @@
             },
             messages: {
                            
-                // bank_name: {
-                //     required: "Enter Bank Name"
-                // },
+                remark: {
+                    required: "Enter Remark"
+                },
                 // txn_id: {
                 //     required: "Enter Transaction Id"
                 // },
