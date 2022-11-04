@@ -1098,6 +1098,7 @@ class App_controller extends Controller
     {
         $data=array('status'=>false,'msg'=>'Data not found');
 
+
         $logged_user=Auth::mobile_app_user($request['token']);
               
         $rules = [
@@ -1128,6 +1129,8 @@ class App_controller extends Controller
 
         } else {
 
+          
+
             // $bank_details=$request->all();
             // unset($bank_details['token']);
 
@@ -1136,7 +1139,8 @@ class App_controller extends Controller
                
             $is_details=Bank_details_model::where('user_id',$logged_user['user_id'])->first();
             if(empty($is_details))
-            {
+            {              
+
                 $bank_details['user_id']=$logged_user['user_id'];
                 $bank_details['created_at']=date('Y-m-d H:i:s');
                 $bank_details['updated_at']=date('Y-m-d H:i:s');
@@ -1144,6 +1148,8 @@ class App_controller extends Controller
                 $add_bank=Bank_details_model::create($bank_details)->bank_detail_id;                 
                 if($add_bank)
                 {
+
+                   
 
                     require_once('vendor/autoload.php');
                     $client = new \GuzzleHttp\Client();
@@ -1157,6 +1163,7 @@ class App_controller extends Controller
                     ],
                     ]);
                     
+                 
 
                     $contents=json_decode($response->getBody(), true);                    
 
@@ -1256,10 +1263,11 @@ class App_controller extends Controller
         require_once('vendor/autoload.php');
         $client = new \GuzzleHttp\Client();
 
-        
+
+              
             $response = $client->request('POST', 'https://sandbox.leantech.me/customers/v1/', [
                 'body' => '{"app_user_id":"'.$logged_user['email'].date('YmdHis').'"}',
-                // 'body' => '{"app_user_id":"'.$request['email'].'"}',
+                // 'body' => '{"app_user_id":"derterggd"}',
                 'headers' => [
                     'accept' => 'application/json',
                     'content-type' => 'application/json',
@@ -1268,7 +1276,8 @@ class App_controller extends Controller
                 ]);
                 
         
-                $contents=json_decode($response->getBody(), true);                    
+                $contents=json_decode($response->getBody(), true);   
+              
         
                 if(!empty($contents['customer_id']))
                 {
@@ -1305,7 +1314,9 @@ class App_controller extends Controller
                                         ]);
 
                                 $contents=json_decode($response->getBody(), true); 
-            
+
+                                  
+                          
                                 if(!empty($contents['id']))
                                 {
                                     Bank_details_model::where('bank_detail_id', $is_details['bank_detail_id'])

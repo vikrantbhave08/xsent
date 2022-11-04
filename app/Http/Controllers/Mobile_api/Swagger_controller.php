@@ -36,7 +36,10 @@ class Swagger_controller extends Controller
        
     }
 
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    
+
+    
 
        
     /**
@@ -63,6 +66,9 @@ class Swagger_controller extends Controller
     *  type="http",
     *  scheme="bearer"
     * )
+
+
+    
     
 
 

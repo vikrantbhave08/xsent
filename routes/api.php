@@ -27,14 +27,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::group([
-    // 'prefix' => 'v1',
-    // 'as' => 'api.',
-    'middleware' => ['auth:api']
-], function () {
-    //lists all users
-    Route::get('allusers', [Login_controller::class, 'all_users']);   
-});
+// Route::group([
+//     // 'prefix' => 'v1',
+//     // 'as' => 'api.',
+//     'middleware' => ['auth:api']
+// ], function () {
+//     //lists all users
+//     Route::get('allusers', [Login_controller::class, 'all_users']);   
+// });
 
 Route::post('register', [Login_controller::class, 'register']);
 Route::post('login', [Login_controller::class, 'login']);
