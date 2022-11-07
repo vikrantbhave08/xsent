@@ -158,9 +158,7 @@ class Login_controller extends Controller
                 {
                     $shop_exists=Shops_model::where('shop_name',$request['shop_name'])->first();
                     if(empty($shop_exists))
-                    {              
-                       
-                                     
+                    {                
 
                 $user=User_model::where('username',$request['email'])->first();
 

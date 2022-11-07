@@ -44,7 +44,7 @@ class Requests_controller extends Controller
                                                 // ->whereIn('amount_requests.by_role',array(2,3))
                                                 // ->whereYear('amount_requests.created_at', '=', date('Y'))
                                                 // ->whereMonth('amount_requests.created_at',"=",$i)
-                                                ->get()->toArray();
+                                                ->orderBy('amount_requests.created_at', 'DESC')->get()->toArray();
 
                                                 // $result['requests']=array();
                                                 // echo "<pre>";

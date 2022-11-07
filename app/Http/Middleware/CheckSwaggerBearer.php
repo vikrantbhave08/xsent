@@ -27,7 +27,7 @@ class CheckSwaggerBearer
 
         } else {
             
-            return response()->json(['status'=>false,'msg'=>'Authorised first']);
+            return response()->json(['status'=>false,'msg'=>'Authorise first']);
         }
   
         

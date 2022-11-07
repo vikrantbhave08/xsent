@@ -2,12 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Swagger\Auth_controller;
-use App\Http\Controllers\Swagger\Parent_controller;
-use App\Http\Controllers\Swagger\Login_controller;
-use App\Http\Controllers\Swagger\App_controller;
-use App\Http\Controllers\Swagger\Pay_controller;
-use App\Http\Controllers\Swagger\Swagger_controller;
+use App\Http\Controllers\Mobile_api\Auth_controller;
+use App\Http\Controllers\Mobile_api\Parent_controller;
+use App\Http\Controllers\Mobile_api\Login_controller;
+use App\Http\Controllers\Mobile_api\App_controller;
+use App\Http\Controllers\Mobile_api\Pay_controller;
+use App\Http\Controllers\Mobile_api\Swagger_controller;
 use App\Http\Controllers\Home_controller;
 /*
 |--------------------------------------------------------------------------
@@ -30,11 +30,84 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group([
     // 'prefix' => 'v1',
     // 'as' => 'api.',
-    'middleware' => ['auth:api']
+    'middleware' => ['CheckSwaggerBearer:swagger']
 ], function () {
-    //lists all users
+    
+   
+Route::get('allusers', [Swagger_controller::class, 'all_users']);   
+   
+Route::post('register-parent', [Login_controller::class, 'register']);
+Route::post('register-shop', [Login_controller::class, 'register']);
+Route::post('login', [Login_controller::class, 'login']);
+Route::post('logout', [Login_controller::class, 'logout']);
+Route::post('send-otp', [Login_controller::class, 'send_otp']);
+Route::post('verify-mobile', [Login_controller::class, 'verify_mobile']);
+Route::post('mobile-verified', [Login_controller::class, 'mobile_verified']);
+Route::get('verify-email', [Login_controller::class, 'verify_email']);
+Route::get('send-verification-link', [Login_controller::class, 'send_verification_link']);
+Route::post('forgot-password', [Login_controller::class, 'forgot_password']);
+Route::get('send-notification', [Login_controller::class, 'send_notification']);
+
+Route::post('reset-password', [App_controller::class, 'reset_password']);
+
+Route::post('get-own-profile', [App_controller::class, 'get_users_profile']);
+Route::post('get-users-profile', [App_controller::class, 'get_users_profile']);
+Route::post('add-student', [App_controller::class, 'add_user']);
+Route::post('add-salesperson', [App_controller::class, 'add_user']);
+Route::post('update-user', [App_controller::class, 'update_user']);
+Route::post('delete-user', [App_controller::class, 'delete_user']);
+Route::Post('getall-childrens', [App_controller::class, 'get_children']); 
+Route::Post('get-children', [App_controller::class, 'get_children']); 
+Route::Post('get-child-details', [App_controller::class, 'get_child_details']); 
+
+Route::Post('add-shop', [App_controller::class, 'add_shop']); 
+Route::Post('getall-shops-by-owner', [App_controller::class, 'get_shops_by_owner']); 
+Route::Post('get-shop-by-owner', [App_controller::class, 'get_shops_by_owner']); 
+Route::Post('transaction-summary', [App_controller::class, 'transaction_summary']); 
+Route::Post('children-transaction-summary', [App_controller::class, 'transaction_summary']); 
+Route::Post('parent-transaction-summary', [App_controller::class, 'transaction_summary']); 
+Route::Post('parent-watch-children-transaction-summary', [App_controller::class, 'transaction_summary']); 
+
+Route::Post('add-bank-details', [App_controller::class, 'add_bank_details']); 
+Route::Post('get-bank-details', [App_controller::class, 'get_bank_details']);
+Route::Post('create_destination', [App_controller::class, 'create_destination']); 
+
+Route::Post('add-money-to-wallet', [App_controller::class, 'add_money_to_wallet']); 
+Route::Post('parent-transfer-child', [App_controller::class, 'add_money_to_wallet']); 
+Route::Post('child-transfer-shop', [App_controller::class, 'add_money_to_wallet']); 
+Route::Post('parent-transfer-shop', [App_controller::class, 'add_money_to_wallet']); 
+Route::Post('get-notifications', [App_controller::class, 'get_notifications']); 
+Route::Post('get-users-wallet', [App_controller::class, 'get_users_wallet']); 
+Route::Post('update-users-wallet', [App_controller::class, 'update_users_wallet']); 
+
+Route::Post('qr-code-generate', [App_controller::class, 'qr_code_generate']); 
+
+Route::Post('add-request', [App_controller::class, 'add_request']); 
+Route::Post('add-request-by-owner', [App_controller::class, 'add_request']); 
+Route::Post('add-request-by-parent', [App_controller::class, 'add_request']); 
+Route::Post('add-request-by-child', [App_controller::class, 'add_request']); 
+Route::Post('request-money-history', [App_controller::class, 'request_money_history']); 
+ 
+Route::Post('topup-history', [App_controller::class, 'topup_history']);
+
+Route::Post('get-dashboard-data', [App_controller::class, 'get_dashboard_data']); 
+Route::Post('billing-history', [App_controller::class, 'billing_history']); 
+
+Route::Post('add-complaint', [App_controller::class, 'add_complaint']);
+Route::Post('get-complaints', [App_controller::class, 'get_complaints']);
+
+Route::get('getall-province', [Login_controller::class, 'getall_province']); 
+Route::Post('getall-cities-by-province', [Login_controller::class, 'getall_cities_by_province']); 
+Route::get('getall-shop-categories', [Login_controller::class, 'getall_shop_categories']); 
+
+Route::get('send-notification', [Login_controller::class, 'sendnotification']); 
+Route::get('pdf-page', [Login_controller::class, 'pdf_page']);  
+
+Route::get('get-complaint-reasons', [Login_controller::class, 'get_complaint_reasons']);  
+
+Route::Post('payment-intent', [Pay_controller::class, 'payment_intent']);  
+Route::Post('payment-details', [Pay_controller::class, 'payment_details']);  
+Route::Post('webhook', [Pay_controller::class, 'webhook']);  
+   
 });
 
-Route::get('allusers', [Swagger_controller::class, 'all_users']);   
-Route::post('login_auth', [Swagger_controller::class, 'login_auth']);
-Route::post('register_auth', [Swagger_controller::class, 'register_auth']);

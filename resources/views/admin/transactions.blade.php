@@ -43,7 +43,7 @@
                                                         <tr>
                                                             <th></th>
                                                             <th>Sr. No</th>
-                                                            <th>Txn Id</th>
+                                                            <th>Transaction Id</th>
                                                             <th>Debited From</th>
                                                             <th>Credited To</th>
                                                             <th>Amount</th>
