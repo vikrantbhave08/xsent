@@ -33,9 +33,7 @@ Route::group([
     'middleware' => ['CheckSwaggerBearer:swagger']
 ], function () {
     
-   
-Route::get('allusers', [Swagger_controller::class, 'all_users']);   
-   
+      
 Route::post('register-parent', [Login_controller::class, 'register']);
 Route::post('register-shop', [Login_controller::class, 'register']);
 Route::post('login', [Login_controller::class, 'login']);

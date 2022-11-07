@@ -35,10 +35,11 @@ use App\Models\Shop_cat_model;
 class Swagger_controller extends Controller
 {
 
-    public function __construct(Request $request)
-    {               
-      
-    }
+
+    public function index(Request $request)
+    {  
+       
+    }   
 
    
        
@@ -2157,47 +2158,18 @@ class Swagger_controller extends Controller
      *     path="/getall-cities-by-province",
      *     @OA\Response(response="200", description="An example resource")
      * )
+     * 
+     * 
+     * 
+     * 
+     * 
     *   */
 
-    
+      
 
-
-    public function login_auth(Request $request)
+    public function get_d(Request $request)
     {
-        $validator = $request->validate([
-            'email' => 'email|required',
-            'password' => 'required'
-        ]);
-
-       
-
-        if (!auth()->attempt($validator)) {
-            return response()->json(['error' => 'Unauthorised'], 401);
-        } else {
-            $success['token'] = auth()->user()->createToken('authToken')->accessToken;
-            $success['user'] = auth()->user();
-            return response()->json(['success' => $success])->setStatusCode(Response::HTTP_ACCEPTED);
-        }
-    }
-
-
-    /**
-     * details api
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function details()
-    {
-        $user = Auth::user();
-        return response()->json(['success' => $user], $this->successStatus);
-    }
-
-    
-    public function all_users(Request $request)
-    {
-        
-        echo "all users";
-        
-    }
-   
+     
+    }    
+     
 }
