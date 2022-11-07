@@ -2163,6 +2163,30 @@ class Swagger_controller extends Controller
    
     *   */
 
+    public function index(Request $request)
+    {  
+       
+    }     
+
+
+    public function login_auth(Request $request)
+    {
+        $validator = $request->validate([
+            'email' => 'email|required',
+            'password' => 'required'
+        ]);
+
+       
+
+        if (!auth()->attempt($validator)) {
+            return response()->json(['error' => 'Unauthorised'], 401);
+        } else {
+            $success['token'] = auth()->user()->createToken('authToken')->accessToken;
+            $success['user'] = auth()->user();
+            return response()->json(['success' => $success])->setStatusCode(Response::HTTP_ACCEPTED);
+        }
+    }
+
 
     /**
      * details api
