@@ -801,6 +801,115 @@
                 ]
             }
         },
+        "/add-salesperson": {
+            "post": {
+                "tags": [
+                    "Add User"
+                ],
+                "summary": "api/add-user",
+                "description": "api/add-user",
+                "operationId": "add_salesperson",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Test User"
+                                    },
+                                    "contact_no": {
+                                        "type": "number",
+                                        "example": "9876543210"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user1@mail.com"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "UAE"
+                                    },
+                                    "province": {
+                                        "type": "string",
+                                        "example": "Abu Dhabi"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "city name"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "PassWord12345"
+                                    },
+                                    "fcm_token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "child_role": {
+                                        "type": "number",
+                                        "example": "5"
+                                    },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2022-01-31"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "example": "Male/Female"
+                                    },
+                                    "university": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "shop_id": {
+                                        "type": "number",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/update-user": {
             "post": {
                 "tags": [
@@ -2410,32 +2519,14 @@
                 ]
             }
         },
-        "/getall-province": {
-            "get": {
-                "tags": [
-                    "Getall-Province"
-                ],
-                "operationId": "1c0faaeb0f3d27fba1f4095cfc5c8f92",
-                "responses": {
-                    "200": {
-                        "description": "An example resource"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/add-salesperson": {
+        "/request-money-history-by-owner": {
             "post": {
                 "tags": [
-                    "Add User"
+                    "Money Request"
                 ],
-                "summary": "api/add-user",
-                "description": "api/add-user",
-                "operationId": "add_salesperson",
+                "summary": "api/request-money-history (Owner)",
+                "description": "api/request-money-history (Owner)",
+                "operationId": "Owner_request_history",
                 "requestBody": {
                     "description": "Form Data or JSON",
                     "required": true,
@@ -2447,60 +2538,123 @@
                                     "password"
                                 ],
                                 "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Test User"
-                                    },
-                                    "contact_no": {
-                                        "type": "number",
-                                        "example": "9876543210"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "user1@mail.com"
-                                    },
-                                    "country": {
-                                        "type": "string",
-                                        "example": "UAE"
-                                    },
-                                    "province": {
-                                        "type": "string",
-                                        "example": "Abu Dhabi"
-                                    },
-                                    "city": {
-                                        "type": "string",
-                                        "example": "city name"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "PassWord12345"
-                                    },
-                                    "fcm_token": {
+                                    "token": {
                                         "type": "string",
                                         "example": ""
-                                    },
-                                    "child_role": {
-                                        "type": "number",
-                                        "example": "5"
-                                    },
-                                    "birth_date": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2022-01-31"
-                                    },
-                                    "gender": {
-                                        "type": "string",
-                                        "example": "Male/Female"
-                                    },
-                                    "university": {
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/request-money-history-by-parent": {
+            "post": {
+                "tags": [
+                    "Money Request"
+                ],
+                "summary": "api/request-money-history (Parent)",
+                "description": "api/request-money-history (Parent)",
+                "operationId": "parent_request_history",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
                                         "type": "string",
                                         "example": ""
-                                    },
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/request-money-history-by-parent-for-children": {
+            "post": {
+                "tags": [
+                    "Money Request"
+                ],
+                "summary": "api/request-money-history (Parent)",
+                "description": "api/request-money-history (Parent)",
+                "operationId": "parent_request_history_for_children",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
                                     "token": {
                                         "type": "string",
                                         "example": ""
                                     },
-                                    "shop_id": {
+                                    "user_id": {
                                         "type": "number",
                                         "example": ""
                                     }
@@ -2528,6 +2682,566 @@
                     },
                     "404": {
                         "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/topup-history-for-parent": {
+            "post": {
+                "tags": [
+                    "Topup History"
+                ],
+                "summary": "api/topup-history (Parent)",
+                "description": "api/topup-history (Parent)",
+                "operationId": "topup_history_parent",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/topup-history-for-owner": {
+            "post": {
+                "tags": [
+                    "Topup History"
+                ],
+                "summary": "api/topup-history (Owner)",
+                "description": "api/topup-history (Owner)",
+                "operationId": "topup_history_owner",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/get-dashboard-data": {
+            "post": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "api/get-dashboard-data (Child)",
+                "description": "api/get-dashboard-data (Child)",
+                "operationId": "dashboard_data",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "year": {
+                                        "type": "number",
+                                        "example": "2022"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/get-dashboard-data-for-children": {
+            "post": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "api/get-dashboard-data (Parent)",
+                "description": "api/get-dashboard-data (Parent)",
+                "operationId": "dashboard_data_for_children",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "user_id": {
+                                        "type": "number",
+                                        "example": ""
+                                    },
+                                    "year": {
+                                        "type": "number",
+                                        "example": "2022"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/billing-history": {
+            "post": {
+                "tags": [
+                    "Billing History"
+                ],
+                "summary": "api/billing-history (SELF)",
+                "description": "api/billing-history (SELF)",
+                "operationId": "billing_history",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "year": {
+                                        "type": "number",
+                                        "example": "2022"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/billing-history-by-parent-for-children": {
+            "post": {
+                "tags": [
+                    "Billing History"
+                ],
+                "summary": "api/billing-history (Parent)",
+                "description": "api/billing-history (Parent)",
+                "operationId": "billing_history_for_child",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "user_id": {
+                                        "type": "number",
+                                        "example": ""
+                                    },
+                                    "year": {
+                                        "type": "number",
+                                        "example": "2022"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payment-details": {
+            "post": {
+                "tags": [
+                    "Payment Details"
+                ],
+                "summary": "api/payment-details",
+                "description": "api/payment-details",
+                "operationId": "payment_details",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "amount": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "payment_intent": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/add-complaint": {
+            "post": {
+                "tags": [
+                    "Complaints"
+                ],
+                "summary": "api/add-complaint",
+                "description": "api/add-complaint",
+                "operationId": "complaint_add",
+                "parameters": [
+                    {
+                        "name": "complaint_img",
+                        "in": "path",
+                        "description": "file of Article",
+                        "required": false,
+                        "schema": {
+                            "type": "file"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "reason_id": {
+                                        "type": "number",
+                                        "example": ""
+                                    },
+                                    "complaint_details": {
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getall-province": {
+            "get": {
+                "tags": [
+                    "Locations"
+                ],
+                "operationId": "1c0faaeb0f3d27fba1f4095cfc5c8f92",
+                "responses": {
+                    "200": {
+                        "description": "An example resource"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getall-cities-by-province": {
+            "get": {
+                "tags": [
+                    "Locations"
+                ],
+                "operationId": "484c571f1125272ad71e2df10cf310f3",
+                "requestBody": {
+                    "description": "Form Data or JSON",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "province_id": {
+                                        "type": "number",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "An example resource"
                     }
                 },
                 "security": [

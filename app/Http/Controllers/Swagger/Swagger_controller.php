@@ -1663,7 +1663,7 @@ class Swagger_controller extends Controller
     * path="/request-money-history-by-owner",
     * summary="api/request-money-history (Owner)",
     * description="api/request-money-history (Owner)",
-    * operationId="Owner_request_add",
+    * operationId="Owner_request_history",
     * tags={"Money Request"},
     * security={ {"bearerAuth": {} }},
     * @OA\RequestBody(
@@ -1700,14 +1700,461 @@ class Swagger_controller extends Controller
     * )
 
 
+     *  * @OA\Post(
+    * path="/request-money-history-by-parent",
+    * summary="api/request-money-history (Parent)",
+    * description="api/request-money-history (Parent)",
+    * operationId="parent_request_history",
+    * tags={"Money Request"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *       @OA\Property(property="token", type="string", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+     *  * @OA\Post(
+    * path="/request-money-history-by-parent-for-children",
+    * summary="api/request-money-history (Parent)",
+    * description="api/request-money-history (Parent)",
+    * operationId="parent_request_history_for_children",
+    * tags={"Money Request"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *       @OA\Property(property="token", type="string", example=""),
+    *       @OA\Property(property="user_id", type="number", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+    
+    *   @OA\Post(
+    * path="/topup-history-for-parent",
+    * summary="api/topup-history (Parent)",
+    * description="api/topup-history (Parent)",
+    * operationId="topup_history_parent",
+    * tags={"Topup History"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},   
+    *   @OA\Property(property="token", type="string", example=""), 
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+    
+    * @OA\Post(
+    * path="/topup-history-for-owner",
+    * summary="api/topup-history (Owner)",
+    * description="api/topup-history (Owner)",
+    * operationId="topup_history_owner",
+    * tags={"Topup History"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+    
+    * @OA\Post(
+    * path="/get-dashboard-data",
+    * summary="api/get-dashboard-data (Child)",
+    * description="api/get-dashboard-data (Child)",
+    * operationId="dashboard_data",
+    * tags={"Dashboard"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *   @OA\Property(property="year", type="number", example="2022"),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+    
+    * @OA\Post(
+    * path="/get-dashboard-data-for-children",
+    * summary="api/get-dashboard-data (Parent)",
+    * description="api/get-dashboard-data (Parent)",
+    * operationId="dashboard_data_for_children",
+    * tags={"Dashboard"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *   @OA\Property(property="user_id", type="number", example=""),
+    *   @OA\Property(property="year", type="number", example="2022"),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+    
+
+    * @OA\Post(
+    * path="/billing-history",
+    * summary="api/billing-history (SELF)",
+    * description="api/billing-history (SELF)",
+    * operationId="billing_history",
+    * tags={"Billing History"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *   @OA\Property(property="year", type="number", example="2022"),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+    
+
+    * @OA\Post(
+    * path="/billing-history-by-parent-for-children",
+    * summary="api/billing-history (Parent)",
+    * description="api/billing-history (Parent)",
+    * operationId="billing_history_for_child",
+    * tags={"Billing History"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *   @OA\Property(property="user_id", type="number", example=""),
+    *   @OA\Property(property="year", type="number", example="2022"),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+    
+
+    * @OA\Post(
+    * path="/payment-details",
+    * summary="api/payment-details",
+    * description="api/payment-details",
+    * operationId="payment_details",
+    * tags={"Payment Details"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *   @OA\Property(property="amount", type="string", example=""),
+    *   @OA\Property(property="payment_intent", type="string", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+    
+
+    * @OA\Post(
+    * path="/add-complaint",
+    * summary="api/add-complaint",
+    * description="api/add-complaint",
+    * operationId="complaint_add",
+    * tags={"Complaints"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\Parameter(name="complaint_img", in="path", description="file of Article", required=false,
+     *         @OA\Schema(type="file")
+     *     ),
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *   @OA\Property(property="reason_id", type="number", example=""),
+    *   @OA\Property(property="complaint_details", type="string", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+
 
      * @OA\Get(
-     * tags={"Getall-Province"},
+     * tags={"Locations"},
      *security={
      *        {
      *         "bearerAuth": {}},
      *},
      *     path="/getall-province",
+     *     @OA\Response(response="200", description="An example resource")
+     * )
+     * 
+     * @OA\Get(
+     * tags={"Locations"},
+     *security={
+     *        {
+     *         "bearerAuth": {}},
+     *},
+      * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *   @OA\Property(property="province_id", type="number", example=""),
+    *    ),
+    * ),
+     *     path="/getall-cities-by-province",
      *     @OA\Response(response="200", description="An example resource")
      * )
    

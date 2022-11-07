@@ -87,10 +87,16 @@ Route::Post('add-request-by-owner', [App_controller::class, 'add_request']);
 Route::Post('add-request-by-parent', [App_controller::class, 'add_request']); 
 Route::Post('add-request-by-child', [App_controller::class, 'add_request']); 
 Route::Post('request-money-history', [App_controller::class, 'request_money_history']); 
+Route::Post('request-money-history-by-parent', [App_controller::class, 'request_money_history']); 
+Route::Post('request-money-history-by-owner', [App_controller::class, 'request_money_history']); 
+Route::Post('request-money-history-by-parent-for-children', [App_controller::class, 'request_money_history']); 
  
 Route::Post('topup-history', [App_controller::class, 'topup_history']);
+Route::Post('topup-history-for-parent', [App_controller::class, 'topup_history']); 
+Route::Post('topup-history-for-owner', [App_controller::class, 'topup_history']);
 
 Route::Post('get-dashboard-data', [App_controller::class, 'get_dashboard_data']); 
+Route::Post('get-dashboard-data-for-children', [App_controller::class, 'get_dashboard_data']); 
 Route::Post('billing-history', [App_controller::class, 'billing_history']); 
 
 Route::Post('add-complaint', [App_controller::class, 'add_complaint']);
