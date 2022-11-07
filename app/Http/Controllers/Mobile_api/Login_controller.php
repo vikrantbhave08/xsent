@@ -292,10 +292,6 @@ class Login_controller extends Controller
 
     }
 
-    public function all_users(Request $request)
-    {
-        echo "all users";
-    }
 
     public function login(Request $request)
     {

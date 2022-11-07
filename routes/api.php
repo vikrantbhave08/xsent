@@ -7,7 +7,6 @@ use App\Http\Controllers\Mobile_api\Parent_controller;
 use App\Http\Controllers\Mobile_api\Login_controller;
 use App\Http\Controllers\Mobile_api\App_controller;
 use App\Http\Controllers\Mobile_api\Pay_controller;
-use App\Http\Controllers\Mobile_api\Swagger_controller;
 use App\Http\Controllers\Home_controller;
 /*
 |--------------------------------------------------------------------------
@@ -27,14 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-// Route::group([
-//     // 'prefix' => 'v1',
-//     // 'as' => 'api.',
-//     'middleware' => ['auth:api']
-// ], function () {
-//     //lists all users
-//     Route::get('allusers', [Login_controller::class, 'all_users']);   
-// });
+
 
 Route::post('register', [Login_controller::class, 'register']);
 Route::post('login', [Login_controller::class, 'login']);
@@ -94,5 +86,3 @@ Route::get('get-complaint-reasons', [Login_controller::class, 'get_complaint_rea
 Route::Post('payment-intent', [Pay_controller::class, 'payment_intent']);  
 Route::Post('payment-details', [Pay_controller::class, 'payment_details']);  
 Route::Post('webhook', [Pay_controller::class, 'webhook']);  
-
-Route::get('swagger', [Swagger_controller::class, 'index']);  

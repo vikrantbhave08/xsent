@@ -14,17 +14,52 @@
     },
     "servers": [
         {
-            "url": "",
+            "url": "http://localhost/xsent/swagger",
             "description": "Demo API Server"
         }
     ],
     "paths": {
-        "/xsent/api/getall-province": {
+        "/allusers": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get list of users",
+                "description": "Returns list of users",
+                "operationId": "getUserList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/getall-province": {
             "get": {
                 "tags": [
                     "Getall-Province"
                 ],
-                "operationId": "460f4ef291021ebedc76d2a532468b5b",
+                "operationId": "1c0faaeb0f3d27fba1f4095cfc5c8f92",
                 "responses": {
                     "200": {
                         "description": "An example resource"
@@ -37,7 +72,7 @@
                 ]
             }
         },
-        "/xsent/api/login": {
+        "/login": {
             "post": {
                 "tags": [
                     "Authentication"
