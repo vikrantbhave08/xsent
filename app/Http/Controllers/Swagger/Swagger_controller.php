@@ -2157,16 +2157,9 @@ class Swagger_controller extends Controller
      *     path="/getall-cities-by-province",
      *     @OA\Response(response="200", description="An example resource")
      * )
-   
-     
-
-   
     *   */
 
-    public function index(Request $request)
-    {  
-       
-    }     
+    
 
 
     public function login_auth(Request $request)
