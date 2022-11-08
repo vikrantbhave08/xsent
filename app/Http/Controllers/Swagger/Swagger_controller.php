@@ -191,6 +191,355 @@ use App\Models\Shop_cat_model;
     * )
     
 
+    
+     *
+     *  * @OA\Post(
+    * path="/reset-password",
+    * summary="api/reset-password",
+    * description="api/reset-password",
+    * operationId="reset_password",
+    * tags={"Reset Password"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Reset Users Password",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="token", type="string", example=""),
+    *       @OA\Property(property="current_password", type="string", example=""),
+    *       @OA\Property(property="new_password", type="string", example=""),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+    
+     *
+     *  * @OA\Post(
+    * path="/verify-mobile",
+    * summary="api/verify-mobile",
+    * description="api/verify-mobile",
+    * operationId="verify_mobile",
+    * tags={"Mobile Verification"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="contact_no", type="number", example="9876543210"),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+     *  * @OA\Post(
+    * path="/mobile-verified",
+    * summary="api/mobile-verified",
+    * description="api/mobile-verified",
+    * operationId=" Mobile_Verified",
+    * tags={"Mobile Verification"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="token", type="string", example=""),
+    *       @OA\Property(property="user_id", type="number", example=""),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+    
+     *
+     *  * @OA\Post(
+    * path="/register-parent",
+    * summary="api/register",
+    * description="api/register",
+    * operationId="Register Parent",
+    * tags={"Registration"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="name", type="string",  example="Test User"),
+    *       @OA\Property(property="contact_no", type="number",  example="9876543210"),
+    *       @OA\Property(property="email", type="string",  example="user1@mail.com"),
+    *       @OA\Property(property="country", type="string",  example="UAE"),
+    *       @OA\Property(property="province", type="string",  example="Abu Dhabi"),
+    *       @OA\Property(property="city", type="string",  example="city name"),
+    *       @OA\Property(property="password", type="string",  example="PassWord12345"),
+    *       @OA\Property(property="fcm_token", type="string", example=""),
+    *       @OA\Property(property="user_role", type="number", example="2 or 3"),
+    *       @OA\Property(property="birth_date", type="date", example="2022-01-31"),
+    *       @OA\Property(property="gender", type="string", example="Male/Female"),
+    *       @OA\Property(property="university", type="string", example=""),
+    *       @OA\Property(property="token", type="string", example=""),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+     *  
+     * 
+     * 
+     *  @OA\Post(
+    * path="/register-shop",
+    * summary="api/register ",
+    * description="api/register",
+    * operationId="Register Shop ",
+    * tags={"Registration"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="name", type="string",  example="Test User"),
+    *       @OA\Property(property="shop_name", type="string",  example="shop_name"),
+    *       @OA\Property(property="shop_city", type="string",  example="shop_city"),
+    *       @OA\Property(property="shop_country", type="string",  example="shop_country"),
+    *       @OA\Property(property="contact_no", type="number",  example="9876543210"),
+    *       @OA\Property(property="email", type="string",  example="user1@mail.com"),
+    *       @OA\Property(property="country", type="string",  example="UAE"),
+    *       @OA\Property(property="province", type="string",  example="Abu Dhabi"),
+    *       @OA\Property(property="city", type="string",  example="city name"),
+    *       @OA\Property(property="password", type="string",  example="PassWord12345"),
+    *       @OA\Property(property="fcm_token", type="string", example=""),
+    *       @OA\Property(property="user_role", type="number", example="2 or 3"),
+    *       @OA\Property(property="birth_date", type="date", example="2022-01-31"),
+    *       @OA\Property(property="gender", type="string", example="Male/Female"),
+    *       @OA\Property(property="university", type="string", example=""),
+    *       @OA\Property(property="token", type="string", example=""),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+     
+
+     *  * @OA\Post(
+    * path="/add-student",
+    * summary="api/add-user",
+    * description="api/add-user",
+    * operationId="add_user",
+    * tags={"Users"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="name", type="string",  example="Test User"),
+    *       @OA\Property(property="contact_no", type="number",  example="9876543210"),
+    *       @OA\Property(property="email", type="string",  example="user1@mail.com"),
+    *       @OA\Property(property="country", type="string",  example="UAE"),
+    *       @OA\Property(property="province", type="string",  example="Abu Dhabi"),
+    *       @OA\Property(property="city", type="string",  example="city name"),
+    *       @OA\Property(property="password", type="string",  example="PassWord12345"),
+    *       @OA\Property(property="fcm_token", type="string", example=""),
+    *       @OA\Property(property="child_role", type="number", example="4"),
+    *       @OA\Property(property="birth_date", type="date", example="2022-01-31"),
+    *       @OA\Property(property="gender", type="string", example="Male/Female"),
+    *       @OA\Property(property="university", type="string", example=""),
+    *       @OA\Property(property="token", type="string", example=""),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+    
+    *   @OA\Post(
+    * path="/add-salesperson",
+    * summary="api/add-user",
+    * description="api/add-user",
+    * operationId="add_salesperson",
+    * tags={"Add User"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="name", type="string",  example="Test User"),
+    *       @OA\Property(property="contact_no", type="number",  example="9876543210"),
+    *       @OA\Property(property="email", type="string",  example="user1@mail.com"),
+    *       @OA\Property(property="country", type="string",  example="UAE"),
+    *       @OA\Property(property="province", type="string",  example="Abu Dhabi"),
+    *       @OA\Property(property="city", type="string",  example="city name"),
+    *       @OA\Property(property="password", type="string",  example="PassWord12345"),
+    *       @OA\Property(property="fcm_token", type="string", example=""),
+    *       @OA\Property(property="child_role", type="number", example="5"),
+    *       @OA\Property(property="birth_date", type="date", example="2022-01-31"),
+    *       @OA\Property(property="gender", type="string", example="Male/Female"),
+    *       @OA\Property(property="university", type="string", example=""),
+    *       @OA\Property(property="token", type="string", example=""),
+    *       @OA\Property(property="shop_id", type="number", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
 
      * 
      * 
