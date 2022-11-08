@@ -2161,7 +2161,10 @@ use App\Models\Shop_cat_model;
 
       class Swagger_controller extends Controller
       {
-      
-
+        public function __construct(Request $request)
+        {
+            
+        }
      
-}
+      }
+
