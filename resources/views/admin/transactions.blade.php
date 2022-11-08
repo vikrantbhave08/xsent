@@ -65,7 +65,7 @@
 
                                                             <td>{{  $trans['from_user']==0 ? 'Admin' : $trans['debited']." (".($trans['from_user']==0 ? 'Admin' : $trans['from_role_name']) .")"  }}</td>
                                                             <td>{{  $trans['user_id']==0 ? 'Admin' : $trans['credited']. " (".($trans['user_id']==0 ? 'Admin' : $trans['to_role_name']) .")"  }}</td>
-                                                            <td>   <?php echo isset($trans['pay_txn_id']) ? '<span class="me-2"> <i class="ri-bank-card-fill"></i></span>' : '<span class="me-2"> <i class="ri-hand-coin-fill"></i></span>' ?> {{ 'AED '.$trans['amount']  }}</td>
+                                                            <td>   <?php echo isset($trans['pay_txn_id']) ?  '<span class="me-2"> <i class="ri-hand-coin-fill"></i></span>'  : '<span class="me-2"> <i class="ri-bank-card-fill"></i></span>' ?> {{ 'AED '.$trans['amount']  }}</td>
                                                             <td>{{  isset($trans['pay_txn_id']) ? 'Real Money' : 'Virtual Money'  }}</td>
                                                             <td>{{  $trans['created_at']  }}</td>                                                          
                                                            
