@@ -2091,6 +2091,94 @@ use App\Models\Shop_cat_model;
      *   ),
     * )
 
+    * @OA\Post(
+    * path="/get-complaints",
+    * summary="api/get-complaints",
+    * description="api/get-complaints",
+    * operationId="get_complaint",
+    * tags={"Complaints"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\Parameter(name="complaint_img", in="path", description="file of Article", required=false,
+     *         @OA\Schema(type="file")
+     *     ),
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+
+    * @OA\Post(
+    * path="/get-complaint-reasons",
+    * summary="api/get-complaint-reasons",
+    * description="api/get-complaint-reasons",
+    * operationId="get_complaint_resons",
+    * tags={"Complaints"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\Parameter(name="complaint_img", in="path", description="file of Article", required=false,
+     *         @OA\Schema(type="file")
+     *     ),
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Form Data or JSON",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *   @OA\Property(property="token", type="string", example=""),
+    *    ),
+    * ),
+    *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
 
      * @OA\Get(
      * tags={"Locations"},
