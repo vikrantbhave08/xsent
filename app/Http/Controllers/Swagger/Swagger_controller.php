@@ -62,36 +62,48 @@ use App\Models\Shop_cat_model;
      * 
     
 
-     * @OA\POST(
-     *     path="/articles/{id}",
-     *     operationId="update",
-     *     tags={"Test Form Fields"},
-     *      security={ {"bearerAuth": {} }},
-     *     summary="Update article in DB",
-     *     description="Update article in DB",
-     *     @OA\Parameter(name="id", in="path", description="Id of Article", required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(name="file", in="path", description="file of Article", required=false,
-     *         @OA\Schema(type="file")
-     *     ),
-     *     @OA\RequestBody(
-     *        required=true,
-     *        @OA\JsonContent(
-     *           required={"title", "content", "status"},
-     *           @OA\Property(property="title", type="string", format="string", example="Test Article Title"),
-     *           @OA\Property(property="content", type="string", format="string", example="This is a description for kodementor"),
-     *           @OA\Property(property="status", type="string", format="string", example="Published"),
-     *        ),
-     *     ),
-     *     @OA\Response(
-     *          response=200, description="Success",
-     *          @OA\JsonContent(
-     *             @OA\Property(property="status_code", type="integer", example="200"),
-     *             @OA\Property(property="data",type="object")
-     *          )
-     *       )
-     *  )
+       * @OA\Post(
+    * path="/login",
+    * summary="Sign in",
+    * description="Login by email, password",
+    * operationId="authLogin",
+    * tags={"Login"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+    *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+    *       @OA\Property(property="fcm_token", type="string", example=""),
+    *       @OA\Property(property="app_type", type="string", example="shop or parent"),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
 
 
      * 
