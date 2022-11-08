@@ -32,16 +32,8 @@ use App\Models\Payment_history_model;
 use App\Models\Shop_cat_model;
 
 
-class Swagger_controller extends Controller
-{
 
-
-    public function index(Request $request)
-    {  
-       
-    }   
-
-   
+ 
        
     /**
      * 
@@ -2127,8 +2119,10 @@ class Swagger_controller extends Controller
      *   ),
     * )
 
+*/
 
 
+/*
 
      * @OA\Get(
      * tags={"Locations"},
@@ -2163,13 +2157,11 @@ class Swagger_controller extends Controller
      * 
      * 
      * 
-    *   */
+      */
 
+      class Swagger_controller extends Controller
+      {
       
 
-    public function get_d(Request $request)
-    {
-     
-    }    
      
 }

@@ -3189,67 +3189,6 @@
                     }
                 ]
             }
-        },
-        "/getall-province": {
-            "get": {
-                "tags": [
-                    "Locations"
-                ],
-                "operationId": "f5b79a752e9afdf8244610882590990a",
-                "responses": {
-                    "200": {
-                        "description": "An example resource"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/getall-cities-by-province": {
-            "get": {
-                "tags": [
-                    "Locations"
-                ],
-                "operationId": "a2e3862a14452386a5cff99b452a0761",
-                "requestBody": {
-                    "description": "Form Data or JSON",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "token": {
-                                        "type": "string",
-                                        "example": ""
-                                    },
-                                    "province_id": {
-                                        "type": "number",
-                                        "example": ""
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "An example resource"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
