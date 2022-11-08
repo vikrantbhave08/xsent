@@ -51,8 +51,7 @@
                                             
                                                 <table id="registereUser" class="row-border check" style="width:100%">
                                                     <thead>
-                                                        <tr>
-                                                            <th></th>
+                                                        <tr>                                                          
                                                             <th>Sr. No</th>
                                                             <!-- <th>User ID</th> -->
                                                             <th>User Name</th>
@@ -70,8 +69,7 @@
 
                                                     @foreach($users as $usr_no => $user)   
                                                        <tr>
-                                                            <!-- <td><input type="checkbox"></td>  -->
-                                                            <td></td> 
+                                                            <!-- <td><input type="checkbox"></td>  -->                                                           
                                                             <td>{{ $usr_no+1 }}</td> 
                                                             <!-- <td>541023</td> -->
                                                             <td>{{ $user['first_name'].' '.$user['last_name'] }}</td>

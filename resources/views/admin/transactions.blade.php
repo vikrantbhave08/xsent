@@ -41,7 +41,7 @@
                                                 <table id="request" class="row-border check" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th></th>
+                                                            <!-- <th></th> -->
                                                             <th>Sr. No</th>
                                                             <th>Transaction Id</th>
                                                             <th>Debited From</th>
@@ -57,7 +57,7 @@
                                                         @foreach($transactions as $key=>$trans)
                                                         <tr>
                                                             <!-- <td><input type="checkbox"></td> -->
-                                                            <td></td>
+                                                          
                                                             <td>{{ $key+1 }}</td>
                                                             <td>{{ isset($trans['pay_txn_id']) ? $trans['pay_txn_id'] : $trans['txn_id'] }}</td>
 

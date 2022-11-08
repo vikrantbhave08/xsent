@@ -41,7 +41,7 @@
                                                 <table id="request" class="row-border check" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th></th>
+                                                            <!-- <th></th> -->
                                                             <th>Sr. No</th>
                                                             <th>Request From</th>
                                                             <th>Email</th>
@@ -57,7 +57,7 @@
                                                         @foreach($requests as $key=>$val)
                                                         <tr>
                                                             <!-- <td><input type="checkbox"></td> -->
-                                                            <td></td>
+                                                         
                                                             <td>{{ $key+1 }}</td>
                                                             <td>@if($val['by_role']==2) 
                                                                 {{ $val['shop_name']." (".$val['first_name']." ".$val['last_name'].")" }} 
@@ -80,7 +80,7 @@
 
                                                             @else
                                                             
-                                                            <span class="badge bg-success" style="font-size: 1.2em;">Paid</span>
+                                                            <button class="btn btn-success btn-sm ">Paid</button>
 
                                                             @endif
 

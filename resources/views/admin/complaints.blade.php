@@ -18,8 +18,10 @@
                                     </div>
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                         <div class="calender-view">
-                                            <input type=" text" class="form-control calender" id="date_from"
+                                            <input type="text" class="form-control calender" id="date_from"
                                                 placeholder="Select date">
+                                                <span class="close-icon calender-icon" title="clear" data-clear><i class="ri-calendar-line"></i></span>
+                                                <span onclick="clear_date()" class="close-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
                                         </div>
 
                                     </div>
@@ -32,7 +34,6 @@
                                                 <table id="complaint" class="row-border" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th></th>
                                                             <th>Sr. No</th>
                                                             <th>Complaint Id</th>
                                                             <th>Complaint From</th>
@@ -49,7 +50,6 @@
                                                         @foreach($complaints as $sr=>$complaint)
                                                         <tr> 
                                                             <!-- <td><input type="checkbox"></td> -->
-                                                            <td></td>
                                                             <td>{{ $sr+1 }}</td>
                                                             <td>{{ $complaint['complaintid'] }}</td>
                                                             <td>{{ $complaint['first_name'].' '.$complaint['last_name'] }}</td>
@@ -191,6 +191,13 @@
             },
 
         });
+
+        function clear_date()
+       {       
+        // $flatpickr.clear();
+        window.location.href = "{{url('/admin/complaints')}}";
+       }
+
         function resizeData() {
             var winWidth = $(window).width();
             var winHeight = $(window).height();
@@ -230,10 +237,11 @@
                 dropdownParent: $('#sendremarkModal')
             });
             $('#complaint').DataTable({
+                "searching": true,
                 scrollY: 600,
                 scrollX: true,
                 // "bPaginate": false,
-                "ordering": false,
+                "ordering": true,
                 "bLengthChange": false,
                 "bFilter": false,
                 "bInfo": false,
