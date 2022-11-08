@@ -31,8 +31,6 @@ use App\Models\Bank_details_model;
 use App\Models\Payment_history_model;
 use App\Models\Shop_cat_model;
 
-
-
  
        
     /**
@@ -2119,10 +2117,6 @@ use App\Models\Shop_cat_model;
      *   ),
     * )
 
-*/
-
-
-/*
 
      * @OA\Get(
      * tags={"Locations"},
@@ -2157,14 +2151,14 @@ use App\Models\Shop_cat_model;
      * 
      * 
      * 
-      */
+     */
 
-      class Swagger_controller extends Controller
+    class Swagger_controller extends Controller
+    {
+      public function __construct(Request $request)
       {
-        public function __construct(Request $request)
-        {
-            
-        }
-     
+          
       }
+    
+    }
 
