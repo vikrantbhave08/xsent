@@ -29,16 +29,15 @@
                                         <span id="button-text">Pay now</span>
                                     </button>
                                     <div id="payment-message" class="hidden"></div>
-                                    </form> -->
-
-                                    
+                                    </form> -->                                    
 
 
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                         <div class="calender-view">
                                             <input type=" text" class="form-control calender" id="date_from"
                                                 placeholder="Select date">
-                                            <span onclick="clear_date()" class="close-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
+                                            <span class="close-icon calender-icon" title="clear" data-clear><i class="ri-calendar-line"></i></span>
+                                            <span onclick="clear_date()" class="close-icon closed-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
                                         </div>
 
                                     </div>
@@ -137,6 +136,19 @@
     <script>
 
         $('.register_uesrs').addClass('active');
+
+        var searched_date="{{ !empty($search_date) ? $search_date : '' }}";
+                                    
+        if(searched_date=='')
+        {   
+            $(".calender-icon").css('display','block');
+            $(".closed-icon").css('display','none');
+
+        } else {
+
+            $(".calender-icon").css('display','none');
+            $(".closed-icon").css('display','block');
+        } 
 
         // SELECT DATE
         flatpickr("#date_from", {

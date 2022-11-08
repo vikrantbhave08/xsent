@@ -17,13 +17,17 @@ class Complaints_controller extends Controller
         $this->middleware('check_user:admin');
     }
 
-    public function index()
+    public function index(Request $request)
     {         
         $result['user_role']=1;
+        $result['search_date']=!empty($request['search_date']) ? $request['search_date'] :'';
         $result['complaints']=Complaints_model::select('complaints.*','users.first_name','users.last_name','complaint_reasons.reason_name','user_roles.role_name')
                                                 ->leftjoin('users', 'complaints.by_user', '=', 'users.user_id')    
                                                 ->leftjoin('user_roles', 'complaints.by_role', '=', 'user_roles.role_id')    
                                                 ->leftjoin('complaint_reasons', 'complaints.reason_id', '=', 'complaint_reasons.reason_id') 
+                                                ->where(function ($query) use ($request) {
+                                                    if (!empty($request['search_date'])) $query->whereDate('complaints.created_at',$request['search_date']);
+                                                 }) 
                                                 ->orderBy('complaints.created_at', 'DESC')
                                                 ->get()->toArray();
         

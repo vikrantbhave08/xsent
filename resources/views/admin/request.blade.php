@@ -26,7 +26,8 @@
                                                 <!-- <a class="input-button" title="clear" data-clear>sdfs;f
                                                     <i class="icon-close"></i>
                                                 </a> -->
-                                                <span onclick="clear_date()" class="close-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
+                                                <span  class="close-icon calender-icon" title="clear" data-clear><i class="ri-calendar-line"></i></span>
+                                                <span onclick="clear_date()" class="close-icon closed-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
                                         </div>
                                     </div>
 
@@ -268,6 +269,24 @@
     <script>
         
         $('.requests').addClass('active');
+
+        var searched_date="{{ !empty($search_date) ? $search_date : '' }}";
+
+    
+                      
+        if(searched_date=='')
+        {   
+            $(".calender-icon").css('display','block');
+            $(".closed-icon").css('display','none');
+           
+        } else {
+          
+            $(".calender-icon").css('display','none');
+            $(".closed-icon").css('display','block');
+        }      
+             
+   
+        
 
 
         // SELECT DATE
