@@ -105,6 +105,92 @@ use App\Models\Shop_cat_model;
      *   ),
     * )
 
+    
+     *  * @OA\Post(
+    * path="/logout",
+    * summary="/logout",
+    * description="api/logout",
+    * operationId="logout",
+    * tags={"Logout"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="User Logout",
+    *    @OA\JsonContent(
+    *       required={"email","password"},    
+    *       @OA\Property(property="logout", type="string", example=""),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+
+
+    
+     *
+     *  * @OA\Post(
+    * path="/forgot-password",
+    * summary="api/forgot-password",
+    * description="api/forgot-password",
+    * operationId="forgot",
+    * tags={"Forgot Password"},
+    * security={ {"bearerAuth": {} }},
+    * @OA\RequestBody(
+    *    required=true,
+    *    description="Pass user credentials",
+    *    @OA\JsonContent(
+    *       required={"email","password"},
+    *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+    *       @OA\Property(property="user_role", type="string", example=""),
+    *    ),
+    * ),
+  *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+    * )
+    
+
 
      * 
      * 
