@@ -70,7 +70,8 @@
 
                                                     @foreach($users as $usr_no => $user)   
                                                        <tr>
-                                                            <td><input type="checkbox"></td> 
+                                                            <!-- <td><input type="checkbox"></td>  -->
+                                                            <td></td> 
                                                             <td>{{ $usr_no+1 }}</td> 
                                                             <!-- <td>541023</td> -->
                                                             <td>{{ $user['first_name'].' '.$user['last_name'] }}</td>

@@ -48,7 +48,8 @@
                                                     <tbody>
                                                         @foreach($complaints as $sr=>$complaint)
                                                         <tr> 
-                                                            <td><input type="checkbox"></td>
+                                                            <!-- <td><input type="checkbox"></td> -->
+                                                            <td></td>
                                                             <td>{{ $sr+1 }}</td>
                                                             <td>{{ $complaint['complaintid'] }}</td>
                                                             <td>{{ $complaint['first_name'].' '.$complaint['last_name'] }}</td>

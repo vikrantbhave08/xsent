@@ -56,7 +56,8 @@
                                                         
                                                         @foreach($requests as $key=>$val)
                                                         <tr>
-                                                            <td><input type="checkbox"></td>
+                                                            <!-- <td><input type="checkbox"></td> -->
+                                                            <td></td>
                                                             <td>{{ $key+1 }}</td>
                                                             <td>@if($val['by_role']==2) 
                                                                 {{ $val['shop_name']." (".$val['first_name']." ".$val['last_name'].")" }} 

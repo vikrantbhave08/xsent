@@ -16,7 +16,7 @@
                             <div class="main-wrapper">
                                 <div class="row d-flex align-items-center mb-4">
                                     <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
-                                        <h4 class="page-title">Requests</h4>
+                                        <h4 class="page-title">Transactions</h4>
                                     </div>
                                                                   
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
@@ -56,7 +56,8 @@
                                                         
                                                         @foreach($transactions as $key=>$trans)
                                                         <tr>
-                                                            <td><input type="checkbox"></td>
+                                                            <!-- <td><input type="checkbox"></td> -->
+                                                            <td></td>
                                                             <td>{{ $key+1 }}</td>
                                                             <td>{{ isset($trans['pay_txn_id']) ? $trans['pay_txn_id'] : $trans['txn_id'] }}</td>
 

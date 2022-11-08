@@ -30,34 +30,52 @@
                                     <div class="row">
                                         <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10">
                                             <div class="row">
-                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item form-label">Complaint Id :</li>
                                                         <li class="list-inline-item data-label"> {{ !empty($complaint_details) ? $complaint_details['complaintid'] : 0 }}</li>
                                                     </ul>
                                                 </div>
-                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item form-label">Complaint From :</li>
                                                         <li class="list-inline-item data-label">{{ !empty($complaint_details) ? $complaint_details['first_name']." ".$complaint_details['last_name'] : 0 }}</li>
                                                     </ul>
                                                 </div>
-                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item form-label">Complaint Reason :</li>
                                                         <li class="list-inline-item data-label">{{ !empty($complaint_details) ? $complaint_details['reason_name'] : '' }}
-                                                            in wallet</li>
+                                                            </li>
                                                     </ul>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                     <ul class="list-inline mb-0">
                                                         <li class="list-inline-item form-label">Complaint Date :</li>
                                                         <li class="list-inline-item data-label">{{ !empty($complaint_details) ?  date('d F Y | h:i A',strtotime($complaint_details['created_at'])) : '' }} </li>
                                                     </ul>
                                                 </div>
-                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                            </div>
+                                            <div class="row">
+                                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                    <ul class="list-inline mb-0">
+                                                        <li class="list-inline-item form-label">Transaction Type :</li>
+                                                        <li class="list-inline-item data-label">
+                                                        @if($complaint_details['reason_id']==1) 
+                                                                <!-- amount has not recieved in wallet -->
+                                                                <i class="ri-arrow-left-right-line"></i>
+                                                                @elseif($complaint_details['reason_id']==2)
+                                                                <!-- amount has not recieved in bank account -->
+                                                                <i class="ri-arrow-left-down-line"></i>
+                                                                @elseif($complaint_details['reason_id']==3)
+                                                                <i class="ri-arrow-right-up-line"></i>
+                                                                <!-- amount has debited twice from wallet -->
+                                                                @endif
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                     <ul class="list-inline mb-0">
                                                         <li class="list-inline-item form-label">Complaint Image :</li>
                                                         <li class="list-inline-item data-label">
@@ -74,7 +92,7 @@
                                                          </li>
                                                     </ul>
                                                 </div>
-                                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                     <ul class="list-inline mb-0">
                                                         <li class="list-inline-item form-label">
                                                             @if($complaint_details['is_active']==0)
