@@ -68,6 +68,9 @@ class Users_controller extends Controller
     public function register_user_details(Request $request)
     {
         $user_id=base64_decode($request['uid']);
+
+        $result['search_date']=!empty($request['search_date']) ? $request['search_date'] :'';
+        $result['user_id'] = $user_id;
        
         $user_details=User_model::where('users.user_id',$user_id)->first()->toArray();  
 
@@ -117,6 +120,7 @@ class Users_controller extends Controller
                                                 if($i==1) $query->where('ph.to_user', 0);     //user transfer to bank account
                                                 // if($i==1) $query->where('wt.from_user', 6);         //user transfer to bank account
                                                 // if($i==1) $query->where('wt.user_id', 8);     //user transfer to bank account
+                                                if (!empty($request['search_date'])) $query->whereDate('ph.created_at',$request['search_date']);
                                                                                                         
                                             })
                                             ->whereMonth('ph.created_at',"=",$month) 

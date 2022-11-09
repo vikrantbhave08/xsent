@@ -18,12 +18,11 @@
                                     </div>
                                     <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
                                         <div class="calender-view">
-                                            <input type="text" class="form-control calender" id="date_from"
+                                                <input type="text" class="form-control calender" id="date_from"
                                                 placeholder="Select date">
                                                 <span class="close-icon calender-icon" title="clear" data-clear><i class="ri-calendar-line"></i></span>
                                                 <span onclick="clear_date()" class="close-icon closed-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
                                         </div>
-
                                     </div>
                                 </div>
 
@@ -199,7 +198,7 @@
         flatpickr("#date_from", {
 
             dateFormat: 'Y-m-d',
-
+            defaultDate: "{{ !empty($search_date) ? $search_date : 'null' }}",
             onChange: function (selectedDates, dateStr, instance) {
 
                 // get_data_by_date();

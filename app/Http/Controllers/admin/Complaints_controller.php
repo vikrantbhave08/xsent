@@ -59,9 +59,11 @@ class Complaints_controller extends Controller
     public function complaint_details(Request $request)
     {
         $result['user_role']=1;
+        $result['search_date']=!empty($request['search_date']) ? $request['search_date'] :'';
+       
         $complaint=Complaints_model::select('complaints.*','users.first_name','users.last_name','complaint_reasons.reason_name')
                                     ->leftjoin('users', 'complaints.by_user', '=', 'users.user_id')    
-                                    ->leftjoin('complaint_reasons', 'complaints.reason_id', '=', 'complaint_reasons.reason_id')    
+                                    ->leftjoin('complaint_reasons', 'complaints.reason_id', '=', 'complaint_reasons.reason_id')                                     
                                     ->where('complaint_id',base64_decode($request['complaint_id']))
                                     ->first();
 
@@ -92,8 +94,8 @@ class Complaints_controller extends Controller
                         for($i=0; $i<2; $i++) // for two status  bank transfer to user  & user transfer to bank account
                         {
 
-                            $trans=Payment_history_model::from('payment_history as ph')->select('ph.*')                                                
-                                                    ->where(function ($query) use ($request,$i,$complaint,$user_id) {                                                    
+                            $trans=Payment_history_model::from('payment_history as ph')->select('ph.*')          
+                                                        ->where(function ($query) use ($request,$i,$complaint,$user_id) {                                                    
                                                                                             
                                                         if($i==0) $query->where('ph.from_user', 0);         //bank transfer to user
                                                         if($i==0) $query->where('ph.to_user',$user_id);     //bank transfer to user                                               
@@ -102,6 +104,7 @@ class Complaints_controller extends Controller
                                                         if($i==1) $query->where('ph.from_user', $user_id);         //user transfer to bank account
                                                         if($i==1) $query->where('ph.from_role',$complaint->by_role);     //for user role 
                                                         if($i==1) $query->where('ph.to_user', 0);     //user transfer to bank account
+                                                        if (!empty($request['search_date'])) $query->whereDate('ph.created_at',$request['search_date']);
                                                                                                         
                                                     })
                                                     ->whereYear('ph.created_at',"=",$from_year)
@@ -129,7 +132,8 @@ class Complaints_controller extends Controller
                                                         ->select('wt.*')
                                                         ->where(function ($query) use ($request,$user_id,$i) {                                              
                                                             if ($i==0) $query->where('wt.from_user',$user_id);     // child paid to shop                                             
-                                                            if ($i==1) $query->where('wt.user_id',$user_id);     // parent pays to child                                             
+                                                            if ($i==1) $query->where('wt.user_id',$user_id);     // parent pays to child     
+                                                            if (!empty($request['search_date'])) $query->whereDate('wt.created_at',$request['search_date']);                                        
                                                         })
                                                         ->whereYear('wt.created_at',"=",$from_year)
                                                         ->whereMonth('wt.created_at',"=",$month)

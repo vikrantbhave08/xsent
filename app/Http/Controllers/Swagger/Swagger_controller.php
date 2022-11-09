@@ -37,7 +37,7 @@ use App\Models\Shop_cat_model;
      * 
     * @OA\Info(
     *      version="1.0.0",
-    *      title="Integration Swagger in Laravel with Passport Auth Documentation",
+    *      title="Xsent Api Documentation with bearer auth",
     *      description="Implementation of Swagger with in Laravel",
     *      @OA\Contact(
     *          email="admin@admin.com"

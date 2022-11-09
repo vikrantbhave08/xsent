@@ -139,12 +139,16 @@
                                         <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
                                             <h4 class="page-title">Transaction History</h4>
                                         </div>
-                                        <!-- <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
-                                            <div class="calender-view ">
-                                                <input type=" text" class="form-control calender" id="date_from"
-                                                    placeholder="Select date">
-                                            </div>
-                                        </div> -->
+                                       
+                                    <div class="col-sm-3 col-md-3 col-lg-2 col-xl-2 ms-auto">
+                                        <div class="calender-view">
+                                                <input type="text" class="form-control calender" id="date_from"
+                                                placeholder="Select date">
+                                                <span class="close-icon calender-icon" title="clear" data-clear><i class="ri-calendar-line"></i></span>
+                                                <span onclick="clear_date()" class="close-icon closed-icon" title="clear" data-clear><i class="ri-close-line"></i></span>
+                                        </div>
+                                    </div>
+
                                     </div>
                                     <div class="content-wrapper transaction-history">
                                         <div class="table-design">
@@ -330,18 +334,41 @@
 
         $('.complaints').addClass('active');
 
-        // SELECT DATE
-        flatpickr("#date_from", {
+       
+        var searched_date="{{ !empty($search_date) ? $search_date : '' }}";
 
-            dateFormat: 'Y-m-d',
+    
+                            
+if(searched_date=='')
+{   
+    $(".calender-icon").css('display','block');
+    $(".closed-icon").css('display','none');
 
-            onChange: function (selectedDates, dateStr, instance) {
+} else {
 
-                get_data_by_date();
+    $(".calender-icon").css('display','none');
+    $(".closed-icon").css('display','block');
+}  
 
-            },
+flatpickr("#date_from", {
 
-        });
+    dateFormat: 'Y-m-d',
+    defaultDate: "{{ !empty($search_date) ? $search_date : 'null' }}",
+    onChange: function (selectedDates, dateStr, instance) {
+
+        // get_data_by_date();
+        window.location.href = "{{url('/admin/complaint-details')}}?{{ 'complaint_id='.base64_encode($complaint_details['complaint_id']) }}&search_date="+dateStr;
+
+    },
+
+});
+
+function clear_date()
+{       
+// $flatpickr.clear();
+window.location.href = "{{url('/admin/complaint-details')}}?{{ 'complaint_id='.base64_encode($complaint_details['complaint_id']) }}";
+}
+
         function resizeData() {
             var winWidth = $(window).width();
             var winHeight = $(window).height();
