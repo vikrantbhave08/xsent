@@ -23,6 +23,18 @@
     .error{
         color:red
     }
+
+    .spinner-border {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: -0.125em;
+    border: 0.25em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    -webkit-animation: .75s linear infinite spinner-border;
+    animation: .75s linear infinite spinner-border;
+}
         </style>
 </head>
 
@@ -84,10 +96,16 @@
                                                     </div>
 
                                                     <span class="text-center login-err"></span>
+                                                   
 
                                                     <div class="d-flex justify-content-center align-items-center">
                                                         <Button class="btn btn-primary btn-register w-100"
-                                                            type="submit">Login</Button>
+                                                            type="submit">Login
+                                                        
+                                                            <div class="spinner-border" hidden role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </Button>
                                                     </div>
 
                                                 </div>
@@ -136,7 +154,10 @@
             },          
             submitHandler: function (form, message) {
              
-                    redUrl = "{{url('/admin/loginme')}}";             
+                    redUrl = "{{url('/admin/loginme')}}";      
+                    
+                    $(".btn-register").prop('disabled',true);
+                    $(".spinner-border").prop('hidden',false);
 
                 $.ajax({
                     url: redUrl,
@@ -167,10 +188,20 @@
                             }, 3000);
                         }
 
+                        $(".btn-register").prop('disabled',false);
+                        $(".spinner-border").prop('hidden',true);
+
 
                     },
-                    error: function (xhr) {
-                        console.log(xhr);
+                    error: function (xhr, textStatus, errorThrown) {
+                        // console.log(xhr.responseJSON);
+                        if(xhr.status==419)
+                        {
+                            $(".login-err").css("color", "red");
+                            $(".login-err").html("Server error ! refresh page.");
+                        }   
+                        $(".btn-register").prop('disabled',false);
+                        $(".spinner-border").prop('hidden',true);
                     }
                 });
 
