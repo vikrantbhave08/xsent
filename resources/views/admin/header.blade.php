@@ -76,7 +76,8 @@
                                 </a>
                             </div>
                             <div>
-                                <a id="show-sidebar" class="btn btn-dark toggleBtn" href="#">
+                                <!-- <a id="show-sidebar" class="btn btn-dark toggleBtn" href="#"> -->
+                                <a id="show-sidebar" class="btn toggleBtn" href="#">
                                     <img src="{{ asset('assets/dist/images/menu-icon.png') }}" />
                                 </a>
                             </div>

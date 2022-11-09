@@ -26,7 +26,7 @@ p {
     color: #f61b1b;
 
     &::before {
-        font-size: 22px;
+        font-size: 15px;
         font-weight: 600;
     }
 }
@@ -35,7 +35,7 @@ p {
     color: #3e5fed;
 
     &::before {
-        font-size: 22px;
+        font-size: 15px;
         font-weight: 600;
     }
 }
@@ -44,7 +44,7 @@ p {
     color: #20cb20;
 
     &::before {
-        font-size: 22px;
+        font-size: 15px;
         font-weight: 600;
     }
 }
@@ -141,16 +141,16 @@ p {
         transition: all 0.3s ease;
 
         .btn-dark {
-            background-color: transparent !important;
-            border-color: transparent !important;
+            background-color: transparent;
+            border-color: transparent;
             float: left;
             padding-left: 0px;
             transition: all 0.3s ease;
 
             &:hover {
                 color: #fff;
-                background-color: transparent !important;
-                border-color: transparent !important;
+                background-color: transparent;
+                border-color: transparent;
             }
 
             &:focus {

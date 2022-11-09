@@ -24,7 +24,7 @@ p {
   color: #f61b1b;
 }
 .ri-arrow-right-up-line::before {
-  font-size: 22px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -32,7 +32,7 @@ p {
   color: #3e5fed;
 }
 .ri-arrow-left-right-line::before {
-  font-size: 22px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -40,7 +40,7 @@ p {
   color: #20cb20;
 }
 .ri-arrow-left-down-line::before {
-  font-size: 22px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -121,16 +121,16 @@ p {
   transition: all 0.3s ease;
 }
 .page-wrapper .page-heading .btn-dark {
-  background-color: transparent !important;
-  border-color: transparent !important;
+  background-color: transparent;
+  border-color: transparent;
   float: left;
   padding-left: 0px;
   transition: all 0.3s ease;
 }
 .page-wrapper .page-heading .btn-dark:hover {
   color: #fff;
-  background-color: transparent !important;
-  border-color: transparent !important;
+  background-color: transparent;
+  border-color: transparent;
 }
 .page-wrapper .page-heading .btn-dark:focus {
   box-shadow: none !important;
@@ -677,4 +677,4 @@ p {
     padding: 8px 14px !important;
     font-size: 11px !important;
   }
-}/*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main_old_sass.css.map */
