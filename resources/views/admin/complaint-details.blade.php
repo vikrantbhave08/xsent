@@ -337,37 +337,37 @@
        
         var searched_date="{{ !empty($search_date) ? $search_date : '' }}";
 
-    
-                            
-if(searched_date=='')
-{   
-    $(".calender-icon").css('display','block');
-    $(".closed-icon").css('display','none');
+                
+                                        
+            if(searched_date=='')
+            {   
+                $(".calender-icon").css('display','block');
+                $(".closed-icon").css('display','none');
 
-} else {
+            } else {
 
-    $(".calender-icon").css('display','none');
-    $(".closed-icon").css('display','block');
-}  
+                $(".calender-icon").css('display','none');
+                $(".closed-icon").css('display','block');
+            }  
 
-flatpickr("#date_from", {
+            flatpickr("#date_from", {
 
-    dateFormat: 'Y-m-d',
-    defaultDate: "{{ !empty($search_date) ? $search_date : 'null' }}",
-    onChange: function (selectedDates, dateStr, instance) {
+                dateFormat: 'Y-m-d',
+                defaultDate: "{{ !empty($search_date) ? $search_date : 'null' }}",
+                onChange: function (selectedDates, dateStr, instance) {
 
-        // get_data_by_date();
-        window.location.href = "{{url('/admin/complaint-details')}}?{{ 'complaint_id='.base64_encode($complaint_details['complaint_id']) }}&search_date="+dateStr;
+                    // get_data_by_date();
+                    window.location.href = "{{url('/admin/complaint-details')}}?{{ 'complaint_id='.base64_encode($complaint_details['complaint_id']) }}&search_date="+dateStr;
 
-    },
+                },
 
-});
+            });
 
-function clear_date()
-{       
-// $flatpickr.clear();
-window.location.href = "{{url('/admin/complaint-details')}}?{{ 'complaint_id='.base64_encode($complaint_details['complaint_id']) }}";
-}
+            function clear_date()
+            {       
+            // $flatpickr.clear();
+            window.location.href = "{{url('/admin/complaint-details')}}?{{ 'complaint_id='.base64_encode($complaint_details['complaint_id']) }}";
+            }
 
         function resizeData() {
             var winWidth = $(window).width();

@@ -78,7 +78,7 @@
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#complaint_img"
                                                                 imgid="#complaint_image"
-                                                                width="20px" height="100%">
+                                                                width="40px" height="100%">
                                                                 @endif
                                                             </td>
                                                             <td>{{ date('d M Y',strtotime($complaint['created_at']))  }}</td>

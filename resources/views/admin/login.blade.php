@@ -30,7 +30,7 @@
     <div class="main py-4 d-flex align-items-center">
         <div class="container h-100">
             <div class="row h-100">
-                <div class="col-xl-8 offset-xl-2 h-100">
+                <div class="col-xl-10 offset-xl-1 h-100">
                     <div class="login-bg h-100">
                         <div class="row h-100">
                             <div class="col-xxl-7 col-xl-7 col-lg-7 col-7 h-100">
