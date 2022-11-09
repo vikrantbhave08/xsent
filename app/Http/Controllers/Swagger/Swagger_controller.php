@@ -55,7 +55,7 @@ use App\Models\Shop_cat_model;
     * 
     * @OA\SecurityScheme(
     * securityScheme="bearerAuth",
-    *  type="http",
+    *  type="https",
     *  scheme="bearer"
     * )
      *
