@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="content-wrapper">
                                     <div class="row">
-                                        <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="row">
                                                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                                                     <ul class="list-inline">
