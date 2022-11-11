@@ -50,7 +50,7 @@
                                                     </ul>
                                                 </div>
                                                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                                                    <ul class="list-inline mb-0">
+                                                    <ul class="list-inline">
                                                         <li class="list-inline-item form-label">Complaint Date :</li>
                                                         <li class="list-inline-item data-label">{{ !empty($complaint_details) ?  date('d F Y | h:i A',strtotime($complaint_details['created_at'])) : '' }} </li>
                                                     </ul>
@@ -58,7 +58,7 @@
                                             </div>
                                             <div class="row">
                                             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                                                    <ul class="list-inline mb-0">
+                                                    <ul class="list-inline">
                                                         <li class="list-inline-item form-label">Transaction Type :</li>
                                                         <li class="list-inline-item data-label">
                                                         @if($complaint_details['reason_id']==1) 
@@ -76,7 +76,7 @@
                                                 </div>
                                             
                                                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                                                    <ul class="list-inline mb-0">
+                                                    <ul class="list-inline">
                                                         <li class="list-inline-item form-label">Complaint Image :</li>
                                                         <li class="list-inline-item data-label">
                                                         @if(!empty($complaint_details['complaint_img']))
@@ -93,7 +93,7 @@
                                                     </ul>
                                                 </div>
                                                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                                                    <ul class="list-inline mb-0">
+                                                    <ul class="list-inline">
                                                         <li class="list-inline-item form-label">
                                                             @if($complaint_details['is_active']==0)
                                                                 <button class="btn btn-sm table-btn" type="button"
@@ -113,21 +113,19 @@
                                                     </ul>
                                                 </div>
                                             </div>
+
+                                            <div class="row">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                    <ul class="list-inline">
+                                                        <li class="list-inline-item form-label">Complaint Details :</li>
+                                                        <li class="list-inline-item data-label"> {{ !empty($complaint_details) ? $complaint_details['complaint_details'] : "" }}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
                                         </div>
 
-                                        <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
-                                            <label class="form-label">Reason</label>
-                                            <input type="text" class="form-control" placeholder="Pending"> -->
-                                            <!-- <div class="custom-dropdown">
-                                                <select id="status">
-                                                    <option value=""></option>
-                                                    <option value="status1">Status 1</option>
-                                                    <option value="status2">Status 2</option>
-                                                    <option value="status3">Status 3</option>
-                                                    <option value="status4">Status 4</option>
-                                                </select>
-                                            </div> -->
-                                        <!-- </div> -->
+                                    
 
                                     </div>
 
