@@ -115,7 +115,7 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item form-label">Complaint Details :</li>
                                                         <li class="list-inline-item data-label"> {{ !empty($complaint_details) ? $complaint_details['complaint_details'] : "" }}</li>
