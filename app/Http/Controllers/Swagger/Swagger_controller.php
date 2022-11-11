@@ -2223,6 +2223,11 @@ use App\Models\Shop_cat_model;
       {
           
       }
+
+      public function test_api()
+      {
+        echo "page not found";
+      }
     
     }
 
