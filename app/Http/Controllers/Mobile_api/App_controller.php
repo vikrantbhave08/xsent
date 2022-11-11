@@ -1889,7 +1889,8 @@ class App_controller extends Controller
                     for($i=12; $i>=1; $i--)
                         {     
 
-                        $complaints=Complaints_model::select('complaints.*',DB::raw("CONCAT('".url('/public/images')."', complaint_img) AS complaint_img"),'users.first_name','users.last_name','complaint_reasons.reason_name')
+                        // $complaints=Complaints_model::select('complaints.*',DB::raw("CONCAT('".url('/public/images')."', complaint_img) AS complaint_img"),'users.first_name','users.last_name','complaint_reasons.reason_name')
+                        $complaints=Complaints_model::select('complaints.*','users.first_name','users.last_name','complaint_reasons.reason_name')
                                                     ->leftjoin('users', 'complaints.by_user', '=', 'users.user_id')    
                                                     ->leftjoin('complaint_reasons', 'complaints.reason_id', '=', 'complaint_reasons.reason_id')
                                                     ->where(function ($query) use ($request,$logged_user) {
@@ -1906,6 +1907,7 @@ class App_controller extends Controller
                     foreach($complaints as $key=>$res)
                     {
                         $monthly_complaints[$key]=$res;
+                        $monthly_complaints[$key]['complaint_img']= !empty($res['complaint_img']) ? $res['complaint_img'] : ''; 
                         $monthly_complaints[$key]['date']=date('d F Y', strtotime($res['updated_at'])); 
                         $monthly_complaints[$key]['time']=date('h:i A', strtotime($res['updated_at']));                                                                 
                     }
