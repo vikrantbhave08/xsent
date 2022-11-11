@@ -1907,7 +1907,7 @@ class App_controller extends Controller
                     foreach($complaints as $key=>$res)
                     {
                         $monthly_complaints[$key]=$res;
-                        $monthly_complaints[$key]['complaint_img']= !empty($res['complaint_img']) ? $res['complaint_img'] : ''; 
+                        $monthly_complaints[$key]['complaint_img']= !empty($res['complaint_img']) ? url('/public/images').$res['complaint_img'] : ''; 
                         $monthly_complaints[$key]['date']=date('d F Y', strtotime($res['updated_at'])); 
                         $monthly_complaints[$key]['time']=date('h:i A', strtotime($res['updated_at']));                                                                 
                     }
