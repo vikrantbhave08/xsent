@@ -1593,7 +1593,7 @@ class App_controller extends Controller
                                             'updated_at' => date('Y-m-d H:i:s')
                                             ])->notification_id;
                     }
-                    $data=array('status'=>true,'msg'=>'Requests added successfully');                   
+                    $data=array('status'=>true,'msg'=>'Request added successfully');                   
                 }
             } else {
                 $data=array('status'=>false,'msg'=>'Sum of requested amount is more than wallet balance or wallet is empty');     
