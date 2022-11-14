@@ -174,21 +174,12 @@
     <script src="{{ asset('assets/dist/js/apexcharts.js') }}"></script>
     <script src="{{ asset('assets/dist/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/dist/js/chart.js') }}"></script> 
-    
  
 
     <script>
-
-    var config = {
-                    messagingSenderId: "555450045117",
-                    apiKey: "AIzaSyBkHxYZcTZmBBBnJDIF-bsgJEmqR92lPNc",
-                    projectId: "xsentdemo",
-                    appId: "1:555450045117:web:e077bdcbd769739ba79dd4"
-                };
-    firebase.initializeApp(config);  
-
          $('.complaints').addClass('active');
         // SELECT DATE
+
         var searched_date="{{ !empty($search_date) ? $search_date : '' }}";
 
     
