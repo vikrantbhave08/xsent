@@ -231,7 +231,12 @@ class Dashboard_controller extends Controller
             'currency' => 'INR',
             //   'recurring' => ['interval' => 'month'],
             ]
-        );      
+        );    
+        
+        
+        // echo "<pre>";
+        // print_r($PRICE_ID);
+        // exit;
 
         $checkout_session=$stripe->checkout->sessions->create([
             'success_url' => App::make('url')->to('/admin/payment-status?session_id={CHECKOUT_SESSION_ID}'),
@@ -239,6 +244,7 @@ class Dashboard_controller extends Controller
             'line_items' => [
             [
                 'price' => $PRICE_ID->id,
+                // 'price' => "price_1M41e9SCia5qiodpJ5WWvHHP",
                 'quantity' => 1,
             ],
             ],

@@ -228,8 +228,11 @@ class Users_controller extends Controller
     public function prebuild_checkout_page()
     {
        
-        $checkout_session = Dashboard_controller::prebuild_checkout_page();       
-
+        $checkout_session = Dashboard_controller::prebuild_checkout_page();      
+        
+        // echo "<pre>";
+        // print_r($checkout_session);
+        // exit;
         return redirect($checkout_session->url);
     }
 }
