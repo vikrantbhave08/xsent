@@ -174,8 +174,10 @@
                             $(".login-err").css("color", "#ffcb99");
                             $(".login-err").html(res.msg);
                             setTimeout(function () {
-                                window.location.href = "{{ url('/admin/dashboard') }}";
-                            }, 3000);
+                                window.location.href = "{{ url('/admin/dashboard') }}"; 
+                                $(".btn-register").prop('disabled',false);
+                                 $(".spinner-border").prop('hidden',true);
+                            }, 500);
 
 
 
@@ -183,13 +185,14 @@
                             // fp1.close();
                             $(".login-err").css("color", "red");
                             $(".login-err").html(res.msg);
+                            $(".btn-register").prop('disabled',false);
+                            $(".spinner-border").prop('hidden',true);
                             setTimeout(function () {
-                                // location.reload();
+                                // location.reload(); 
                             }, 3000);
                         }
 
-                        $(".btn-register").prop('disabled',false);
-                        $(".spinner-border").prop('hidden',true);
+                       
 
 
                     },
@@ -202,6 +205,10 @@
                         }   
                         $(".btn-register").prop('disabled',false);
                         $(".spinner-border").prop('hidden',true);
+
+                        setTimeout(function () {
+                                location.reload(); 
+                            }, 2000);
                     }
                 });
 

@@ -135,7 +135,7 @@ class App_controller extends Controller
                                                    
                                                    
                                                     $spend_or_earn_by_month[$j]['spend_month']=date('M', mktime(0,0,0,$i, 1, $request['year'])); 
-                                                    $spend_or_earn_by_month[$j]['spend_amount']=array_sum(array_column($shop_sales_per_month, 'total_sale')) ? array_sum(array_column($shop_sales_per_month, 'total_sale')) : 0 ;                                                    
+                                                    $spend_or_earn_by_month[$j]['spend_amount']=array_sum(array_column($shop_sales_per_month, 'total_sale')) ? array_sum(array_column($shop_sales_per_month, 'total_sale')) : "0" ;                                                    
                                                    
                                                     $j++;
         }
