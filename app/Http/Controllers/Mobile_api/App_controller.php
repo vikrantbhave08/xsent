@@ -183,7 +183,7 @@ class App_controller extends Controller
 
     public function get_dashboard_data(Request $request)
     {
-        $data=array('status'=>false,'msg'=>'Data not found','balance'=>0,'monthly_report'=>array(),'spend_analysis'=>array());
+        $data=array('status'=>false,'msg'=>'Data not found','balance'=>"0",'monthly_report'=>array(),'spend_analysis'=>array());
 
         if($request['year'])
         {
@@ -210,7 +210,7 @@ class App_controller extends Controller
 
                 $spend_analysis= $logged_user['user_role']!=2 ? $this->spend_analysis($request) : array() ;          
 
-                $data=array('status'=>true,'msg'=>'Dashbaord data','balance'=>!empty($users_wallet) ? $users_wallet->balance : 0,'monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
+                $data=array('status'=>true,'msg'=>'Dashbaord data','balance'=>!empty($users_wallet) ? $users_wallet->balance : "0",'monthly_report'=>$monthly_report,'spend_analysis'=>$spend_analysis);
             
         }
        
