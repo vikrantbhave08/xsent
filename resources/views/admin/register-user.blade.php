@@ -15,10 +15,10 @@
                                     <div class="col-sm-9 col-md-9 col-lg-10 col-xl-10">
                                         <h4 class="page-title">Registered Users</h4>
                                     </div>
-                                    <form id="payment-form" action="{{url('/admin/payment')}}"  method="POST">                                      
+                                    <!-- <form id="payment-form" action="{{url('/admin/payment')}}"  method="POST">                                      
                                         @csrf
                                         <button type="submit" id="checkout-button">Checkout</button>
-                                    </form>
+                                    </form> -->
 
                                     <!-- <form id="payment-form">
                                     <div id="payment-element">
