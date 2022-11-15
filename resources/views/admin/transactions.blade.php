@@ -184,6 +184,15 @@
                 scrollY: 650,
                 scrollX: true,
                 // "bPaginate": false,
+                aoColumns : [
+                    { },
+                    { },
+                    { },
+                    { },
+                    {  sWidth: '15%' },
+                    { },
+                    { }
+                ],
                 "ordering": true,
                 "bLengthChange": false,
                 "bFilter": false,

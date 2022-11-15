@@ -154,7 +154,7 @@ class Requests_controller extends Controller
                         $notification_body=array(
                             'title'=>'Payment Recieved',
                             'msg'=>'',
-                            'body'=>'Xsent has transfered '.$users_request->request_amount.' AED amount to your bank',
+                            'body'=>'Xsent has transfered '.$users_request->request_amount.' AED amount to your bank. Amount will credit in 4-5 days',
                             'to'=>$beneficiery_user->fcm_token, 
                         );
 
