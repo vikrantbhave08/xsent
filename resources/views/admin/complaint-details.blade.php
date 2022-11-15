@@ -92,7 +92,7 @@
                                                          </li>
                                                     </ul>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 offset-xl-3 offset-lg-3 offset-md-3 offset-sm-3">
                                                     <ul class="list-inline">
                                                         <li class="list-inline-item form-label">
                                                             @if($complaint_details['is_active']==0)
