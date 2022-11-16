@@ -1453,13 +1453,15 @@ class App_controller extends Controller
 
         $logged_user=Auth::mobile_app_user($request['token']);
 
-        $shops=Shops_model::select('users.first_name','users.last_name','shops.owner_id','shops.shop_name','shops.shop_id','shops.shop_gen_id')
+      
+        $shops=Shops_model::select('users.first_name','users.last_name','shops.*')
                     ->leftjoin('users', 'shops.owner_id', '=', 'users.user_id') 
                     ->where(function ($query) use ($request,$logged_user) {
                         if (!empty($request['shop_gen_id'])) $query->where('shops.shop_gen_id', $request['shop_gen_id']);                       
-                        if ($logged_user==2 || $logged_user==5) $query->where('shops.owner_id',$logged_user['user_id']);                       
+                        if ($logged_user['user_role']==2 || $logged_user['user_role']==5) $query->where('shops.owner_id',$logged_user['user_id']);                       
                     })
                     ->get()->toArray();
+
         if(!empty($shops))
         {
             $data=array('status'=>true,'msg'=>'Shops','shops'=>$shops);
