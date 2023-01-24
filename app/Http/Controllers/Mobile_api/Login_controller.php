@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Mobile_api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use URL;
+use DB;
 
 use \ArrayObject;
 
@@ -554,6 +555,17 @@ class Login_controller extends Controller
 
 
     
+function raw_data()
+{
+    $user=User_model::select('users.*',DB::raw('ifnull(COUNT(parent_child.child_id),0) as childs'))
+                    ->leftjoin('parent_child', 'users.user_id', '=', 'parent_child.parent_id')
+                    ->groupBy('parent_child.child_id')->get()->toArray();   
+
+                   echo "<pre>";
+                   print_r($user);
+                   exit;
+}
+
 function send_otp($data)
 { 
     $endpoint = 'https://api.smsglobal.com/http-api.php';

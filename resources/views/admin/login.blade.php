@@ -76,14 +76,16 @@
                                                         <div class="col-xl-12 col-lg-12">
                                                             <div class="form-group">
                                                                 <label class="form-label" for="username">Username</label>
-                                                                <input type="text" name="username" id="username" value="" class="form-control"
+                                                                <input readonly 
+                                                                    onfocus="this.removeAttribute('readonly');"  type="text" name="username" autocomplete="off" id="username" value="" class="form-control"
                                                                     placeholder="Enter username" />
                                                             </div>
                                                         </div>
                                                         <div class="col-xl-12 col-lg-12">
                                                             <div class="form-group">
                                                                 <label class="form-label">Password</label>
-                                                                <input type="password" name="password" value="" class="form-control"
+                                                                <input type="password" readonly 
+                                                                    onfocus="this.removeAttribute('readonly');"  name="password" autocomplete="off" value="" class="form-control"
                                                                     placeholder="Enter password" />
                                                             </div>
                                                         </div>

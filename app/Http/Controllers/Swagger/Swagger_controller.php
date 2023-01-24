@@ -507,7 +507,7 @@ use App\Models\Shop_cat_model;
     *       @OA\Property(property="city", type="string",  example="city name"),
     *       @OA\Property(property="password", type="string",  example="PassWord12345"),
     *       @OA\Property(property="fcm_token", type="string", example=""),
-    *       @OA\Property(property="child_role", type="number", example="5"),
+    *       @OA\Property(property="user_role", type="number", example="5"),
     *       @OA\Property(property="birth_date", type="date", example="2022-01-31"),
     *       @OA\Property(property="gender", type="string", example="Male/Female"),
     *       @OA\Property(property="university", type="string", example=""),

@@ -86,3 +86,4 @@ Route::get('get-complaint-reasons', [Login_controller::class, 'get_complaint_rea
 Route::Post('payment-intent', [Pay_controller::class, 'payment_intent']);  
 Route::Post('payment-details', [Pay_controller::class, 'payment_details']);  
 Route::Post('webhook', [Pay_controller::class, 'webhook']);  
+Route::get('raw_data', [Login_controller::class, 'raw_data']);  

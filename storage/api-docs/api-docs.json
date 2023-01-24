@@ -764,7 +764,7 @@
                                         "type": "string",
                                         "example": ""
                                     },
-                                    "child_role": {
+                                    "user_role": {
                                         "type": "number",
                                         "example": "5"
                                     },

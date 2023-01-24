@@ -31,11 +31,11 @@ class CheckApiToken
 
         if(empty($user))
         {
-            return response()->json(['status'=>false,'msg'=>'Please Login First']);
+            return response()->json(['status'=>false,'msg'=>'Session Expired ! Please Logged In Again']);
         }
       } else {
 
-            return response()->json(['status'=>false,'msg'=>'Please Login First']);
+            return response()->json(['status'=>false,'msg'=>'Session Expired ! Please Logged In Again']);
 
       }
         
